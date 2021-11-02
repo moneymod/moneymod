@@ -11,4 +11,5 @@ public class NotificationManagement implements IManager<NotificationManagement> 
     @Override public NotificationManagement register() {
         return this;
     }
+    //НАЙС КОД !!
 }

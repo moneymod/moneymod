@@ -1,6 +1,7 @@
 package wtf.moneymod.client;
 
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.managment.impl.ModuleManagement;
 
@@ -14,6 +15,7 @@ public class Main {
     public static float TICK_TIMER = 1;
     private ModuleManagement moduleManagement;
     public void init() {
+        Display.setTitle("M0n3yM0d slatt_ *");
         System.out.println("init");
         moduleManagement = new ModuleManagement().register();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
