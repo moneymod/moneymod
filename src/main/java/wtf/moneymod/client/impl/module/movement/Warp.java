@@ -18,16 +18,17 @@ public class Warp extends Module {
 
     int delay;
     @Override public void onTick() {
-        if(mode == Mode.TICK)
+        if (mode == Mode.TIMER) {
             delay++;
-        Main.TICK_TIMER = tick;
-        if (delay >= time){
-            setToggled(false);
-            delay = 0;
-            return;
+            Main.TICK_TIMER = tick;
+            if (delay >= time) {
+                setToggled(false);
+                delay = 0;
+                return;
+            }
         }
     }
     public enum Mode {
-        SKIP, TICK
+        SKIP, TIMER
     }
 }
