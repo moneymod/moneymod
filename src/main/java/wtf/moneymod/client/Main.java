@@ -5,6 +5,7 @@ import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.CommandManagement;
 import wtf.moneymod.client.api.management.impl.ModuleManagement;
+import wtf.moneymod.client.impl.ui.click.Screen;
 
 /**
  * @author cattyn
@@ -22,6 +23,9 @@ public class Main {
     private static Main main;
     public static float TICK_TIMER = 1;
 
+    //objects
+    private Screen screen;
+
     //management
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
@@ -31,6 +35,7 @@ public class Main {
         System.out.println("init");
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
+        screen = new Screen();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
@@ -45,6 +50,10 @@ public class Main {
 
     public CommandManagement getCommandManagement() {
         return commandManagement;
+    }
+
+    public Screen getScreen() {
+        return screen;
     }
 
 }

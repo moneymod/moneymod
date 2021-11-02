@@ -7,12 +7,12 @@ import wtf.moneymod.client.impl.module.Module;
 
 @Module.Register( label = "Step", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_R)
 public class Step extends Module {
-    @Setting(id = "Heighttt", clamp = @Clamp(min = 0, max = 4)) public float height = 2;
+    @Setting(id = "Heighttt", clamp = @Clamp(min = 0, max = 4)) public double height = 2;
 
     @Override public void onTick() {
         if (!mc.player.isInLava() && !mc.player.isInWater()){
             if (mc.player.onGround)
-                mc.player.stepHeight = height;
+                mc.player.stepHeight = ( float ) height;
         }
     }
 
