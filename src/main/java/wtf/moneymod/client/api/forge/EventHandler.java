@@ -5,8 +5,8 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
-import wtf.moneymod.client.other.module.Module;
-import wtf.moneymod.client.utility.Globals;
+import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.Globals;
 
 public class EventHandler implements Globals {
 

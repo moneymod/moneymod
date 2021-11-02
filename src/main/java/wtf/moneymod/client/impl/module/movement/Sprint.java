@@ -1,9 +1,8 @@
-package wtf.moneymod.client.other.module.movement;
+package wtf.moneymod.client.impl.module.movement;
 
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import org.lwjgl.input.Keyboard;
-import wtf.moneymod.client.other.module.Module;
-import wtf.moneymod.client.utility.impl.world.EntityUtil;
+import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 
 @Module.Register( label = "Sprint", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_X )
 public class Sprint extends Module {

@@ -1,10 +1,8 @@
 package wtf.moneymod.client;
 
-import club.cafedevelopment.reflectionsettings.container.SettingManager;
 import net.minecraftforge.common.MinecraftForge;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.managment.impl.ModuleManager;
-import wtf.moneymod.client.other.module.movement.Sprint;
 
 public class Main {
 

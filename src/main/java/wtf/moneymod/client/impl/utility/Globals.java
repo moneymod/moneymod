@@ -1,4 +1,4 @@
-package wtf.moneymod.client.utility;
+package wtf.moneymod.client.impl.utility;
 
 import net.minecraft.client.Minecraft;
 

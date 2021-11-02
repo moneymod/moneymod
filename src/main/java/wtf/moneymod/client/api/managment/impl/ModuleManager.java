@@ -2,7 +2,7 @@ package wtf.moneymod.client.api.managment.impl;
 
 import org.reflections.Reflections;
 import wtf.moneymod.client.api.managment.IManager;
-import wtf.moneymod.client.other.module.Module;
+import wtf.moneymod.client.impl.module.Module;
 
 import java.util.ArrayList;
 import java.util.Comparator;

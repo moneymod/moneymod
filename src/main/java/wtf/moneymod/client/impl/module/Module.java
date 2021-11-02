@@ -1,8 +1,8 @@
-package wtf.moneymod.client.other.module;
+package wtf.moneymod.client.impl.module;
 
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
-import wtf.moneymod.client.utility.Globals;
+import wtf.moneymod.client.impl.utility.Globals;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

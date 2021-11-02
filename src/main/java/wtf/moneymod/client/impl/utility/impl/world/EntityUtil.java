@@ -1,7 +1,7 @@
-package wtf.moneymod.client.utility.impl.world;
+package wtf.moneymod.client.impl.utility.impl.world;
 
 import net.minecraft.entity.EntityLivingBase;
-import wtf.moneymod.client.utility.Globals;
+import wtf.moneymod.client.impl.utility.Globals;
 
 public enum EntityUtil implements Globals {
     INSTANCE;
