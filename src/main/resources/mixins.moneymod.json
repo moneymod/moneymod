@@ -1,8 +1,9 @@
 {
   "required": true,
   "compatibilityLevel": "JAVA_8",
-  "package": "wtf.moneymod.client.asm.mixins",
+  "package": "wtf.moneymod.client.mixin.mixins",
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
+      "MixinTimer"
   ]
 }
