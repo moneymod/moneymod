@@ -1,6 +1,6 @@
-package wtf.moneymod.client.api.managment.impl;
+package wtf.moneymod.client.api.management.impl;
 
-import wtf.moneymod.client.api.managment.IManager;
+import wtf.moneymod.client.api.management.IManager;
 
 /**
  * @author yoursleep

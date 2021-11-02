@@ -1,13 +1,19 @@
-package wtf.moneymod.client.api.managment.impl;
+package wtf.moneymod.client.api.management.impl;
 
+import club.cafedevelopment.reflectionsettings.container.SettingManager;
 import org.reflections.Reflections;
-import wtf.moneymod.client.api.managment.IManager;
+import wtf.moneymod.client.api.management.IManager;
 import wtf.moneymod.client.impl.module.Module;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+/**
+ * @author cattyn
+ * @since 11/02/21
+ */
 
 public class ModuleManagement implements IManager<ModuleManagement> {
 
@@ -16,7 +22,9 @@ public class ModuleManagement implements IManager<ModuleManagement> {
     @Override public ModuleManagement register() {
         new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
             try {
-                modules.add(c.newInstance());
+                Module module = c.newInstance();
+                modules.add(module);
+                SettingManager.getInstance().acquireFrom(module);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
