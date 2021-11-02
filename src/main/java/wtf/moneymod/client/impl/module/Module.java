@@ -9,6 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * @author cattyn
+ * @since 11/02/21
+ */
+
 public class Module implements Globals {
 
     private final String label, desc;
