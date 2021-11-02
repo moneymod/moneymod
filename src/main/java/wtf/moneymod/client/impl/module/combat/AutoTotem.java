@@ -15,9 +15,9 @@ public class AutoTotem extends Module {
 
     //pig pig pig
 
-    @Setting(id = "Health", clamp = @Clamp(min = 1, max = 36)) int health = 16;
-    @Setting(id = "Mode") Mode mode = Mode.CRYSTAL;
-    @Setting(id = "RightClickGapple") boolean rightClickGapple = true;
+    @Setting(id = "Health", clamp = @Clamp(min = 1, max = 36)) public int health = 16;
+    @Setting(id = "Mode") public Mode mode = Mode.CRYSTAL;
+    @Setting(id = "RightClickGapple") public boolean rightClickGapple = true;
 
     @Override
     public void onTick() {

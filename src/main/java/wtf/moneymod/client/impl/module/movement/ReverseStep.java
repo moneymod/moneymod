@@ -3,7 +3,7 @@ package wtf.moneymod.client.impl.module.movement;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "ReverseStep", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_H)
+@Module.Register( label = "ReverseStep", cat = Module.Category.MOVEMENT)
 public class ReverseStep extends Module {
 
     @Override public void onTick() {

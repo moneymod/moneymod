@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "Warp", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_LCONTROL )
+@Module.Register( label = "Warp", cat = Module.Category.MOVEMENT)
 public class Warp extends Module {
 
     //Pro module

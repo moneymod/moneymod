@@ -5,7 +5,7 @@ import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "Step", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_R)
+@Module.Register( label = "Step", cat = Module.Category.MOVEMENT)
 public class Step extends Module {
     @Setting(id = "Heighttt", clamp = @Clamp(min = 0, max = 4)) public double height = 2;
 

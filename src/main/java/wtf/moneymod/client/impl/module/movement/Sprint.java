@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 
-@Module.Register( label = "Sprint", cat = Module.Category.MOVEMENT, key = Keyboard.KEY_X )
+@Module.Register( label = "Sprint", cat = Module.Category.MOVEMENT)
 public class Sprint extends Module {
 
     @Override public void onTick() {

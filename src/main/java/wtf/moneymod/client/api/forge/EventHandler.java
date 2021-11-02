@@ -1,6 +1,9 @@
 package wtf.moneymod.client.api.forge;
 
+import club.cafedevelopment.reflectionsettings.container.SettingContainer;
+import club.cafedevelopment.reflectionsettings.container.SettingManager;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -9,6 +12,10 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
+import wtf.moneymod.client.impl.utility.impl.render.JColor;
+
+import java.awt.*;
 
 public class EventHandler implements Globals {
 
@@ -28,7 +35,7 @@ public class EventHandler implements Globals {
             for (Command command : Main.getMain().getCommandManagement().getCommands()) {
                 String[] split = temp.split(" ");
                 for (String name : command.getAlias()) {
-                    if (name.equalsIgnoreCase(split[0])) {
+                    if (name.equalsIgnoreCase(split[ 0 ])) {
                         command.execute(split);
                         event.setCanceled(true);
                         mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());
@@ -37,6 +44,18 @@ public class EventHandler implements Globals {
                 }
             }
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
+        for (Module m : Main.getMain().getModuleManager().get()) {
+            for (SettingContainer setting : SettingManager.getInstance().acquireFrom(m)) {
+                if (setting.getValue().getClass().getSimpleName().equalsIgnoreCase("JColor")) {
+                    JColor color = ( JColor ) setting.getValue();
+                    float[] hsb = Color.RGBtoHSB(color.getColor().getRed(), color.getColor().getGreen(), color.getColor().getBlue(), null);
+                    if (color.isRainbow()) color.setColor(ColorUtil.rainbowColor(0, hsb[ 1 ], hsb[ 2 ]));
+                }
+            }
         }
     }
 
