@@ -4,5 +4,6 @@
   "package": "wtf.moneymod.client.asm.mixins",
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
+      "MixinTimer"
   ]
 }

@@ -14,7 +14,7 @@ public class Main {
 
     private static Main main;
     private ModuleManager moduleManager;
-
+    public static float TICK_TIMER = 1;
     public void init() {
         System.out.println("init");
         moduleManager = new ModuleManager().register();
