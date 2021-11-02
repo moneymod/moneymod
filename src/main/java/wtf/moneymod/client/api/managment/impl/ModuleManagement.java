@@ -2,18 +2,18 @@ package wtf.moneymod.client.api.managment.impl;
 
 import org.reflections.Reflections;
 import wtf.moneymod.client.api.managment.IManager;
-import wtf.moneymod.client.other.module.Module;
+import wtf.moneymod.client.impl.module.Module;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class ModuleManager implements IManager<ModuleManager> {
+public class ModuleManagement implements IManager<ModuleManagement> {
 
     ArrayList<Module> modules = new ArrayList<>();
 
-    @Override public ModuleManager register() {
+    @Override public ModuleManagement register() {
         new Reflections("wtf.moneymod.client.other.module").getSubTypesOf(Module.class).forEach(c -> {
             try {
                 modules.add(c.newInstance());
