@@ -1,0 +1,133 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+
+group = "wtf.moneymod"
+archivesBaseName = "moneymod"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    runDir = 'run'
+    mappings = "stable_39"
+    coreMod = 'wtf.moneymod.client.mixin.Loader'
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
+    maven {
+        name = "minecraft"
+        url "https://libraries.minecraft.net"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") { // do NOT update this to 8.0 or above, it breaks compatibility with future client
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core' // we want to exclude this as well because 0.7.11 includes it too new for MC
+    }
+    compile 'club.minnced:java-discord-rpc:2.0.2'
+    compile 'com.github.CafeDevelopment:ReflectionSettings:1.0-SNAPSHOT'
+    compile(group: 'org.reflections', name: 'reflections', version: '0.9.11') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+}
+
+shadowJar {
+    dependencies {
+        include(dependency('org.spongepowered:mixin'))
+        include(dependency('club.minnced:java-discord-rpc'))
+        include(dependency('org.reflections:reflections'))
+        include(dependency('org.javassist:javassist'))
+        include('com.github.CafeDevelopment:ReflectionSettings')
+    }
+    manifest {
+        attributes(
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                "FMLCorePlugin": 'wtf.moneymod.client.mixin.Loader',
+                "TweakOrder": 0,
+                'FMLCorePluginContainsFMLMod': 'true',
+                'ForceLoadAsMod': 'true',
+                "MixinConfigs": 'mixins.moneymod.json',
+        )
+    }
+    exclude 'dummyThing'
+    exclude 'LICENSE.txt'
+    classifier = 'release'
+}
+
+mixin {
+    defaultObfuscationEnv searge
+    add sourceSets.main, 'mixins.moneymod.refmap.json'
+}
+
+reobf {
+    shadowJar {
+        mappingType = 'SEARGE'
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                "FMLCorePlugin": 'wtf.moneymod.client.mixin.Loader',
+                "TweakOrder": 0,
+                "MixinConfigs": 'mixins.moneymod.json',
+        )
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task copyDeps(type: Copy) {
+    from configurations.runtime
+    into 'build/lib'
+}
+
+build.dependsOn(shadowJar)
