@@ -17,6 +17,7 @@ public class Warp extends Module {
     //pov when you not pasting ^
 
     int delay;
+
     @Override public void onTick() {
         if (mode == Mode.TIMER) {
             delay++;

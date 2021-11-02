@@ -14,7 +14,7 @@ public class ModuleManagement implements IManager<ModuleManagement> {
     ArrayList<Module> modules = new ArrayList<>();
 
     @Override public ModuleManagement register() {
-        new Reflections("wtf.moneymod.client.other.module").getSubTypesOf(Module.class).forEach(c -> {
+        new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
             try {
                 modules.add(c.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
