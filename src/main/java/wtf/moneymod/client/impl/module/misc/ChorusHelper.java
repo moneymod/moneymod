@@ -28,6 +28,7 @@ public class ChorusHelper extends Module {
     Queue<CPacketPlayer> packets = new LinkedList<>();
     Queue<CPacketConfirmTeleport> packetss = new LinkedList<>();
     SPacketPlayerPosLook serverPos;
+    BlockPos playerPos;
     @Setting(id = "Render") public boolean render = true;
     @Setting(id = "Color" ) public JColor color = new JColor(0, 255, 0, true);
 
@@ -36,7 +37,7 @@ public class ChorusHelper extends Module {
         checkChorus = false;
         hackPacket = false;
         posTp = false;
-        serverPos = null;
+        playerPos = null;
     }
 
 
@@ -56,14 +57,20 @@ public class ChorusHelper extends Module {
     public void doTeleport(){
         checkChorus = false;
         hackPacket = true;
-        serverPos = null;
+        playerPos = null;
+        sendPackets();
+    }
+    public void sendPackets() {
         while (!packets.isEmpty()) {
             mc.player.connection.sendPacket(packets.poll());
         }
         while (!packetss.isEmpty()) {
             mc.player.connection.sendPacket(packetss.poll());
         }
+        hackPacket = false;
+        checkChorus = false;
     }
+
 
 
 
@@ -99,7 +106,8 @@ public class ChorusHelper extends Module {
     }
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
-        if (serverPos != null && checkChorus) {
+        if (playerPos != null && checkChorus) {
+            playerPos = new BlockPos(serverPos.getX(), serverPos.getY(),serverPos.getZ());
             Renderer3D.drawBoxESP(new BlockPos(serverPos.getX(), serverPos.getY(), serverPos.getZ()), color.getColor(), 0.2f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 2);
         }
     }
