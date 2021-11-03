@@ -66,7 +66,10 @@ public class SliderButton extends Component {
         double inc = setting.getValue().getClass().getSimpleName().equalsIgnoreCase("Integer") ? 1 : 0.1;
         renderWidth = 104 * ((inc == 1 ? ( int ) setting.getValue() : ( double ) setting.getValue()) - min) / (max - min);
         if (dragging) {
-            if (diff == 0) setting.setValue(setting.getMin());
+            if (diff == 0){
+                if (inc == 1) setting.setValue((int) setting.getMin());
+                else setting.setValue(setting.getMin());
+            }
             else {
                 final double newValue = round(diff / 104 * (max - min) + min, 1);
                 double precision = 1.0D / inc;
