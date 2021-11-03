@@ -6,6 +6,7 @@ import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.CommandManagement;
 import wtf.moneymod.client.api.management.impl.ConfigManager;
 import wtf.moneymod.client.api.management.impl.ModuleManagement;
+import wtf.moneymod.client.api.management.impl.PacketManagement;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.eventhandler.EventBus;
 
@@ -41,6 +42,7 @@ public class Main {
         screen = new Screen();
         ConfigManager.getInstance().load();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
     }
 
