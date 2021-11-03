@@ -70,7 +70,7 @@ shadowJar {
         include(dependency('club.minnced:java-discord-rpc'))
         include(dependency('org.reflections:reflections'))
         include(dependency('org.javassist:javassist'))
-        include('com.github.CafeDevelopment:ReflectionSettings')
+        include(dependency('com.github.CafeDevelopment:ReflectionSettings'))
     }
     manifest {
         attributes(
