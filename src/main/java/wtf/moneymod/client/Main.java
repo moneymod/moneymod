@@ -5,6 +5,7 @@ import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.CommandManagement;
 import wtf.moneymod.client.api.management.impl.ConfigManager;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.management.impl.ModuleManagement;
 import wtf.moneymod.client.impl.ui.click.Screen;
 
