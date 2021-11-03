@@ -34,7 +34,7 @@ public class ModeButton extends Component {
         this.modes = new ArrayList<>();
         int off = 12;
         for (Enum e : (( Enum ) setting.getValue()).getClass().getEnumConstants()) {
-            modes.add(new SubMode(this, SettingUtils.getProperName(e), off));
+            modes.add(new SubMode(this, SettingUtils.INSTANCE.getProperName(e), off));
             off += 12;
         }
     }
@@ -47,7 +47,7 @@ public class ModeButton extends Component {
         modes.forEach(v -> v.mouseClicked(mouseX, mouseY, button));
         if (isHovered(mouseX, mouseY) && this.button.open) {
             if (button == 0) {
-                setting.setValue(SettingUtils.increaseEnum(setting.getValue()));
+                setting.setValue(SettingUtils.INSTANCE.increaseEnum(setting.getValue()));
             }
             if (button == 1) {
                 open = !open;
@@ -65,7 +65,7 @@ public class ModeButton extends Component {
     @Override public void render(int mouseX, int mouseY) {
         Gui.drawRect(button.panel.getX(), button.panel.getY() + offset, button.panel.getX() + button.panel.getWidth(), button.panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
         mc.fontRenderer.drawStringWithShadow(setting.getId(), button.panel.getX() + 5, button.panel.getY() + offset + 2, -1);
-        mc.fontRenderer.drawStringWithShadow(SettingUtils.getProperName(setting.getValue()), button.panel.getX() + button.panel.getWidth() - 5 - mc.fontRenderer.getStringWidth(SettingUtils.getProperName(setting.getValue())), button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 1 : 2) : 2), -1);
+        mc.fontRenderer.drawStringWithShadow(SettingUtils.INSTANCE.getProperName(setting.getValue()), button.panel.getX() + button.panel.getWidth() - 5 - mc.fontRenderer.getStringWidth(SettingUtils.INSTANCE.getProperName(setting.getValue())), button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 1 : 2) : 2), -1);
         if (open) modes.forEach(m -> m.render(mouseX, mouseY));
     }
 

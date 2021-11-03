@@ -5,6 +5,7 @@
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
     "MixinNetworkManager",
+    "MixinMinecraft",
     "MixinTimer"
   ]
 }

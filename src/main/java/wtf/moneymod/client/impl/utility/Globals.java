@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.utility;
 
+import com.google.gson.Gson;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -10,6 +11,7 @@ import net.minecraft.client.Minecraft;
 public interface Globals {
 
     Minecraft mc = Minecraft.getMinecraft();
+    Gson gson = new Gson( );
 
     default boolean nullCheck() {
         return mc.player == null || mc.world == null;
