@@ -2,6 +2,7 @@ package wtf.moneymod.client.impl.module;
 
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.utility.Globals;
 
 import java.lang.annotation.ElementType;
@@ -67,6 +68,7 @@ public class Module implements Globals {
         toggled = true;
         onToggle();
         onEnable();
+        Main.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -74,6 +76,7 @@ public class Module implements Globals {
         toggled = false;
         onToggle();
         onDisable();
+        Main.EVENT_BUS.unregister(this);
         MinecraftForge.EVENT_BUS.unregister(this);
     }
 

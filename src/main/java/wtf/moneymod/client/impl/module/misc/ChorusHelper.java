@@ -16,6 +16,8 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -80,23 +82,22 @@ public class ChorusHelper extends Module {
         }
     }
 
-    @SubscribeEvent
-    public void receive(PacketEvent.Send event) {
-        if (event.getPacket() instanceof CPacketConfirmTeleport && checkChorus) {
-            packetss.add((CPacketConfirmTeleport) event.getPacket());
-            event.setCanceled(true);
+    @Handler public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
+        if (e.getPacket() instanceof CPacketConfirmTeleport && checkChorus) {
+            packetss.add((CPacketConfirmTeleport) e.getPacket());
+            e.cancel();
         }
-        if (event.getPacket() instanceof CPacketPlayer && checkChorus) {
-            packets.add((CPacketPlayer) event.getPacket());
-            event.setCanceled(true);
+        if (e.getPacket() instanceof CPacketPlayer && checkChorus) {
+            packets.add((CPacketPlayer) e.getPacket());
+            e.cancel();
         }
-    }
-    @SubscribeEvent
-    public void send(PacketEvent.Receive event) {
-        if (event.getPacket() instanceof SPacketPlayerPosLook) {
-            serverPos = (SPacketPlayerPosLook) event.getPacket();
+    });
+
+    @Handler public Listener<PacketEvent.Receive> packeEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
+        if (e.getPacket() instanceof SPacketPlayerPosLook) {
+            serverPos = (SPacketPlayerPosLook) e.getPacket();
         }
-    }
+    });
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
         if (serverPos != null && checkChorus) {

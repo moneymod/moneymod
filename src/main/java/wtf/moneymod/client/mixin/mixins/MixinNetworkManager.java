@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.utility.Globals;
 
@@ -18,8 +19,8 @@ public class MixinNetworkManager implements Globals {
     public void receive( final ChannelHandlerContext context, final Packet<?> packet, final CallbackInfo ci ) {
         if ( mc.player == null && mc.world == null ) return;
         final PacketEvent.Receive event = new PacketEvent.Receive( packet );
-        MinecraftForge.EVENT_BUS.post( event );
-        if ( event.isCanceled( ) ) {
+        Main.EVENT_BUS.dispatch( event );
+        if ( event.isCancelled( ) ) {
             ci.cancel( );
         }
     }
@@ -28,8 +29,8 @@ public class MixinNetworkManager implements Globals {
     public void send( final Packet<?> packet, final CallbackInfo ci ) {
         if ( mc.player == null && mc.world == null ) return;
         final PacketEvent.Send event = new PacketEvent.Send( packet );
-        MinecraftForge.EVENT_BUS.post( event );
-        if ( event.isCanceled( ) ) {
+        Main.EVENT_BUS.dispatch( event );
+        if ( event.isCancelled( ) ) {
             ci.cancel( );
         }
     }
