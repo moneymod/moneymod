@@ -5,9 +5,9 @@ import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.CommandManagement;
 import wtf.moneymod.client.api.management.impl.ConfigManager;
-import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.management.impl.ModuleManagement;
 import wtf.moneymod.client.impl.ui.click.Screen;
+import wtf.moneymod.eventhandler.EventBus;
 
 /**
  * @author cattyn
@@ -24,6 +24,7 @@ public class Main {
     //global values
     private static Main main;
     public static float TICK_TIMER = 1;
+    public static EventBus EVENT_BUS = new EventBus();
 
     //objects
     private Screen screen;
