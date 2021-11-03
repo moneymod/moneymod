@@ -15,30 +15,24 @@ import java.util.stream.Collectors;
  * @since 11/02/21
  */
 
-public class ModuleManagement implements IManager<ModuleManagement> {
-
-    ArrayList<Module> modules = new ArrayList<>();
+public class ModuleManagement extends ArrayList<Module> implements IManager<ModuleManagement> {
 
     @Override public ModuleManagement register() {
         new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
             try {
                 Module module = c.newInstance();
-                modules.add(module);
+                add(module);
                 SettingManager.getInstance().acquireFrom(module);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         });
-        modules.sort(Comparator.comparing(Module::getLabel));
+        sort(Comparator.comparing(Module::getLabel));
         return this;
     }
 
-    public ArrayList<Module> get() {
-        return modules;
-    }
-
     public ArrayList<Module> get(Predicate<Module> predicate) {
-        return modules.stream().filter(predicate).collect(Collectors.toCollection(ArrayList::new));
+        return stream().filter(predicate).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Module> get(Module.Category category) {
@@ -46,7 +40,7 @@ public class ModuleManagement implements IManager<ModuleManagement> {
     }
 
     public Module getFirst(Predicate<Module> predicate) {
-        return modules.stream().filter(predicate).findFirst().orElse(null);
+        return stream().filter(predicate).findFirst().orElse(null);
     }
 
     public Module get(String name) {
