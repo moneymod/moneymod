@@ -19,8 +19,8 @@ import java.awt.*;
 
 public class EventHandler implements Globals {
 
-    @SubscribeEvent public void onInput(InputEvent event) {
-        Main.getMain().getModuleManager().get(m -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == m.getKey()).forEach(Module::toggle);
+    @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
+        Main.getMain().getModuleManager().get(module -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == module.getKey()).forEach(Module::toggle);
     }
 
     @SubscribeEvent public void onTick(TickEvent.ClientTickEvent event) {
