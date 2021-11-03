@@ -36,8 +36,11 @@ public class Warp extends Module {
                 setToggled(false);
             }
         }
+        if (mode == Mode.ALWAYS){
+            Main.TICK_TIMER = ( float ) tick;
+        }
     }
     public enum Mode {
-        SKIP, TIMER
+        TIMER, ALWAYS
     }
 }
