@@ -6,6 +6,7 @@
   "mixins": [
     "MixinNetworkManager",
     "MixinMinecraft",
+    "MixinEntityPlayerSP",
     "MixinTimer"
   ]
 }
