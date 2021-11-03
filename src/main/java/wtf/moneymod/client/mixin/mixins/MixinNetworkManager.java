@@ -15,7 +15,7 @@ import wtf.moneymod.client.impl.utility.Globals;
 public class MixinNetworkManager implements Globals {
 
     @Inject( method = "channelRead0", at = @At( "HEAD" ), cancellable = true )
-    public void onPacketReceive( final ChannelHandlerContext context, final Packet<?> packet, final CallbackInfo ci ) {
+    public void receive( final ChannelHandlerContext context, final Packet<?> packet, final CallbackInfo ci ) {
         if ( mc.player == null && mc.world == null ) return;
         final PacketEvent.Receive event = new PacketEvent.Receive( packet );
         MinecraftForge.EVENT_BUS.post( event );
@@ -25,7 +25,7 @@ public class MixinNetworkManager implements Globals {
     }
 
     @Inject( method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At( "HEAD" ), cancellable = true )
-    public void onPacketSend( final Packet<?> packet, final CallbackInfo ci ) {
+    public void send( final Packet<?> packet, final CallbackInfo ci ) {
         if ( mc.player == null && mc.world == null ) return;
         final PacketEvent.Send event = new PacketEvent.Send( packet );
         MinecraftForge.EVENT_BUS.post( event );
