@@ -2,15 +2,12 @@ package wtf.moneymod.client.impl.module.combat;
 
 import club.cafedevelopment.reflectionsettings.annotation.Clamp;
 import club.cafedevelopment.reflectionsettings.annotation.Setting;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketPlayerDigging;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
+import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,6 +16,8 @@ import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.awt.*;
 
@@ -56,8 +55,7 @@ public class Scout extends Module {
         percent = (long) Math.min((System.currentTimeMillis() - lastHsTime) / (time * 1000L) * 100, 100);
     }
 
-    @SubscribeEvent
-    public void send(PacketEvent.Send event){
+    @Handler public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, event -> {
         if (event.getPacket() instanceof CPacketPlayerDigging){
             CPacketPlayerDigging packet = (CPacketPlayerDigging) event.getPacket();
             if (packet.getAction() == CPacketPlayerDigging.Action.RELEASE_USE_ITEM){
@@ -79,7 +77,7 @@ public class Scout extends Module {
 
             }
         }
-    }
+    });
 
     @SubscribeEvent
     public void onRender2D (RenderGameOverlayEvent.Text event) {

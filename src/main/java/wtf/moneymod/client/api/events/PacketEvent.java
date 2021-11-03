@@ -2,9 +2,8 @@ package wtf.moneymod.client.api.events;
 
 import net.minecraft.network.Packet;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import wtf.moneymod.eventhandler.event.Event;
 
-@Cancelable
 public class PacketEvent extends Event {
     private final Packet<?> packet;
 
