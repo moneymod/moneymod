@@ -1,12 +1,16 @@
 package wtf.moneymod.client.api.management.impl;
 
+import club.cafedevelopment.reflectionsettings.container.SettingContainer;
 import club.cafedevelopment.reflectionsettings.container.SettingManager;
+import com.google.common.reflect.ClassPath;
 import org.reflections.Reflections;
 import wtf.moneymod.client.api.management.IManager;
+import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 

@@ -18,7 +18,13 @@ import java.util.stream.Collectors;
 public class ModuleCommand extends Command {
 
     public ModuleCommand() {
-        super("<ModuleName> || <ModuleName> <SettingName/List> || <ModuleName> <SettingName> <NewValue>", Main.getMain().getModuleManager().get().stream().map(m -> m.getLabel().toLowerCase()).toArray(String[]::new));
+        super("<ModuleName> || <ModuleName> <SettingName/List> || <ModuleName> <SettingName> <NewValue>",
+                Main
+                        .getMain()
+                        .getModuleManager()
+                        .stream()
+                        .map(m -> m.getLabel().toLowerCase())
+                        .toArray(String[]::new));
     }
 
     @Override public void execute(String[] args) {

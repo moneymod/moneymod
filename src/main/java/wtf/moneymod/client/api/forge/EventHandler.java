@@ -32,7 +32,7 @@ public class EventHandler implements Globals {
         String message = event.getMessage();
         if (message.startsWith(Main.getMain().getCommandManagement().getPrefix())) {
             String temp = message.substring(1);
-            for (Command command : Main.getMain().getCommandManagement().getCommands()) {
+            for (Command command : Main.getMain().getCommandManagement()) {
                 String[] split = temp.split(" ");
                 for (String name : command.getAlias()) {
                     if (name.equalsIgnoreCase(split[ 0 ])) {
@@ -48,10 +48,10 @@ public class EventHandler implements Globals {
     }
 
     @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
-        for (Module m : Main.getMain().getModuleManager().get()) {
+        for (Module m : Main.getMain().getModuleManager()) {
             for (SettingContainer setting : SettingManager.getInstance().acquireFrom(m)) {
                 if (setting.getValue().getClass().getSimpleName().equalsIgnoreCase("JColor")) {
-                    JColor color = ( JColor ) setting.getValue();
+                    JColor color = setting.getValue();
                     float[] hsb = Color.RGBtoHSB(color.getColor().getRed(), color.getColor().getGreen(), color.getColor().getBlue(), null);
                     if (color.isRainbow()) color.setColor(ColorUtil.rainbowColor(0, hsb[ 1 ], hsb[ 2 ]));
                 }
