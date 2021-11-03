@@ -107,7 +107,7 @@ public class ChorusHelper extends Module {
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
         if (playerPos != null && checkChorus) {
-            playerPos = new BlockPos(serverPos.getX(), serverPos.getY(),serverPos.getZ())
+            playerPos = new BlockPos(serverPos.getX(), serverPos.getY(),serverPos.getZ());
             Renderer3D.drawBoxESP(new BlockPos(serverPos.getX(), serverPos.getY(), serverPos.getZ()), color.getColor(), 0.2f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 2);
         }
     }
