@@ -17,7 +17,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 
 import java.awt.*;
@@ -34,7 +33,6 @@ public class Scout extends Module {
     int ticks;
     private long lastHsTime;
     long percent;
-    private final Timer timer = new Timer( );
 
 
     @Override public void onToggle() {
