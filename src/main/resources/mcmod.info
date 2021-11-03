@@ -1,16 +1,10 @@
-[
-{
-  "modid": "moneymod",
-  "name": "MoneyMod",
-  "description": "",
-  "version": "v0",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
-]
+[{
+    "modid": "moneymod",
+    "name": "MoneyMod+3",
+    "description": "rich hack for minecraft 1.12.2 (i hate dis version pls kys)",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://plutonium.wtf/",
+    "authorList": ["cattyn", "pighax "],
+    "screenshots": []
+}]

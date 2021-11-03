@@ -16,8 +16,8 @@ public final class FriendManagement extends ArrayList<String> implements IManage
         return INSTANCE;
     }
 
-    public boolean is(String name ) {
-        return stream( ).anyMatch( friend -> friend.equalsIgnoreCase( name ) );
+    public boolean is(String name) {
+        return stream().anyMatch(friend -> friend.equalsIgnoreCase(name));
     }
 
 }
