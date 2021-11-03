@@ -7,7 +7,7 @@ import wtf.moneymod.client.impl.module.Module;
 
 @Module.Register( label = "Step", cat = Module.Category.MOVEMENT)
 public class Step extends Module {
-    @Setting(id = "Heighttt", clamp = @Clamp(min = 0, max = 4)) public double height = 2;
+    @Setting(id = "Height", clamp = @Clamp(min = 0, max = 4)) public double height = 2;
 
     @Override public void onTick() {
         if (!mc.player.isInLava() && !mc.player.isInWater()){

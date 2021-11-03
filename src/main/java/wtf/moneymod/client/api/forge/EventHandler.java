@@ -53,7 +53,9 @@ public class EventHandler implements Globals {
                 if (setting.getValue().getClass().getSimpleName().equalsIgnoreCase("JColor")) {
                     JColor color = setting.getValue();
                     float[] hsb = Color.RGBtoHSB(color.getColor().getRed(), color.getColor().getGreen(), color.getColor().getBlue(), null);
-                    if (color.isRainbow()) color.setColor(ColorUtil.rainbowColor(0, hsb[ 1 ], hsb[ 2 ]));
+                    if (color.isRainbow()) {
+                        color.setColor(ColorUtil.injectAlpha(ColorUtil.rainbowColor(0, hsb[ 1 ], hsb[ 2 ]), color.getColor().getAlpha()));
+                    }
                 }
             }
         }
