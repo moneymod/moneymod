@@ -3,14 +3,13 @@ package wtf.moneymod.client.impl.module.render;
 import club.cafedevelopment.reflectionsettings.annotation.Clamp;
 import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.Timer;
+import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 

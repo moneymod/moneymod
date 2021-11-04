@@ -1,4 +1,4 @@
-package wtf.moneymod.client.impl.utility;
+package wtf.moneymod.client.impl.utility.impl.misc;
 
 public class Timer {
     private long time;

@@ -1,9 +1,7 @@
 package wtf.moneymod.client.impl.module.misc;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
 import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemChorusFruit;
 import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
@@ -13,7 +11,6 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 import wtf.moneymod.eventhandler.listener.Handler;

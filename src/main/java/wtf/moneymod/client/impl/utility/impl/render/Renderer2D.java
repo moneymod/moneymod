@@ -166,7 +166,6 @@ public class Renderer2D {
         drawLine( right, top + smooth, right, bottom - smooth, t, color.getRGB( ) );
         drawLine( left + smooth, bottom, right - smooth, bottom, t, color.getRGB( ) );
         drawLine( left, top + smooth, left, bottom - smooth, t, color.getRGB( ) );
-        //( int ) left + smooth, ( int ) top + smooth, smooth
         drawPolygonPartOutline( left + smooth, top + smooth, smooth, 0, t, color.getRGB( ) );
         drawPolygonPartOutline( right - smooth, top + smooth, smooth, 3, t, color.getRGB( ) );
         drawPolygonPartOutline( right - smooth,  bottom - smooth, smooth, 2, t, color.getRGB( ) );

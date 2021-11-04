@@ -7,6 +7,8 @@
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinEntityPlayerSP",
-    "MixinTimer"
+    "MixinTimer",
+    "MixinPlayerControllerMP",
+    "MixinBlock"
   ]
 }

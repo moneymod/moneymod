@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.Timer;
+import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;

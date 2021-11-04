@@ -50,7 +50,7 @@ public class SelfFill extends Module {
             ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST), false);
             offsets.forEach(offset -> mc.getConnection().sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, true)));
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-            BlockUtil.placeBlock(startPos);
+            BlockUtil.INSTANCE.placeBlock(startPos);
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + height, mc.player.posZ, false));
             ItemUtil.switchToHotbarSlot(startSlot, false);
