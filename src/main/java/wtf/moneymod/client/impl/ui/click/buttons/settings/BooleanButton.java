@@ -6,6 +6,7 @@ import scala.reflect.runtime.Settings;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
+import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 
 import java.awt.*;
@@ -44,8 +45,7 @@ public class BooleanButton extends Component {
     }
 
     @Override public void render(int mouseX, int mouseY) {
-        Gui.drawRect(button.panel.getX(), button.panel.getY() + offset, button.panel.getX() + button.panel.getWidth(), button.panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(setting.getId(), button.panel.getX() + 5, button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 1 : 2) : 2), setting.getValue() ? (( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).color.getColor().getRGB() : new Color(160, 160, 160).getRGB());
+        Screen.abstractTheme.drawBooleanButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(),12, isHovered);
     }
 
     public boolean isHovered(final double x, final double y) {

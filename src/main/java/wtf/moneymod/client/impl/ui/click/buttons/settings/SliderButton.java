@@ -80,9 +80,7 @@ public class SliderButton extends Component {
     }
 
     @Override public void render(int mouseX, int mouseY) {
-        Gui.drawRect(button.panel.getX(), button.panel.getY() + offset, button.panel.getX() + button.panel.getWidth(), button.panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        Gui.drawRect(button.panel.getX() + 3, button.panel.getY() + offset + 11, ( int ) (button.panel.getX() + 3 + renderWidth), button.panel.getY() + offset + 10, isHovered ? Screen.color.darker().getRGB() : Screen.color.getRGB());
-        mc.fontRenderer.drawStringWithShadow(setting.getId() + ": " + ChatFormatting.GRAY + setting.getValue(), button.panel.getX() + 5, button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 0 : 1.5f) : 1.5f), isHovered ? new Color(170, 170, 170).getRGB() : -1);        //FontUtil.drawText(String.valueOf(round(setting.getValue(), setting.getDecimalPlaces())), button.panel.getX() + button.panel.getWidth() - 1 - FontUtil.getTextWidth(String.valueOf(round(setting.getValue(), setting.getDecimalPlaces()))), button.panel.getY() + offset + 1, isHovered ? new Color(170, 170, 170).getRGB() : -1);
+        Screen.abstractTheme.drawSliderButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(),12, renderWidth, isHovered);
     }
 
     public boolean isHovered(final double x, final double y) {

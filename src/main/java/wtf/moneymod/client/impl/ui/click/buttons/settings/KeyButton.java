@@ -12,7 +12,7 @@ import java.awt.*;
 public class KeyButton extends Component {
 
     private boolean binding;
-    private final ModuleButton button;
+    public final ModuleButton button;
     private boolean isHovered;
     private int offset;
     private int x;
@@ -81,4 +81,9 @@ public class KeyButton extends Component {
     public boolean isHovered( final double x, final double y ) {
         return x > this.x && x < this.x + 110 && y > this.y && y < this.y + 12;
     }
+
+    public boolean isBinding() {
+        return binding;
+    }
+
 }

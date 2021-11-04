@@ -46,15 +46,9 @@ public class Panel implements Globals {
     }
 
     public void renderPanel(int mouseX, int mouseY) {
-        ScaledResolution sr = new ScaledResolution(mc);
 
-        ClickGui clickgui = ( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class);
-        Gui.drawRect(x - 2, y - 2, x + width + 2, y, new Color(255, 255, 255, 90).getRGB());
-        Gui.drawRect(x, y, x + width, y + barHeight - 2, new Color(0, 0, 0, 210).getRGB());
-        if (open)
-            Gui.drawRect(x, y + barHeight - 2, x + width, y + barHeight, new Color(255, 255, 255, 90).getRGB());
-        mc.fontRenderer.drawStringWithShadow(category.name() + ChatFormatting.WHITE + " (" + components.size() + ")", x + 3, y + 4, Screen.color.getRGB());
-        mc.fontRenderer.drawStringWithShadow(open ? "-" : "+", x + width - 10, y + 4, Color.GRAY.getRGB());
+        Screen.abstractTheme.drawHeader(this, x, y, width, barHeight, isHover(mouseX, mouseY));
+
         if (open && !components.isEmpty()) {
             components.forEach(component -> {
                 component.render(mouseX, mouseY);
@@ -63,10 +57,8 @@ public class Panel implements Globals {
                 }
             });
         }
-        int localHeight = open ? height : barHeight - 2;
-        Gui.drawRect(x - 2, y, x, y + localHeight, new Color(255, 255, 255, 90).getRGB());
-        Gui.drawRect(x + width, y, x + width + 2, y + localHeight, new Color(255, 255, 255, 90).getRGB());
-        Gui.drawRect(x - 2, y + localHeight, x + width + 2, y + localHeight + 2, new Color(255, 255, 255, 90).getRGB());
+
+        Screen.abstractTheme.drawPanelOutline(this, x, y, width, height, isHover(mouseX, mouseY));
     }
 
     public ArrayList<Component> getComponents() {
@@ -123,6 +115,10 @@ public class Panel implements Globals {
 
     public boolean isHover(final double x, final double y) {
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.barHeight;
+    }
+
+    public int getBarHeight() {
+        return barHeight;
     }
 
 }

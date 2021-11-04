@@ -10,7 +10,9 @@ import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
+import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
+import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 
@@ -43,28 +45,47 @@ public class ColorButton extends Component {
         isHovered = isHovered(mouseX, mouseY);
         y = button.panel.getY() + offset;
         x = button.panel.getX();
+
+        float[] hsb = new float[] {
+                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 0 ],
+                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 1 ],
+                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 2 ]
+        };
+
+        int alphas = (( JColor ) setting.getValue()).getColor().getAlpha();
+
+        boolean picker = mouseX > x + 2 && mouseX < x + 108 && mouseY > y + 18 && mouseY < y + 126,
+                hue = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 126 && mouseY < y + 134,
+                alpha = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 134 && mouseY < y + 141;
+
+        if (dragging) {
+            if (picker) {
+                float restrictedX = ( float ) Math.min(Math.max(x + 2, mouseX), x + 2 + 106);
+                float restrictedY = ( float ) Math.min(Math.max(y + 18, mouseY), y + 18 + 106);
+
+                hsb[ 1 ] = Math.max(Math.min((restrictedX - ( float ) x + 2) / 106, 1), 0);
+                hsb[ 2 ] = Math.max(Math.min(1f - (restrictedY - ( float ) (this.y + 18)) / 108, 1), 0);
+            } else if (hue && !(( JColor ) setting.getValue()).isRainbow()) {
+                float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
+
+                hsb[ 0 ] = Math.min((restrictedX - ( float ) x - 2) / 104, 1);
+            } else if (alpha) {
+                float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
+                alphas = ( int ) (Math.min(1 - (restrictedX - ( float ) x - 2) / 104, 1) * 255);
+            }
+
+        }
+
+        color = ColorUtil.injectAlpha(new Color(Color.HSBtoRGB(hsb[ 0 ], hsb[ 1 ], hsb[ 2 ])), alphas);
+
     }
 
     @Override
     public void render(int mouseX, int mouseY) {
-        Gui.drawRect(button.panel.getX(), button.panel.getY() + offset, button.panel.getX() + button.panel.getWidth(), button.panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-
-        Renderer2D.drawVGradientRect(button.panel.getX() + button.panel.getWidth() - 12,
-                button.panel.getY() + offset + 2,
-                button.panel.getX() + button.panel.getWidth() - 4,
-                button.panel.getY() + offset + 10,
-                injectAlpha((( JColor ) setting.getValue()).getColor(), 255).getRGB(), (( JColor ) setting.getValue()).getColor().getRGB());
-
-        Renderer2D.drawOutline(button.panel.getX() + button.panel.getWidth() - 12,
-                button.panel.getY() + offset + 2,
-                button.panel.getX() + button.panel.getWidth() - 4,
-                button.panel.getY() + offset + 10,
-                1f, new Color(255, 255, 255, 90).getRGB());
-
-        mc.fontRenderer.drawStringWithShadow(setting.getId(), button.panel.getX() + 5, button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 0 : 1) : 1), -1);
+        Screen.abstractTheme.drawColorButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 12, isHovered);
 
         if (open) {
-            drawPicker(mouseX, mouseY);
+            Screen.abstractTheme.drawPickerButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 142, isHovered);
             (( JColor ) setting.getValue()).setColor(color);
         }
 

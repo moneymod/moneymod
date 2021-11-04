@@ -34,7 +34,7 @@ public class ModuleButton extends Component {
         int settingY = this.offset + 12;
         if (!SettingManager.getInstance().acquireFrom(module).isEmpty()) {
             for (SettingContainer s : SettingManager.getInstance().acquireFrom(module)) {
-                if(s.getValue().getClass().isEnum()) {
+                if (s.getValue().getClass().isEnum()) {
                     components.add(new ModeButton(s, this, settingY));
                     continue;
                 }
@@ -114,15 +114,10 @@ public class ModuleButton extends Component {
     }
 
     @Override public void render(int mouseX, int mouseY) {
-        Gui.drawRect(panel.getX(), panel.getY() + offset, panel.getX() + panel.getWidth(), panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(module.getLabel(), panel.getX() + 3, panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 1 : 2) : 2), module.isToggled() ? Screen.color.getRGB() : -1);
 
-        if (open) {
-            components.forEach(component -> component.render(mouseX, mouseY));
-            openText = "-";
-        } else openText = "+";
+        Screen.abstractTheme.drawModuleButton(this, panel.getX(), panel.getY() + offset, panel.getWidth(), 12, isHovered(mouseX, mouseY));
 
-        mc.fontRenderer.drawStringWithShadow(openText, panel.getX() + panel.getWidth() - 10, panel.getY() + offset + 2, -1);
+        if (open) components.forEach(component -> component.render(mouseX, mouseY));
 
         if (isHovered)
             Main.getMain().getScreen().getDescriptionManager().update(module.getDesc(), mouseX, mouseY);

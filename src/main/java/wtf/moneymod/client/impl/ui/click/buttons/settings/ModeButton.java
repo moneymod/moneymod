@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Gui;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
+import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.sub.SubMode;
 import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
@@ -63,9 +64,8 @@ public class ModeButton extends Component {
     }
 
     @Override public void render(int mouseX, int mouseY) {
-        Gui.drawRect(button.panel.getX(), button.panel.getY() + offset, button.panel.getX() + button.panel.getWidth(), button.panel.getY() + offset + 12, isHovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(setting.getId(), button.panel.getX() + 5, button.panel.getY() + offset + 2, -1);
-        mc.fontRenderer.drawStringWithShadow(SettingUtils.INSTANCE.getProperName(setting.getValue()), button.panel.getX() + button.panel.getWidth() - 5 - mc.fontRenderer.getStringWidth(SettingUtils.INSTANCE.getProperName(setting.getValue())), button.panel.getY() + offset + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (isHovered ? 1 : 2) : 2), -1);
+        Screen.abstractTheme.drawModeButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(),12, isHovered);
+
         if (open) modes.forEach(m -> m.render(mouseX, mouseY));
     }
 
