@@ -5,6 +5,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -15,6 +17,8 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 @Module.Register( label = "BurrowBypass", cat = Module.Category.COMBAT)
 public class SelfFillBypass extends Module {
 
+    @Value(value = "Bypass Method") public Mode mode = Mode.PIGBYPASS;
+    @Value(value = "Ticks") @Bounds( min = 10, max = 100) public int ticks = 50;
     BlockPos position;
     int delay, pdelay,stage,jumpdelay,toggledelay;
     boolean jump;
@@ -37,44 +41,53 @@ public class SelfFillBypass extends Module {
     @Override public void onTick() {
 
         if (position != null) {
-            //SHIT CODE MOMENT
-            if (stage == 1) {
-                ChatUtil.INSTANCE.sendMessage("stage = 1");
-                delay++;
-                if (mc.player.onGround) mc.player.jump();
-                Main.TICK_TIMER = 4;
-                if (delay >= 42) {
-                    stage = 2;
-                    delay = 0;
-                    Main.TICK_TIMER = 1;
-                    jump = true;
-                }
-            }
-            if (stage == 2){
-                Main.TICK_TIMER = 1;
-                ChatUtil.INSTANCE.sendMessage("stage = 2");
-                if (mc.player.onGround) mc.player.jump();
-                BlockUtil.INSTANCE.placeBlock(position);
-
-                pdelay++;
-                if (pdelay >= 28){
-                    stage = 3;
-                    pdelay = 0;
-                    Main.TICK_TIMER = 1;
-
-                }
-            }
-            if (stage == 3){
-                ChatUtil.INSTANCE.sendMessage("stage = 3");
-                toggledelay++;
-                Main.TICK_TIMER = 8;
-                if (mc.player.onGround) mc.player.jump();
-                if (toggledelay >= 30) {
-                    mc.player.motionY -= 0.4;
-                    Main.TICK_TIMER = 1;
-                    setToggled(false);
-                }
+            if(mode == Mode.PIGBYPASS){
+                firstmethod();
+            } else {
             }
         }
+    }
+
+    public void firstmethod(){
+        if (stage == 1) {
+            ChatUtil.INSTANCE.sendMessage("stage = 1");
+            delay++;
+            if (mc.player.onGround) mc.player.jump();
+            Main.TICK_TIMER = ticks;
+            if (delay >= 42) {
+                stage = 2;
+                delay = 0;
+                Main.TICK_TIMER = 1;
+                jump = true;
+            }
+        }
+        if (stage == 2){
+            Main.TICK_TIMER = 1;
+            ChatUtil.INSTANCE.sendMessage("stage = 2");
+            if (mc.player.onGround) mc.player.jump();
+            BlockUtil.INSTANCE.placeBlock(position);
+
+            pdelay++;
+            if (pdelay >= 28){
+                stage = 3;
+                pdelay = 0;
+                Main.TICK_TIMER = 1;
+
+            }
+        }
+        if (stage == 3){
+            ChatUtil.INSTANCE.sendMessage("stage = 3");
+            toggledelay++;
+            Main.TICK_TIMER = ticks;
+            if (mc.player.onGround) mc.player.jump();
+            if (toggledelay >= 20) {
+                mc.player.motionY -= 0.4;
+                Main.TICK_TIMER = 1;
+                setToggled(false);
+            }
+        }
+    }
+    public enum Mode{
+        PIGBYPASS, SECONDBYPASS
     }
 }
