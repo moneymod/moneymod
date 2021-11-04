@@ -23,8 +23,8 @@ import java.awt.*;
 @Module.Register( label = "Scout", cat = Module.Category.COMBAT)
 public class Scout extends Module {
 
-    @Setting(id = "Time", clamp = @Clamp(min = 0,max = 8)) public int time = 2;
-    @Setting(id = "Spoof", clamp = @Clamp(min = 0,max = 12)) public int spoof = 6;
+    @Setting(id = "Time", clamp = @Clamp(min = 1,max = 8)) public int time = 2;
+    @Setting(id = "Spoof", clamp = @Clamp(min = 1,max = 12)) public int spoof = 6;
     @Setting(id = "Render") public boolean render = false;
     @Setting(id = "AutoFire") public boolean autoFire = true;
 
