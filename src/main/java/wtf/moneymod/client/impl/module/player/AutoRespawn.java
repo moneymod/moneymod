@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGameOver;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 
-@Module.Register( label = "AutoRespawn", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "AutoRespawn", cat = Module.Category.PLAYER)
 public class AutoRespawn extends Module {
 
     @Setting(id = "DeathCoords") public boolean deathcoords = false;

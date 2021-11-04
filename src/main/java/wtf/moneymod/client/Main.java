@@ -1,12 +1,10 @@
 package wtf.moneymod.client;
 
+import akka.io.TcpListener;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
-import wtf.moneymod.client.api.management.impl.CommandManagement;
-import wtf.moneymod.client.api.management.impl.ConfigManager;
-import wtf.moneymod.client.api.management.impl.ModuleManagement;
-import wtf.moneymod.client.api.management.impl.PacketManagement;
+import wtf.moneymod.client.api.management.impl.*;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.eventhandler.EventBus;
 
@@ -31,6 +29,7 @@ public class Main {
     private Screen screen;
 
     //management
+    private FriendManagement friendManagement;
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
 
@@ -39,6 +38,7 @@ public class Main {
         System.out.println("init");
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
+        friendManagement = new FriendManagement().register();
         screen = new Screen();
         ConfigManager.getInstance().load();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
@@ -57,6 +57,10 @@ public class Main {
 
     public CommandManagement getCommandManagement() {
         return commandManagement;
+    }
+
+    public FriendManagement getFriendManagement() {
+        return friendManagement;
     }
 
     public Screen getScreen() {
