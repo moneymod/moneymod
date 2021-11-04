@@ -21,8 +21,7 @@ public class SubMode extends Component {
     }
 
     @Override public void render( int mouseX, int mouseY ) {
-        Gui.drawRect( modeButton.getButton( ).panel.getX( ), modeButton.getButton( ).panel.getY( ) + modeButton.getOffset( ) + this.offset, modeButton.getButton( ).panel.getX( ) + modeButton.getButton( ).panel.getWidth( ), modeButton.getButton( ).panel.getY( ) + modeButton.getOffset( ) + this.offset + 12, isHover( mouseX, mouseY ) ? new Color( 0, 0, 0, 160 ).getRGB( ) : new Color( 0, 0, 0, 140 ).getRGB( ) );
-        mc.fontRenderer.drawStringWithShadow( mode, ( modeButton.getButton( ).panel.getX( ) + modeButton.getButton( ).panel.getWidth( ) / 2 ) - mc.fontRenderer.getStringWidth( mode ) / 2, modeButton.getButton( ).panel.getY( ) + modeButton.getOffset( ) + this.offset + 2, SettingUtils.INSTANCE.getProperName(modeButton.getSetting().getValue()).equalsIgnoreCase( mode ) ? Screen.color.getRGB( ) : -1 );
+        Screen.abstractTheme.drawSubModeButton(this, mode, modeButton.getButton( ).panel.getX( ), modeButton.getButton( ).panel.getY( ) + modeButton.getOffset( ) + this.offset, modeButton.getButton().panel.getWidth(), 12, isHover(mouseX, mouseY) );
     }
 
     @Override public void mouseClicked( double mouseX, double mouseY, int button ) {
@@ -39,4 +38,13 @@ public class SubMode extends Component {
     public int getOffset( ) {
         return offset;
     }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public ModeButton getModeButton() {
+        return modeButton;
+    }
+
 }
