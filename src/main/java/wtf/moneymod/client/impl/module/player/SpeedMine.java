@@ -27,16 +27,19 @@ import wtf.moneymod.client.mixin.accessors.IPlayerControllerMP;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
+import java.awt.*;
+
 @Module.Register( label = "SpeedMine", cat = Module.Category.PLAYER )
 public class SpeedMine extends Module {
 
+    @Setting( id = "Renderer" ) public RenderMode mode = RenderMode.FADE;
     @Setting( id = "Render" ) public boolean render = true;
     @Setting( id = "Silent" ) public boolean silent = true;
     @Setting( id = "Instant Rebreak" ) public boolean instant = true;
     @Setting( id = "Range", clamp = @Clamp( min = 4, max = 30 ) ) public int range = 16;
     @Setting( id = "Packet Spam", clamp = @Clamp( min = 1, max = 10 ) ) public int spam = 1;
-    @Setting( id = "Color" ) public JColor color = new JColor(255, 0, 0, 160, false);
-    @Setting( id = "Ready Color" ) public JColor readyColor = new JColor(0, 255, 0, 160, false);
+    public Color color = new Color(255, 0, 0, 75);
+    public Color readyColor = new Color(0, 255, 0, 75);
 
     private BlockPos currentPos;
     private final Timer timer = new Timer();
@@ -114,18 +117,28 @@ public class SpeedMine extends Module {
     });
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
-        if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid) return;
+        if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid)
+            return;
         AxisAlignedBB bb = mc.world.getBlockState(currentPos).getSelectedBoundingBox(mc.world, currentPos);
         float progress = getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start);
         if (progress <= 0.1) {
-            Renderer3D.drawBoxESP(bb, readyColor.getColor(), 1f, true, true, readyColor.getColor().getAlpha(), 255);
+            Renderer3D.drawBoxESP(bb, readyColor, 1f, true, true, readyColor.getAlpha(), 255);
         } else {
-            Renderer3D.INSTANCE.drawProgressBox(bb, progress, color.getColor());
+            if (mode == RenderMode.FADE) {
+                Renderer3D.drawBoxESP(bb, new Color(( int ) (color.getRed() * progress), ( int ) (readyColor.getGreen() * (1 - progress)), color.getBlue()), 1f, true, true, color.getAlpha(), 255);
+            } else {
+                Renderer3D.INSTANCE.drawProgressBox(bb, progress, color);
+            }
         }
     }
 
     float getBlockProgress(BlockPos blockPos, ItemStack stack, long start) {
         return ( float ) MathUtil.INSTANCE.clamp(1 - ((System.currentTimeMillis() - start) / ( double ) ToolUtil.INSTANCE.time(blockPos, stack)), 0, 1);
+    }
+
+    public enum RenderMode {
+        FADE,
+        EXPAND
     }
 
 }
