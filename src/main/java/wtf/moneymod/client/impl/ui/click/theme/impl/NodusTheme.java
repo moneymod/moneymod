@@ -1,10 +1,10 @@
 package wtf.moneymod.client.impl.ui.click.theme.impl;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.Gui;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.Screen;
@@ -54,16 +54,16 @@ public class NodusTheme extends AbstractTheme {
         mc.fontRenderer.drawStringWithShadow(openText, x + w - 10, y + 2, -1);
     }
 
-    @Override public void drawBooleanButton(SettingContainer container, int x, int y, int w, int h, boolean hovered) {
+    @Override public void drawBooleanButton(Option<Boolean> container, int x, int y, int w, int h, boolean hovered) {
         drawRect(x, y, x + w, y + 12, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getId(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), container.getValue() ? (( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).color.getColor().getRGB() : new Color(160, 160, 160).getRGB());
+        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), container.getValue() ? (( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).color.getColor().getRGB() : new Color(160, 160, 160).getRGB());
     }
 
     @Override
-    public void drawSliderButton(SettingContainer container, int x, int y, int w, int h, double sliderWidth, boolean hovered) {
+    public void drawSliderButton(Option<Number> container, int x, int y, int w, int h, double sliderWidth, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
         Gui.drawRect(x + 3, y + h - 1, ( int ) (x + 3 + sliderWidth), y + 10, hovered ? Screen.color.darker().getRGB() : Screen.color.getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getId() + ": " + ChatFormatting.GRAY + container.getValue(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 0 : 1.5f) : 1.5f), hovered ? new Color(170, 170, 170).getRGB() : -1);
+        mc.fontRenderer.drawStringWithShadow(container.getName() + ": " + ChatFormatting.GRAY + container.getValue(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 0 : 1.5f) : 1.5f), hovered ? new Color(170, 170, 170).getRGB() : -1);
     }
 
     @Override public void drawKeyButton(KeyButton button, int x, int y, int w, int h, boolean hovered) {
@@ -94,9 +94,9 @@ public class NodusTheme extends AbstractTheme {
         }
     }
 
-    @Override public void drawModeButton(SettingContainer container, int x, int y, int w, int h, boolean hovered) {
+    @Override public void drawModeButton(Option<Enum> container, int x, int y, int w, int h, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getId(), x + 5, y + 2, -1);
+        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + 2, -1);
         mc.fontRenderer.drawStringWithShadow(SettingUtils.INSTANCE.getProperName(container.getValue()), x + w - 5 - mc.fontRenderer.getStringWidth(SettingUtils.INSTANCE.getProperName(container.getValue())), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
     }
 
@@ -105,7 +105,7 @@ public class NodusTheme extends AbstractTheme {
         mc.fontRenderer.drawStringWithShadow(current, (x + w / 2f) - mc.fontRenderer.getStringWidth(current) / 2f, y + 2, SettingUtils.INSTANCE.getProperName(container.getModeButton().getSetting().getValue()).equalsIgnoreCase(current) ? Screen.color.getRGB() : -1);
     }
 
-    @Override public void drawColorButton(SettingContainer container, int x, int y, int w, int h, boolean hovered) {
+    @Override public void drawColorButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
 
         drawVGradientRect(x + w - h,
@@ -120,14 +120,14 @@ public class NodusTheme extends AbstractTheme {
                 y + 10,
                 1f, new Color(255, 255, 255, 90).getRGB());
 
-        mc.fontRenderer.drawStringWithShadow(container.getId(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
+        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
     }
 
-    @Override public void drawPickerButton(SettingContainer container, int x, int y, int w, int h, boolean hovered) {
+    @Override public void drawPickerButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered) {
         float[] hsb = new float[] {
-                Color.RGBtoHSB((( JColor ) container.getValue()).getColor().getRed(), (( JColor ) container.getValue()).getColor().getGreen(), (( JColor ) container.getValue()).getColor().getBlue(), null)[ 0 ],
-                Color.RGBtoHSB((( JColor ) container.getValue()).getColor().getRed(), (( JColor ) container.getValue()).getColor().getGreen(), (( JColor ) container.getValue()).getColor().getBlue(), null)[ 1 ],
-                Color.RGBtoHSB((( JColor ) container.getValue()).getColor().getRed(), (( JColor ) container.getValue()).getColor().getGreen(), (( JColor ) container.getValue()).getColor().getBlue(), null)[ 2 ]
+                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 0 ],
+                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 1 ],
+                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 2 ]
         };
 
         int alphas = (( JColor ) container.getValue()).getColor().getAlpha();

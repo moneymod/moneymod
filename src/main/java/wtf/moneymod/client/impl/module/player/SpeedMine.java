@@ -1,7 +1,5 @@
 package wtf.moneymod.client.impl.module.player;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -15,6 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.BreakBlockEvent;
 import wtf.moneymod.client.api.events.DamageBlockEvent;
 import wtf.moneymod.client.api.management.impl.PacketManagement;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
@@ -32,12 +32,12 @@ import java.awt.*;
 @Module.Register( label = "SpeedMine", cat = Module.Category.PLAYER )
 public class SpeedMine extends Module {
 
-    @Setting( id = "Renderer" ) public RenderMode mode = RenderMode.FADE;
-    @Setting( id = "Render" ) public boolean render = true;
-    @Setting( id = "Silent" ) public boolean silent = true;
-    @Setting( id = "Instant Rebreak" ) public boolean instant = true;
-    @Setting( id = "Range", clamp = @Clamp( min = 4, max = 30 ) ) public int range = 16;
-    @Setting( id = "Packet Spam", clamp = @Clamp( min = 1, max = 10 ) ) public int spam = 1;
+    @Value( value = "Renderer" ) public RenderMode mode = RenderMode.FADE;
+    @Value( value = "Render" ) public boolean render = true;
+    @Value( value = "Silent" ) public boolean silent = true;
+    @Value( value = "Instant Rebreak" ) public boolean instant = true;
+    @Value( value = "Range" ) @Bounds( min = 4, max = 30 ) public int range = 16;
+    @Value( value = "Packet Spam" ) @Bounds( min = 1, max = 10 ) public int spam = 1;
     public Color color = new Color(255, 0, 0, 75);
     public Color readyColor = new Color(0, 255, 0, 75);
 

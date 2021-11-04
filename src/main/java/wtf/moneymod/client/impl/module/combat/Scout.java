@@ -1,18 +1,20 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.*;
-import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.eventhandler.listener.Handler;
@@ -23,10 +25,10 @@ import java.awt.*;
 @Module.Register( label = "Scout", cat = Module.Category.COMBAT)
 public class Scout extends Module {
 
-    @Setting(id = "Time", clamp = @Clamp(min = 1,max = 8)) public int time = 2;
-    @Setting(id = "Spoof", clamp = @Clamp(min = 1,max = 12)) public int spoof = 6;
-    @Setting(id = "Render") public boolean render = false;
-    @Setting(id = "AutoFire") public boolean autoFire = true;
+    @Value(value = "Time") @Bounds(min = 1,max = 8) public int time = 2;
+    @Value(value = "Spoof") @Bounds(min = 1,max = 12) public int spoof = 6;
+    @Value(value = "Render") public boolean render = false;
+    @Value(value = "AutoFire") public boolean autoFire = true;
 
     private boolean hs;
     int ticks;

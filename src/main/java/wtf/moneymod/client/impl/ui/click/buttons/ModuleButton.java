@@ -1,9 +1,7 @@
 package wtf.moneymod.client.impl.ui.click.buttons;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
-import club.cafedevelopment.reflectionsettings.container.SettingManager;
-import net.minecraft.client.gui.Gui;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
@@ -32,8 +30,8 @@ public class ModuleButton extends Component {
         this.components = new ArrayList<>();
         this.open = false;
         int settingY = this.offset + 12;
-        if (!SettingManager.getInstance().acquireFrom(module).isEmpty()) {
-            for (SettingContainer s : SettingManager.getInstance().acquireFrom(module)) {
+        if (!Option.getContainersForObject(module).isEmpty()) {
+            for (Option s : Option.getContainersForObject(module)) {
                 if (s.getValue().getClass().isEnum()) {
                     components.add(new ModeButton(s, this, settingY));
                     continue;

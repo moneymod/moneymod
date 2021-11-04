@@ -1,11 +1,8 @@
 package wtf.moneymod.client.api.management.impl;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
-import club.cafedevelopment.reflectionsettings.container.SettingManager;
-import com.google.common.reflect.ClassPath;
 import org.reflections.Reflections;
 import wtf.moneymod.client.api.management.IManager;
-import wtf.moneymod.client.impl.command.Command;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
 
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ public class ModuleManagement extends ArrayList<Module> implements IManager<Modu
             try {
                 Module module = c.newInstance();
                 add(module);
-                SettingManager.getInstance().acquireFrom(module);
+                Option.getContainersForObject(module);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }

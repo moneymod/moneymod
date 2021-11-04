@@ -1,7 +1,5 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -12,6 +10,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.management.impl.FriendManagement;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -23,10 +23,10 @@ import java.util.function.Predicate;
 @Module.Register( label = "Aura", cat = Module.Category.COMBAT )
 public class Aura extends Module {
 
-    @Setting( id = "Mode" ) public Mode mode = Mode.SWITCH;
-    @Setting( id = "Range", clamp = @Clamp( min = 0, max = 6 ) ) public double range = 4.2;
-    @Setting( id = "Render" ) public boolean render = false;
-    @Setting( id = "Color" ) public JColor color = new JColor(255, 255, 255, 120, false);
+    @Value( value = "Mode" ) public Mode mode = Mode.SWITCH;
+    @Value( value = "Range" ) @Bounds( max = 6 ) public double range = 4.2;
+    @Value( value = "Render" ) public boolean render = false;
+    @Value( value = "Color" ) public JColor color = new JColor(255, 255, 255, 120, false);
 
     float yaw = 0f, pitch = 0f;
     boolean rotating;

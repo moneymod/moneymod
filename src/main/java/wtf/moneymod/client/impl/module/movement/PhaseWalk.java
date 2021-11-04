@@ -1,12 +1,12 @@
 package wtf.moneymod.client.impl.module.movement;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
@@ -16,8 +16,8 @@ import wtf.moneymod.eventhandler.listener.Listener;
 @Module.Register( label = "PhaseWalk", cat = Module.Category.MOVEMENT)
 public class PhaseWalk extends Module {
 
-    @Setting(id = "Attempts", clamp = @Clamp(min = 1, max = 10)) public int attempts = 10;
-    @Setting(id = "Speed", clamp = @Clamp(min = 1, max = 10)) public int speed = 3;
+    @Value(value = "Attempts") @Bounds(min = 1, max = 10) public int attempts = 10;
+    @Value(value = "Speed") @Bounds(min = 1, max = 10) public int speed = 3;
 
     Timer timer = new Timer();
     boolean cancel = false;

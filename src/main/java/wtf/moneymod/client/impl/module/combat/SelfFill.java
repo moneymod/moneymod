@@ -1,11 +1,11 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.BlockPos;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
@@ -18,7 +18,7 @@ public class SelfFill extends Module {
 
     //pig pig pig
 
-    @Setting(id = "Height", clamp = @Clamp(min = -8, max = 8)) public int height = 4;
+    @Value(value = "Height") @Bounds(min = -8, max = 8) public int height = 4;
 
     private final List<Double> offsets = Arrays.asList( 0.4199999, 0.7531999, 1.0013359, 1.1661092 );
     private BlockPos startPos;

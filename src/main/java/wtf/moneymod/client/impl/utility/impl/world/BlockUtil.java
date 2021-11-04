@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import wtf.moneymod.client.impl.utility.Globals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,6 +86,34 @@ public enum BlockUtil implements Globals {
             return -1;
         }
         return 0;
+    }
+
+    public List<BlockPos> getSphere ( float radius, boolean ignoreAir ) {
+        ArrayList<BlockPos> sphere = new ArrayList<BlockPos>( );
+        BlockPos pos = new BlockPos( BlockUtil.mc.player.getPositionVector( ) );
+        int posX = pos.getX( );
+        int posY = pos.getY( );
+        int posZ = pos.getZ( );
+        int radiuss = ( int ) radius;
+        int x = posX - radiuss;
+        while ( ( float ) x <= ( float ) posX + radius ) {
+            int z = posZ - radiuss;
+            while ( ( float ) z <= ( float ) posZ + radius ) {
+                int y = posY - radiuss;
+                while ( ( float ) y < ( float ) posY + radius ) {
+                    if ( ( float ) ( ( posX - x ) * ( posX - x ) + ( posZ - z ) * ( posZ - z ) + ( posY - y ) * ( posY - y ) ) < radius * radius ) {
+                        BlockPos position = new BlockPos( x, y, z );
+                        if ( !ignoreAir || BlockUtil.mc.world.getBlockState( position ).getBlock( ) != Blocks.AIR ) {
+                            sphere.add( position );
+                        }
+                    }
+                    ++y;
+                }
+                ++z;
+            }
+            ++x;
+        }
+        return sphere;
     }
 
 }

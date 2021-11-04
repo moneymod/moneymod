@@ -1,13 +1,13 @@
 package wtf.moneymod.client.impl.module.render;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -16,10 +16,10 @@ import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 @Module.Register( label = "ESP", cat = Module.Category.RENDER, exception = true )
 public class ESP extends Module {
 
-    @Setting(id = "Color" ) public JColor color = new JColor(0, 255, 0, false);
+    @Value(value = "Color" ) public JColor color = new JColor(0, 255, 0, false);
 
-    @Setting(id = "ChorusPredict") public boolean chorusPredict = true;
-    @Setting(id = "Delay (Sec)", clamp = @Clamp(min = 1,max = 32)) public int delay = 5;
+    @Value(value = "ChorusPredict") public boolean chorusPredict = true;
+    @Value(value = "Delay (Sec)") @Bounds(min = 1,max = 32) public int delay = 5;
     BlockPos predictChorus;
     private final Timer timer = new Timer();
     @Override

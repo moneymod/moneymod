@@ -1,9 +1,8 @@
 package wtf.moneymod.client.impl.module.movement;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
-import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 
 @Module.Register( label = "Warp", cat = Module.Category.MOVEMENT)
@@ -11,10 +10,10 @@ public class Warp extends Module {
 
     //Pro module
 
-    @Setting(id = "Time", clamp = @Clamp(min = 1, max = 16)) public int time = 10;
-    @Setting(id = "Tick", clamp = @Clamp(min = 1, max = 8)) public double tick = 4;
-    @Setting(id = "Mode") public Mode mode = Mode.TIMER;
-    @Setting(id = "Step") public boolean step = true;
+    @Value(value = "Time") @Bounds(min = 1, max = 16) public int time = 10;
+    @Value(value = "Tick") @Bounds(min = 1, max = 8) public double tick = 4;
+    @Value(value = "Mode") public Mode mode = Mode.TIMER;
+    @Value(value = "Step") public boolean step = true;
     //pov when you not pasting ^
 
     int delay;
