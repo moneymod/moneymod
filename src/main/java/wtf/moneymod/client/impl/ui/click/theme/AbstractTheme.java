@@ -1,6 +1,5 @@
 package wtf.moneymod.client.impl.ui.click.theme;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -9,12 +8,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.KeyButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.sub.SubMode;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 
 import java.awt.*;
@@ -27,19 +28,19 @@ public abstract class AbstractTheme extends Renderer2D implements Globals {
 
     public abstract void drawModuleButton(ModuleButton module, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawBooleanButton(SettingContainer container, int x, int y, int w, int h, boolean hovered);
+    public abstract void drawBooleanButton(Option<Boolean> container, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawSliderButton(SettingContainer container, int x, int y, int w, int h, double sliderWidth, boolean hovered);
+    public abstract void drawSliderButton(Option<Number> container, int x, int y, int w, int h, double sliderWidth, boolean hovered);
 
     public abstract void drawKeyButton(KeyButton button, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawModeButton(SettingContainer container, int x, int y, int w, int h, boolean hovered);
+    public abstract void drawModeButton(Option<Enum> container, int x, int y, int w, int h, boolean hovered);
 
     public abstract void drawSubModeButton(SubMode container, String current, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawColorButton(SettingContainer container, int x, int y, int w, int h, boolean hovered);
+    public abstract void drawColorButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawPickerButton(SettingContainer container, int x, int y, int w, int h, boolean hovered);
+    public abstract void drawPickerButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered);
 
     protected ScaledResolution getResolution() {
         return new ScaledResolution(mc);

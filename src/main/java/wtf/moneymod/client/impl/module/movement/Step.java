@@ -1,22 +1,23 @@
 package wtf.moneymod.client.impl.module.movement;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
-import org.lwjgl.input.Keyboard;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "Step", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "Step", cat = Module.Category.MOVEMENT )
 public class Step extends Module {
-    @Setting(id = "Height", clamp = @Clamp(min = 0, max = 4)) public double height = 2;
+
+    @Value( value = "Height" ) @Bounds( max = 4 ) public double height = 2;
 
     @Override public void onTick() {
-        if (!mc.player.isInLava() && !mc.player.isInWater()){
+        if (!mc.player.isInLava() && !mc.player.isInWater()) {
             if (mc.player.onGround)
                 mc.player.stepHeight = ( float ) height;
         }
     }
 
-    @Override public void onDisable(){
+    @Override public void onDisable() {
         mc.player.stepHeight = 0.6F;
     }
+
 }

@@ -1,10 +1,9 @@
 package wtf.moneymod.client.api.management.impl;
 
-import club.cafedevelopment.reflectionsettings.container.SettingManager;
-import club.cafedevelopment.reflectionsettings.container.SettingUtil;
 import com.google.gson.*;
 import scala.Int;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
@@ -47,29 +46,26 @@ public class ConfigManager extends Thread implements Globals {
             if (jsonObject.get("Enabled").getAsBoolean() && !m.isConfigException()) m.setToggled(true);
             m.setKey(jsonObject.get("KeyBind").getAsInt());
         }
-        SettingManager.getInstance().acquireFrom(m).forEach(s -> {
-            JsonElement settingObject = jsonObject.get(s.getId());
+        Option.getContainersForObject(m).forEach(s -> {
+            JsonElement settingObject = jsonObject.get(s.getName());
             if (settingObject != null) {
                 if (s.getValue().getClass().isEnum()) {
                     try {
-                        s.setValue(SettingUtils.INSTANCE.getProperEnum(s.getValue(), settingObject.getAsString()));
+                        ((Option<Enum>) s).setValue(SettingUtils.INSTANCE.getProperEnum(( Enum ) s.getValue(), settingObject.getAsString()));
                     } catch (Exception ignored) { }
                     return;
                 }
                 switch (s.getValue().getClass().getSimpleName()) {
                     case "Boolean":
-                        s.setValue(settingObject.getAsBoolean());
+                        ((Option<Boolean>) s).setValue(settingObject.getAsBoolean());
                         break;
-                    case "Double":
+                    case "Number":
                         if (settingObject.getAsDouble() < s.getMax() && settingObject.getAsDouble() > s.getMin())
-                            s.setValue(settingObject.getAsDouble());
-                    case "Integer":
-                        if (settingObject.getAsDouble() < s.getMax() && settingObject.getAsDouble() > s.getMin())
-                            s.setValue(settingObject.getAsInt());
+                            ((Option<Number>) s).setValue(settingObject.getAsDouble());
                         break;
                     case "JColor":
                         JsonArray jsonElements = settingObject.getAsJsonArray();
-                        s.setValue(new JColor(jsonElements.get(0).getAsInt(), jsonElements.get(1).getAsInt(), jsonElements.get(2).getAsInt(), jsonElements.get(3).getAsInt(), jsonElements.get(4).getAsBoolean()));
+                        ((Option<JColor>) s).setValue(new JColor(jsonElements.get(0).getAsInt(), jsonElements.get(1).getAsInt(), jsonElements.get(2).getAsInt(), jsonElements.get(3).getAsInt(), jsonElements.get(4).getAsBoolean()));
                         break;
                 }
             }
@@ -111,30 +107,30 @@ public class ConfigManager extends Thread implements Globals {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("Enabled", new JsonPrimitive(m.isToggled()));
         jsonObject.add("KeyBind", new JsonPrimitive(m.getKey()));
-        SettingManager.getInstance().acquireFrom(m).forEach(s -> {
+        Option.getContainersForObject(m).forEach(s -> {
             if (s.getValue().getClass().isEnum()) {
-                jsonObject.add(s.getId(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(s.getValue())));
+                jsonObject.add(s.getName(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(( Enum ) s.getValue())));
                 return;
             }
             switch (s.getValue().getClass().getSimpleName()) {
                 case "Boolean":
-                    jsonObject.add(s.getId(), new JsonPrimitive(( Boolean ) s.getValue()));
+                    jsonObject.add(s.getName(), new JsonPrimitive(( Boolean ) s.getValue()));
                     break;
                 case "Double":
-                    jsonObject.add(s.getId(), new JsonPrimitive(( Double ) s.getValue()));
+                    jsonObject.add(s.getName(), new JsonPrimitive(( Double ) s.getValue()));
                     break;
                 case "Integer":
-                    jsonObject.add(s.getId(), new JsonPrimitive(( Integer ) s.getValue()));
+                    jsonObject.add(s.getName(), new JsonPrimitive(( Integer ) s.getValue()));
                     break;
                 case "JColor":
                     JsonArray jsonColors = new JsonArray();
-                    JColor color = s.getValue();
+                    JColor color =  ((Option<JColor>) s).getValue();
                     jsonColors.add(color.getColor().getRed());
                     jsonColors.add(color.getColor().getGreen());
                     jsonColors.add(color.getColor().getBlue());
                     jsonColors.add(color.getColor().getAlpha());
                     jsonColors.add(color.isRainbow());
-                    jsonObject.add(s.getId(), jsonColors);
+                    jsonObject.add(s.getName(), jsonColors);
             }
         });
         Files.write(path, gson.toJson(new JsonParser().parse(jsonObject.toString())).getBytes());

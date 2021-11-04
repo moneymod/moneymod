@@ -1,15 +1,15 @@
 package wtf.moneymod.client.impl.module.player;
 
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.GuiGameOver;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 
 @Module.Register( label = "AutoRespawn", cat = Module.Category.PLAYER)
 public class AutoRespawn extends Module {
 
-    @Setting(id = "DeathCoords") public boolean deathcoords = false;
+    @Value(value = "DeathCoords") public boolean deathcoords = false;
     boolean value = false;
     @Override public void onTick() {
         if (nullCheck()) return;

@@ -1,26 +1,20 @@
 package wtf.moneymod.client.impl.ui.click.buttons.settings;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
-import net.minecraft.client.gui.Gui;
-import scala.reflect.runtime.Settings;
-import wtf.moneymod.client.Main;
-import wtf.moneymod.client.impl.module.global.ClickGui;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.ui.click.Component;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 
-import java.awt.*;
-
 public class BooleanButton extends Component {
 
-    private final SettingContainer setting;
+    private final Option<Boolean> setting;
     private final ModuleButton button;
     private boolean isHovered;
     private int offset;
     private int x;
     private int y;
 
-    public BooleanButton(SettingContainer setting, final ModuleButton button, final int offset) {
+    public BooleanButton(Option<Boolean> setting, final ModuleButton button, final int offset) {
         this.setting = setting;
         this.button = button;
         this.x = button.panel.getX() + button.panel.getWidth();

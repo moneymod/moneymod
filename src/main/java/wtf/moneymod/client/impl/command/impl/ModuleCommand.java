@@ -1,10 +1,10 @@
 package wtf.moneymod.client.impl.command.impl;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
-import club.cafedevelopment.reflectionsettings.container.SettingManager;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 
 import java.util.Optional;
@@ -33,10 +33,10 @@ public class ModuleCommand extends Command {
             module.toggle();
             return;
         }
-        Optional<SettingContainer> container = SettingManager.getInstance().getByTargetAndId(module, args[ 1 ], true);
+        Optional<Option<?>> container = Option.getByTargetAndId(module, args[ 1 ]);
         if (args.length == 2) {
             if (args[ 1 ].equalsIgnoreCase("list")) {
-                ChatUtil.INSTANCE.sendMessage(SettingManager.getInstance().acquireFrom(module).stream().map(s -> String.format("%s[%s]", s.getId(), s.getValue())).collect(Collectors.joining(", ")));
+                ChatUtil.INSTANCE.sendMessage(Option.getContainersForObject(module).stream().map(s -> String.format("%s[%s]", s.getName(), s.getValue())).collect(Collectors.joining(", ")));
                 return;
             }
             if (container.isPresent()) {
@@ -50,19 +50,19 @@ public class ModuleCommand extends Command {
             if (container.isPresent()) {
                 try {
                     if (container.get().getValue() instanceof Double) {
-                        container.get().setValue(Double.parseDouble(args[ 2 ]));
+                        (( Option<Double> ) container.get()).setValue(Double.parseDouble(args[ 2 ]));
                     } else if (container.get().getValue() instanceof Float) {
-                        container.get().setValue(Float.parseFloat(args[ 2 ]));
+                        (( Option<Float> ) container.get()).setValue(Float.parseFloat(args[ 2 ]));
                     } else if (container.get().getValue() instanceof Integer) {
-                        container.get().setValue(Integer.parseInt(args[ 2 ]));
+                        (( Option<Integer> ) container.get()).setValue(Integer.parseInt(args[ 2 ]));
                     } else if (container.get().getValue() instanceof Boolean) {
-                        container.get().setValue(Boolean.parseBoolean(args[ 2 ]));
+                        (( Option<Boolean> ) container.get()).setValue(Boolean.parseBoolean(args[ 2 ]));
                     } else if (container.get().getValue().getClass().isEnum()) {
-                        ChatUtil.INSTANCE.sendMessage("wip");
+                        (( Option<Enum> ) container.get()).setValue(SettingUtils.INSTANCE.getProperEnum(( Enum ) container.get().getValue(), args[ 2 ]));
                     } else {
                         System.out.println(container.get().getValue().getClass().getSimpleName());
                     }
-                    ChatUtil.INSTANCE.sendMessage(String.format("%s set value to %s", container.get().getId(), container.get().getValue()));
+                    ChatUtil.INSTANCE.sendMessage(String.format("%s set value to %s", container.get().getName(), container.get().getValue()));
                 } catch (Exception e) {
                     sendUsage();
                     e.printStackTrace();

@@ -1,7 +1,5 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -9,6 +7,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -20,15 +20,15 @@ import java.util.List;
 @Module.Register( label = "FeetPlace", cat = Module.Category.COMBAT )
 public class FeetPlace extends Module {
 
-    @Setting( id = "Delay", clamp = @Clamp( max = 250, min = 0 ) ) public int delay = 50;
-    @Setting( id = "BPS", clamp = @Clamp( max = 20, min = 1 ) ) public int bps = 8;
-    @Setting( id = "Retry" ) public boolean retry = true;
-    @Setting( id = "Retries", clamp = @Clamp( max = 25, min = 1 ) ) public int retries = 5;
-    @Setting( id = "Cleaner" ) public boolean cleaner = true;
-    @Setting( id = "Help" ) public boolean help = true;
-    @Setting( id = "Jump Disable" ) public boolean jumpDisable = true;
-    @Setting( id = "Disable" ) public boolean disable = false;
-    @Setting( id = "AutoCenter" ) public boolean center = false;
+    @Value( value = "Delay" ) @Bounds( max = 250 ) public int delay = 50;
+    @Value( value = "BPS" ) @Bounds( max = 20, min = 1 ) public int bps = 8;
+    @Value( value = "Retry" ) public boolean retry = true;
+    @Value( value = "Retries" ) @Bounds( max = 25, min = 1 ) public int retries = 5;
+    @Value( value = "Cleaner" ) public boolean cleaner = true;
+    @Value( value = "Help" ) public boolean help = true;
+    @Value( value = "Jump Disable" ) public boolean jumpDisable = true;
+    @Value( value = "Disable" ) public boolean disable = false;
+    @Value( value = "AutoCenter" ) public boolean center = false;
 
     private final Timer timer = new Timer();
     private int placed;

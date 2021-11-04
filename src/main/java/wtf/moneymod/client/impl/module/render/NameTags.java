@@ -1,7 +1,5 @@
 package wtf.moneymod.client.impl.module.render;
 
-import club.cafedevelopment.reflectionsettings.annotation.Clamp;
-import club.cafedevelopment.reflectionsettings.annotation.Setting;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +18,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.annotatable.Bounds;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -33,29 +33,29 @@ import java.util.HashMap;
 @Module.Register( label = "NameTags", cat = Module.Category.RENDER)
 public class NameTags extends Module {
 
-    @Setting(id = "Size", clamp = @Clamp(min = 0.1,max = 1)) public double sizeNameTags = 0.5d;
-    @Setting(id = "Range", clamp = @Clamp(min = 80,max = 300)) public int range = 300;
-    @Setting(id = "Thickness", clamp = @Clamp(min = 0.1d,max = 3.0d)) public double thickness = 1d;
+    @Value(value = "Size") @Bounds(min = 0.1f,max = 1) public float sizeNameTags = 0.5f;
+    @Value(value = "Range") @Bounds(min = 80,max = 300) public int range = 300;
+    @Value(value = "Thickness") @Bounds(min = 0.1f,max = 3.0f) public float thickness = 1f;
 
-    @Setting(id = "Fill Color") public JColor fillColor = new JColor(0, 0, 0, false);
-    @Setting( id = "Outline Color") public JColor outlineColor = new JColor(0, 0, 0, false);
-    @Setting(id = "Text Color") public JColor textColor = new JColor(255, 255, 255, false);
+    @Value(value = "Fill Color") public JColor fillColor = new JColor(0, 0, 0, false);
+    @Value( value = "Outline Color") public JColor outlineColor = new JColor(0, 0, 0, false);
+    @Value(value = "Text Color") public JColor textColor = new JColor(255, 255, 255, false);
 
-    @Setting(id = "Fill") public boolean fill = true;
-    @Setting(id = "Outline") public boolean outline = false;
-    @Setting(id = "Self") public boolean self = false;
-    @Setting(id = "Name") public boolean name = true;
-    @Setting(id = "Friend") public boolean friend = true;
-    @Setting(id = "Ping") public boolean ping = true;
-    @Setting(id = "Health") public boolean health = true;
-    @Setting(id = "HealthColor") public boolean healthcolor = true;
-    @Setting(id = "Gamemode") public boolean gamemode = false;
-    @Setting(id = "Totem") public boolean totems = false;
-    @Setting(id = "Items") public boolean items = true;
-    @Setting(id = "MainHand") public boolean mainhand = true;
-    @Setting(id = "Offhand") public boolean offhand = true;
-    @Setting(id = "Armor") public boolean armor = true;
-    @Setting(id = "Armor Dura") public boolean armorDura = true;
+    @Value(value = "Fill") public boolean fill = true;
+    @Value(value = "Outline") public boolean outline = false;
+    @Value(value = "Self") public boolean self = false;
+    @Value(value = "Name") public boolean name = true;
+    @Value(value = "Friend") public boolean friend = true;
+    @Value(value = "Ping") public boolean ping = true;
+    @Value(value = "Health") public boolean health = true;
+    @Value(value = "HealthColor") public boolean healthcolor = true;
+    @Value(value = "Gamemode") public boolean gamemode = false;
+    @Value(value = "Totem") public boolean totems = false;
+    @Value(value = "Items") public boolean items = true;
+    @Value(value = "MainHand") public boolean mainhand = true;
+    @Value(value = "Offhand") public boolean offhand = true;
+    @Value(value = "Armor") public boolean armor = true;
+    @Value(value = "Armor Dura") public boolean armorDura = true;
 
     AccessorRenderManager renderManager = ( AccessorRenderManager ) mc.getRenderManager( );
     HashMap<String, Integer> totemPops = new HashMap<>( );
@@ -203,9 +203,9 @@ public class NameTags extends Module {
         int enchantmentY = y - 8;
         NBTTagList enchants = stack.getEnchantmentTagList( );
         for ( int index = 0; index < enchants.tagCount( ); ++index ) {
-            short id = enchants.getCompoundTagAt( index ).getShort( "id" );
+            short value = enchants.getCompoundTagAt( index ).getShort( "value" );
             short level = enchants.getCompoundTagAt( index ).getShort( "lvl" );
-            Enchantment enc = Enchantment.getEnchantmentByID( ( int ) id );
+            Enchantment enc = Enchantment.getEnchantmentByID( ( int ) value );
             if ( enc == null || enc.getName( ).contains( "fall" ) || !enc.getName( ).contains( "all" ) && !enc.getName( ).contains( "explosion" ) )
                 continue;
             mc.fontRenderer.drawStringWithShadow( enc.isCurse( ) ? TextFormatting.RED + enc.getTranslatedName( ( int ) level ).substring( 11 ).substring( 0, 1 ).toLowerCase( ) : enc.getTranslatedName( ( int ) level ).substring( 0, 1 ).toLowerCase( ) + level, ( float ) ( x * 2 ), ( float ) enchantmentY, -1 );

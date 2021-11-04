@@ -1,14 +1,12 @@
 package wtf.moneymod.client.impl.ui.click.buttons.settings;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
-import wtf.moneymod.client.Main;
-import wtf.moneymod.client.impl.module.global.ClickGui;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.ui.click.Component;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
@@ -20,14 +18,14 @@ import java.awt.*;
 
 public class ColorButton extends Component {
 
-    private final SettingContainer setting;
+    private final Option<JColor> setting;
     private final ModuleButton button;
     private boolean isHovered;
     private int offset, x, y;
     private boolean open, dragging;
     private Color color;
 
-    public ColorButton(SettingContainer setting, final ModuleButton button, final int offset) {
+    public ColorButton(Option<JColor> setting, final ModuleButton button, final int offset) {
         this.setting = setting;
         this.button = button;
         this.x = button.panel.getX() + button.panel.getWidth();

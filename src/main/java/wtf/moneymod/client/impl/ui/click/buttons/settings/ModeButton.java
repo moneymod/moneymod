@@ -1,21 +1,17 @@
 package wtf.moneymod.client.impl.ui.click.buttons.settings;
 
-import club.cafedevelopment.reflectionsettings.container.SettingContainer;
-import net.minecraft.client.gui.Gui;
-import wtf.moneymod.client.Main;
-import wtf.moneymod.client.impl.module.global.ClickGui;
+import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.ui.click.Component;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.sub.SubMode;
 import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class ModeButton extends Component {
 
-    private final SettingContainer setting;
+    private final Option<Enum> setting;
     private final ArrayList<SubMode> modes;
     private final ModuleButton button;
     private boolean isHovered, open;
@@ -24,7 +20,7 @@ public class ModeButton extends Component {
     private int y;
     private int modeIndex;
 
-    public ModeButton(final SettingContainer setting, final ModuleButton button, final int offset) {
+    public ModeButton(final Option<Enum> setting, final ModuleButton button, final int offset) {
         this.setting = setting;
         this.button = button;
         this.x = button.panel.getX() + button.panel.getWidth();
@@ -34,7 +30,7 @@ public class ModeButton extends Component {
         this.open = false;
         this.modes = new ArrayList<>();
         int off = 12;
-        for (Enum e : (( Enum ) setting.getValue()).getClass().getEnumConstants()) {
+        for (Enum e : setting.getValue().getClass().getEnumConstants()) {
             modes.add(new SubMode(this, SettingUtils.INSTANCE.getProperName(e), off));
             off += 12;
         }
@@ -98,7 +94,7 @@ public class ModeButton extends Component {
         return open;
     }
 
-    public SettingContainer getSetting() {
+    public Option<Enum> getSetting() {
         return setting;
     }
 
