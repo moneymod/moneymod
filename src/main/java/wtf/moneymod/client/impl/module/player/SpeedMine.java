@@ -2,6 +2,7 @@ package wtf.moneymod.client.impl.module.player;
 
 import club.cafedevelopment.reflectionsettings.annotation.Clamp;
 import club.cafedevelopment.reflectionsettings.annotation.Setting;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
@@ -113,12 +114,13 @@ public class SpeedMine extends Module {
     });
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
-        if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR) return;
+        if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid) return;
+        AxisAlignedBB bb = mc.world.getBlockState(currentPos).getSelectedBoundingBox(mc.world, currentPos);
         float progress = getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start);
         if (progress <= 0.1) {
-            Renderer3D.drawBoxESP(new AxisAlignedBB(currentPos), readyColor.getColor(), 1f, true, true, readyColor.getColor().getAlpha(), 255);
+            Renderer3D.drawBoxESP(bb, readyColor.getColor(), 1f, true, true, readyColor.getColor().getAlpha(), 255);
         } else {
-            Renderer3D.INSTANCE.drawProgressBox(new AxisAlignedBB(currentPos), progress, color.getColor());
+            Renderer3D.INSTANCE.drawProgressBox(bb, progress, color.getColor());
         }
     }
 
