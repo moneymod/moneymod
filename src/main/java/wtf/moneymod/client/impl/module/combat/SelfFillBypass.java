@@ -19,6 +19,12 @@ public class SelfFillBypass extends Module {
 
     @Value(value = "Bypass Method") public Mode mode = Mode.PIGBYPASS;
     @Value(value = "Ticks") @Bounds( min = 10, max = 100) public int ticks = 50;
+    @Value(value = "Toggle Delay") @Bounds( min = 10, max = 60) public int toggleDelays = 20;
+    @Value(value = "One Delay") @Bounds( min = 10, max = 60) public int oneDelays = 42;
+    @Value(value = "Second Delay") @Bounds( min = 10, max = 60) public int placeDelay = 30;
+
+
+
     BlockPos position;
     int delay, pdelay,stage,jumpdelay,toggledelay;
     boolean jump;
@@ -50,11 +56,10 @@ public class SelfFillBypass extends Module {
 
     public void firstmethod(){
         if (stage == 1) {
-            ChatUtil.INSTANCE.sendMessage("stage = 1");
             delay++;
             if (mc.player.onGround) mc.player.jump();
             Main.TICK_TIMER = ticks;
-            if (delay >= 42) {
+            if (delay >= oneDelays) {
                 stage = 2;
                 delay = 0;
                 Main.TICK_TIMER = 1;
@@ -63,12 +68,10 @@ public class SelfFillBypass extends Module {
         }
         if (stage == 2){
             Main.TICK_TIMER = 1;
-            ChatUtil.INSTANCE.sendMessage("stage = 2");
             if (mc.player.onGround) mc.player.jump();
             BlockUtil.INSTANCE.placeBlock(position);
-
             pdelay++;
-            if (pdelay >= 28){
+            if (pdelay >= placeDelay){
                 stage = 3;
                 pdelay = 0;
                 Main.TICK_TIMER = 1;
@@ -76,11 +79,10 @@ public class SelfFillBypass extends Module {
             }
         }
         if (stage == 3){
-            ChatUtil.INSTANCE.sendMessage("stage = 3");
             toggledelay++;
             Main.TICK_TIMER = ticks;
             if (mc.player.onGround) mc.player.jump();
-            if (toggledelay >= 20) {
+            if (toggledelay >= toggleDelays) {
                 mc.player.motionY -= 0.4;
                 Main.TICK_TIMER = 1;
                 setToggled(false);
