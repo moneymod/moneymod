@@ -64,7 +64,6 @@ public class SpeedMine extends Module {
 
         if (currentPos != null) {
             if (mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
-                System.out.println("ok");
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -85,7 +84,6 @@ public class SpeedMine extends Module {
 
         if (currentPos != null) {
             if (e.getBlockPos().toLong() == currentPos.toLong() && !swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
-                System.out.println(ToolUtil.INSTANCE.bestSlot(currentPos));
                 ItemUtil.switchToHotbarSlot(ToolUtil.INSTANCE.bestSlot(currentPos), silent);
                 swap = true;
                 e.cancel();
@@ -97,9 +95,6 @@ public class SpeedMine extends Module {
             e.cancel();
             return;
         }
-
-        System.out.println("NIGGA");
-
         mc.player.swingArm(EnumHand.MAIN_HAND);
         for (int j = 0; j < spam; j++) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, e.getBlockPos(), e.getFaceDirection()));

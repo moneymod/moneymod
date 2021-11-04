@@ -38,4 +38,7 @@ public enum EntityUtil implements Globals {
         double d5 = (double)f * d * d2 - (double)f2 * d * d3;
         return new double[]{d4, d5};
     }
+    public static float getHealth ( final EntityLivingBase player ) {
+        return player.getHealth( ) + player.getAbsorptionAmount( );
+    }
 }
