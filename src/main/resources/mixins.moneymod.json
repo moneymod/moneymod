@@ -9,6 +9,7 @@
     "MixinEntityPlayerSP",
     "MixinTimer",
     "MixinPlayerControllerMP",
-    "MixinBlock"
+    "MixinBlock",
+    "MixinEntityOtherPlayerMP"
   ]
 }
