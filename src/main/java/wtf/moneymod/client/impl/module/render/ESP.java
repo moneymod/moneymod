@@ -34,7 +34,6 @@ public class ESP extends Module {
     @Value( value = "Speed" ) @Bounds( min = 1, max = 255 ) public float speed = 5;
     @Value( value = "x" ) @Bounds( min = 1, max = 255 ) public float x = 5;
     @Value( value = "y" ) @Bounds( min = 1, max = 255 ) public float y = 5;
-    @Value(value = "ChorusPredict") public boolean chorusPredict = true;
     BlockPos predictChorus;
     private final Timer timer = new Timer();
 
