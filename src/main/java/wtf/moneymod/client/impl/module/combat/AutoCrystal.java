@@ -53,6 +53,7 @@ public class AutoCrystal extends Module {
     @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
     @Value(value = "BoostDelay") @Bounds(max = 200) public int boostdelay = 80;
     @Value(value = "MinDamage") @Bounds(max = 36) public float mindmg = 6f;
+    @Value(value = "MaxSelfDamage") @Bounds(max = 36) public float maxselfdamage = 6f;
     @Value(value = "FacePlaceDamage") @Bounds(max = 36) public float faceplacehp = 8f;
     @Value(value = "ArmorScale") @Bounds(max = 100) public float armorscale = 12f;
     @Value(value = "TickExisted") @Bounds(max = 20) public float tickexisted = 3f;
@@ -61,10 +62,8 @@ public class AutoCrystal extends Module {
     @Value(value = "Second") public boolean secondCheck = true;
     @Value(value = "Swap") public Swap swap = Swap.NONE;
     @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0,180, false);
-    @Value(value = "UpRender") public boolean upRender = false;
     @Value(value = "Box") public boolean box = true;
     @Value(value = "Outline") public boolean outline = true;
-    @Value(value = "BoxHeight") @Bounds(min = -2, max = 2) public float boxHeight = 1f;
     @Value(value = "LineWidht") @Bounds(min = 0.1f, max = 3) public float linewidht = 2f;
     private final Set<BlockPos> placeSet = new HashSet<>();
     private final ConcurrentSet<RenderPos> renderSet = new ConcurrentSet<>();
@@ -148,7 +147,7 @@ public class AutoCrystal extends Module {
             if (renderPos.alpha <= 0)
                 toRemove.add(renderPos);
             if (toRemove.contains(renderPos)) continue;
-            Renderer3D.drawBoxESP((upRender) ? new BlockPos(renderPos.blockPos.getX(), renderPos.blockPos.getY() + 1, renderPos.blockPos.getZ()) : renderPos.blockPos, color.getColor(), linewidht, outline, box, (int) Math.round(renderPos.alpha), (int) Math.round(renderPos.outline), boxHeight);
+            Renderer3D.drawBoxESP(renderPos.blockPos, color.getColor(), linewidht, outline, box, (int) Math.round(renderPos.alpha), (int) Math.round(renderPos.outline), 1);
         }
         toRemove.forEach(renderSet::remove);
     }
@@ -161,7 +160,7 @@ public class AutoCrystal extends Module {
         for (BlockPos pos : BlockUtil.INSTANCE.getSphere(placeRange, true)) {
             double selfDamage, targetDamage;
 
-                if (!BlockUtil.INSTANCE.canPlaceCrystal(pos, secondCheck) || (targetDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, mc.player)) + 2.0 >= (double) EntityUtil.getHealth(mc.player) || selfDamage >= targetDamage || maxDamage > targetDamage)
+                if (!BlockUtil.INSTANCE.canPlaceCrystal(pos, secondCheck) || (targetDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
                 continue;
 
             if (currentTarget.isDead)
@@ -216,7 +215,7 @@ public class AutoCrystal extends Module {
             double selfDamage, targetDamage;
             if (!(crystal instanceof EntityEnderCrystal)) continue;
             float f = mc.player.canEntityBeSeen(crystal) ? breakRange : wallRange;
-            if (!(f > mc.player.getDistance(crystal)) || (targetDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, mc.player)) + 2.0 >= EntityUtil.getHealth(mc.player) || selfDamage >= targetDamage || maxDamage > targetDamage)
+            if (!(f > mc.player.getDistance(crystal)) || (targetDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
                 continue;
             maxCrystal = crystal;
             maxDamage = targetDamage;
