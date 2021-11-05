@@ -49,9 +49,9 @@ public class AutoCrystal extends Module {
     @Value(value = "Place Range ") @Bounds(max = 6) public float placeRange = 5f;
     @Value(value = "Break Range ") @Bounds(max = 6) public float breakRange = 5f;
     @Value(value = "Wall Range") @Bounds(max = 6) public float wallRange = 3.5f;
-    @Value(value = "Break Delay") @Bounds(max = 200) public int breakDelay = 40;
-    @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
-    @Value(value = "BoostDelay") @Bounds(max = 200) public int boostdelay = 80;
+    @Value(value = "Break Delay") @Bounds(max = 200) public float breakDelay = 40;
+    @Value(value = "Place Delay") @Bounds(max = 200) public float placeDelay = 20;
+    @Value(value = "BoostDelay") @Bounds(max = 200) public float boostdelay = 80;
     @Value(value = "MinDamage") @Bounds(max = 36) public float mindmg = 6f;
     @Value(value = "MaxSelfDamage") @Bounds(max = 36) public float maxselfdamage = 6f;
     @Value(value = "FacePlaceDamage") @Bounds(max = 36) public float faceplacehp = 8f;
@@ -176,7 +176,7 @@ public class AutoCrystal extends Module {
             if (ItemUtil.findHotbarBlock(ItemEndCrystal.class) == -1) return;
         }
 
-        if (maxDamage != 0.5 && placeTimer.passed(placeDelay)) {
+        if (maxDamage != 0.5 && placeTimer.passed((int)placeDelay)) {
             int old = mc.player.inventory.currentItem;
             if (!(offhand || !!(swap == Swap.NORMAL) || mc.player.getHeldItemMainhand().getItem() == Items.GOLDEN_APPLE && mc.player.isHandActive())) {
                 ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(ItemEndCrystal.class), false);
@@ -213,7 +213,7 @@ public class AutoCrystal extends Module {
             maxCrystal = crystal;
             maxDamage = targetDamage;
         }
-        if (maxCrystal != null && breakTimer.passed(breakDelay)) {
+        if (maxCrystal != null && breakTimer.passed((int)breakDelay)) {
             if (!(maxCrystal.ticksExisted >= tickexisted)) return;
             if (rotateons) rotate(maxCrystal);
             mc.getConnection().sendPacket(new CPacketUseEntity(maxCrystal));
