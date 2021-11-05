@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.render;
 
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketSoundEffect;
@@ -8,6 +9,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.events.RenderNameTagEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -17,11 +19,16 @@ import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 import wtf.moneymod.client.impl.utility.impl.shader.FramebufferShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.GlowShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.OutlineShader;
+import wtf.moneymod.client.impl.utility.impl.shader.impl.SpaceShader;
+import wtf.moneymod.eventhandler.event.enums.Era;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
 @Module.Register( label = "ESP", cat = Module.Category.RENDER, exception = true )
 public class ESP extends Module {
+
+    @Value( value = "Players" ) public boolean players = true;
+    @Value( value = "Crystals" ) public boolean crystals = true;
 
     @Value( value = "Shaders" ) public boolean shaders = true;
     @Value( value = "Shader" ) public Shader shader = Shader.OUTLINE;
@@ -35,12 +42,21 @@ public class ESP extends Module {
     @Value( value = "x" ) @Bounds( min = 1, max = 255 ) public float x = 5;
     @Value( value = "y" ) @Bounds( min = 1, max = 255 ) public float y = 5;
 
+    public static ESP INSTANCE;
+    public FramebufferShader framebuffer = null;
+
+    public ESP() {
+        INSTANCE = this;
+    }
+
     BlockPos predictChorus;
+    boolean nameTags;
     private final Timer timer = new Timer();
 
     @Override
     public void onToggle() {
         predictChorus = null;
+        nameTags = false;
     }
 
     @Handler public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
@@ -64,9 +80,8 @@ public class ESP extends Module {
     }
 
     @SubscribeEvent public void onRender2d(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
             if (shaders) {
-                FramebufferShader framebuffer = null;
                 switch (shader) {
                     case OUTLINE:
                         framebuffer = OutlineShader.INSTANCE;
@@ -74,19 +89,31 @@ public class ESP extends Module {
                     case GLOW:
                         framebuffer = GlowShader.INSTANCE;
                         break;
+                    case SPACE:
+                        framebuffer = SpaceShader.INSTANCE;
+                        break;
                 }
                 framebuffer.startDraw(event.getPartialTicks());
+                nameTags = true;
                 mc.world.loadedEntityList.forEach(e -> {
-                    if (e != mc.player && e instanceof EntityPlayer)
+                    if (e != mc.player && ((e instanceof EntityPlayer && players) || (e instanceof EntityEnderCrystal && crystals))) {
                         mc.getRenderManager().renderEntityStatic(e, event.getPartialTicks(), true);
+                    }
                 });
+                nameTags = false;
                 framebuffer.stopDraw(color.getColor(), 1f, 1f, 0.8f, speed, x, y);
             }
         }
     }
 
+    @Handler public Listener<RenderNameTagEvent> eventListener = new Listener<>(RenderNameTagEvent.class, e -> {
+        if (nameTags) e.cancel();
+    });
+
     public enum Shader {
-        OUTLINE, GLOW
+        OUTLINE,
+        GLOW,
+        SPACE
     }
 
 }
