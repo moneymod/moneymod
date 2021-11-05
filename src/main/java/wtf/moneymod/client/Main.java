@@ -43,8 +43,8 @@ public class Main {
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
         friendManagement = new FriendManagement().register();
-        screen = new Screen();
         ConfigManager.getInstance().load();
+        screen = new Screen();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());

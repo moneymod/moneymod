@@ -1,12 +1,9 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -19,21 +16,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
-import wtf.moneymod.client.mixin.mixins.AccessorCPacketPlayer;
-import wtf.moneymod.client.mixin.mixins.AccessorCPacketUseEntity;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketUseEntity;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 

@@ -25,7 +25,7 @@ import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
-import wtf.moneymod.client.mixin.mixins.AccessorRenderManager;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 
 import java.awt.*;
 import java.util.HashMap;

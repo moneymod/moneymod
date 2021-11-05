@@ -4,16 +4,16 @@
   "package": "wtf.moneymod.client.mixin.mixins",
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
-    "AccessorRenderManager",
-    "AccessorCPacketUseEntity",
-    "AccessorCPacketPlayer",
+    "ducks.AccessorRenderManager",
+    "ducks.AccessorCPacketUseEntity",
+    "ducks.AccessorCPacketPlayer",
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinEntity",
     "MixinEntityPlayerSP",
     "MixinTimer",
     "MixinPlayerControllerMP",
-    "MixinBlock",
+    "MixinGuiNewChat",
     "MixinEntityRenderer",
     "MixinEntityOtherPlayerMP"
   ]

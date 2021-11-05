@@ -14,7 +14,7 @@ import wtf.moneymod.client.impl.utility.Globals;
 public enum ChatUtil implements Globals {
     INSTANCE;
 
-    public String staticName = ChatFormatting.GREEN + "[" + Main.NAME + "]";
+    public String staticName = ChatFormatting.GREEN + "[" + Main.MODID + "]";
 
     public void sendMessage(String text) {
         sendMsgEvent(staticName, text, false, 1);

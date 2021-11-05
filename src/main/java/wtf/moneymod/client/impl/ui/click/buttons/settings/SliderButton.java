@@ -62,7 +62,7 @@ public class SliderButton extends Component {
         renderWidth = ( float ) (104 * ((inc == 1 ? setting.getValue().intValue() : setting.getValue().floatValue()) - min) / (max - min));
         if (dragging) {
             if (diff == 0){
-                if (inc == 1) setting.setValue(setting.getMin());
+                if (inc == 1) setting.setValue((int) setting.getMin());
                 else setting.setValue(setting.getMin());
             }
             else {

@@ -1,4 +1,4 @@
-package wtf.moneymod.client.mixin.mixins;
+package wtf.moneymod.client.mixin.mixins.ducks;
 
 import net.minecraft.network.play.client.CPacketUseEntity;
 import org.spongepowered.asm.mixin.Mixin;
