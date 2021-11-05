@@ -15,7 +15,7 @@ public class AutoTotem extends Module {
 
     //pig pig pig
 
-    @Value(value = "Health") @Bounds(min = 1, max = 36) public int health = 16;
+    @Value(value = "Health") @Bounds(max = 36) public int health = 16;
     @Value(value = "Item") public Mode mode = Mode.CRYSTAL;
     @Value(value = "Right Click Gapple") public boolean rightClickGapple = true;
 

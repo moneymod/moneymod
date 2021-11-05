@@ -9,6 +9,7 @@
     "AccessorCPacketPlayer",
     "MixinNetworkManager",
     "MixinMinecraft",
+    "MixinEntity",
     "MixinEntityPlayerSP",
     "MixinTimer",
     "MixinPlayerControllerMP",

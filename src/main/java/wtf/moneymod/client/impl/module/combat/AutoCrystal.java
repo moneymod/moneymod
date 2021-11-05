@@ -61,7 +61,7 @@ public class AutoCrystal extends Module {
     @Value(value = "Rotate") public boolean rotateons = true;
     @Value(value = "Second") public boolean secondCheck = true;
     @Value(value = "Swap") public Swap swap = Swap.NONE;
-    @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, false);
+    @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, true);
     @Value(value = "Box") public boolean box = true;
     @Value(value = "Outline") public boolean outline = true;
     @Value(value = "LineWidht") @Bounds(min = 0.1f, max = 3) public float linewidht = 2f;

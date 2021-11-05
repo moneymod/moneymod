@@ -21,7 +21,7 @@ public class ESP extends Module {
     @Value(value = "Color" ) public JColor color = new JColor(0, 255, 0, false);
 
     @Value(value = "ChorusPredict") public boolean chorusPredict = true;
-    @Value(value = "Delay (Sec)") @Bounds(min = 1,max = 32) public int delay = 5;
+    @Value(value = "Delay (Sec)") @Bounds(max = 32) public int delay = 5;
     BlockPos predictChorus;
     private final Timer timer = new Timer();
     @Override
