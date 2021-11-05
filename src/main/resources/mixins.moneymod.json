@@ -13,7 +13,7 @@
     "MixinEntityPlayerSP",
     "MixinTimer",
     "MixinPlayerControllerMP",
-    "MixinBlock",
+    "MixinGuiNewChat",
     "MixinEntityRenderer",
     "MixinEntityOtherPlayerMP"
   ]
