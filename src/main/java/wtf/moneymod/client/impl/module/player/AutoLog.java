@@ -10,7 +10,7 @@ import wtf.moneymod.client.impl.module.Module;
 @Module.Register( label = "AutoLog", cat = Module.Category.PLAYER)
 public class AutoLog extends Module {
 
-    @Value(value = "Health") @Bounds(min = 1,max = 36) public int hpLog = 8;
+    @Value(value = "Health") @Bounds(max = 36) public int hpLog = 8;
 
     @Override public void onTick() {
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
