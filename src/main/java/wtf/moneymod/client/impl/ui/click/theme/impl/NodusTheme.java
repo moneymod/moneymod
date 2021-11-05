@@ -9,6 +9,7 @@ import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
+import wtf.moneymod.client.impl.ui.click.buttons.settings.ColorButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.KeyButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.sub.SubMode;
 import wtf.moneymod.client.impl.ui.click.theme.AbstractTheme;
@@ -123,14 +124,14 @@ public class NodusTheme extends AbstractTheme {
         mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
     }
 
-    @Override public void drawPickerButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered) {
+    @Override public void drawPickerButton(ColorButton container, int x, int y, int w, int h, boolean hovered) {
         float[] hsb = new float[] {
-                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 0 ],
-                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 1 ],
-                Color.RGBtoHSB(container.getValue().getColor().getRed(), container.getValue().getColor().getGreen(), container.getValue().getColor().getBlue(), null)[ 2 ]
+                Color.RGBtoHSB(container.setting.getValue().getColor().getRed(), container.setting.getValue().getColor().getGreen(), container.setting.getValue().getColor().getBlue(), null)[ 0 ],
+                Color.RGBtoHSB(container.setting.getValue().getColor().getRed(), container.setting.getValue().getColor().getGreen(), container.setting.getValue().getColor().getBlue(), null)[ 1 ],
+                Color.RGBtoHSB(container.setting.getValue().getColor().getRed(), container.setting.getValue().getColor().getGreen(), container.setting.getValue().getColor().getBlue(), null)[ 2 ]
         };
 
-        int alphas = (( JColor ) container.getValue()).getColor().getAlpha();
+        int alphas = (( JColor ) container.setting.getValue()).getColor().getAlpha();
 
         int selectedColor = Color.HSBtoRGB(hsb[ 0 ], 1.0f, 1.0f);
 
@@ -170,7 +171,7 @@ public class NodusTheme extends AbstractTheme {
         drawPolygonOutline(xPos - 2, yPos + 2, 2f, 3, 360, Color.black.getRGB());
         popMatrix();
 
-        mc.fontRenderer.drawStringWithShadow("Rainbow", ( int ) (x + w / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), y + h, (( JColor ) container.getValue()).isRainbow() ? (( JColor ) container.getValue()).getColor().getRGB() : -1);
+        mc.fontRenderer.drawStringWithShadow("Rainbow", ( int ) (x + w / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), y + h, (( JColor ) container.setting.getValue()).isRainbow() ? (( JColor ) container.setting.getValue()).getColor().getRGB() : -1);
 
 
     }

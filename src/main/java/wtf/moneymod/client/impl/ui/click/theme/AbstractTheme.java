@@ -12,6 +12,7 @@ import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
+import wtf.moneymod.client.impl.ui.click.buttons.settings.ColorButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.KeyButton;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.sub.SubMode;
 import wtf.moneymod.client.impl.utility.Globals;
@@ -40,7 +41,7 @@ public abstract class AbstractTheme extends Renderer2D implements Globals {
 
     public abstract void drawColorButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered);
 
-    public abstract void drawPickerButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered);
+    public abstract void drawPickerButton(ColorButton container, int x, int y, int w, int h, boolean hovered);
 
     protected ScaledResolution getResolution() {
         return new ScaledResolution(mc);
