@@ -14,6 +14,7 @@ import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.utility.Globals;
 
 /**
@@ -23,6 +24,26 @@ import wtf.moneymod.client.impl.utility.Globals;
 
 public enum EntityUtil implements Globals {
     INSTANCE;
+
+    public static EntityPlayer getTarget(final float range) {
+        EntityPlayer currentTarget = null;
+        for (int size = mc.world.playerEntities.size(), i = 0; i < size; ++i) {
+            final EntityPlayer player = mc.world.playerEntities.get(i);
+            if (!EntityUtil.isntValid(player, range)) {
+                if (currentTarget == null) {
+                    currentTarget = player;
+                } else if (mc.player.getDistanceSq(player) < mc.player.getDistanceSq(currentTarget)) {
+                    currentTarget = player;
+                }
+            }
+        }
+        return currentTarget;
+    }
+
+    public static boolean isntValid(final EntityPlayer entity, final double range) {
+        return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || Main.getMain().getFriendManagement().is(entity.getName());
+    }
+
 
     public boolean isMoving(EntityLivingBase entity) {
         return entity.moveStrafing != 0 || entity.moveForward != 0;
@@ -34,9 +55,9 @@ public enum EntityUtil implements Globals {
         float f3 = mc.player.prevRotationYaw + (mc.player.rotationYaw - mc.player.prevRotationYaw) * mc.getRenderPartialTicks();
         if (f != 0.0f) {
             if (f2 > 0.0f) {
-                f3 += ( float ) (f > 0.0f ? -45 : 45);
+                f3 += (float) (f > 0.0f ? -45 : 45);
             } else if (f2 < 0.0f) {
-                f3 += ( float ) (f > 0.0f ? 45 : -45);
+                f3 += (float) (f > 0.0f ? 45 : -45);
             }
             f2 = 0.0f;
             if (f > 0.0f) {
@@ -47,9 +68,9 @@ public enum EntityUtil implements Globals {
         }
         double d2 = Math.sin(Math.toRadians(f3 + 90.0f));
         double d3 = Math.cos(Math.toRadians(f3 + 90.0f));
-        double d4 = ( double ) f * d * d3 + ( double ) f2 * d * d2;
-        double d5 = ( double ) f * d * d2 - ( double ) f2 * d * d3;
-        return new double[] { d4, d5 };
+        double d4 = (double) f * d * d3 + (double) f2 * d * d2;
+        double d5 = (double) f * d * d2 - (double) f2 * d * d3;
+        return new double[]{d4, d5};
     }
 
     public static float getHealth(EntityLivingBase player) {
@@ -58,13 +79,13 @@ public enum EntityUtil implements Globals {
 
     public float calculate(double posX, final double posY, double posZ, EntityLivingBase entity) {
         double v = (1.0 - entity.getDistance(posX, posY, posZ) / 12.0) * getBlockDensity(new Vec3d(posX, posY, posZ), entity.getEntityBoundingBox());
-        return getBlastReduction(entity, getDamageMultiplied(( float ) ((v * v + v) / 2.0 * 85.0 + 1.0)));
+        return getBlastReduction(entity, getDamageMultiplied((float) ((v * v + v) / 2.0 * 85.0 + 1.0)));
     }
 
     public float getBlastReduction(EntityLivingBase entity, float damageI) {
         float damage = damageI;
-        damage = CombatRules.getDamageAfterAbsorb(damage, ( float ) entity.getTotalArmorValue(), ( float ) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
-        damage *= 1.0f - MathHelper.clamp(( float ) EnchantmentHelper.getEnchantmentModifierDamage(entity.getArmorInventoryList(), EXPLOSION_SOURCE), 0.0f, 20.0f) / 25.0f;
+        damage = CombatRules.getDamageAfterAbsorb(damage, (float) entity.getTotalArmorValue(), (float) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+        damage *= 1.0f - MathHelper.clamp((float) EnchantmentHelper.getEnchantmentModifierDamage(entity.getArmorInventoryList(), EXPLOSION_SOURCE), 0.0f, 20.0f) / 25.0f;
         if (entity.isPotionActive(MobEffects.RESISTANCE)) {
             return damage - damage / 4.0f;
         }
@@ -84,9 +105,9 @@ public enum EntityUtil implements Globals {
         final double d5 = (1.0 - Math.floor(1.0 / d3) * d3) / 2.0;
         float j2 = 0.0f;
         float k2 = 0.0f;
-        for (float f = 0.0f; f <= 1.0f; f += ( float ) d0) {
-            for (float f2 = 0.0f; f2 <= 1.0f; f2 += ( float ) d2) {
-                for (float f3 = 0.0f; f3 <= 1.0f; f3 += ( float ) d3) {
+        for (float f = 0.0f; f <= 1.0f; f += (float) d0) {
+            for (float f2 = 0.0f; f2 <= 1.0f; f2 += (float) d2) {
+                for (float f3 = 0.0f; f3 <= 1.0f; f3 += (float) d3) {
                     final double d6 = bb.minX + (bb.maxX - bb.minX) * f;
                     final double d7 = bb.minY + (bb.maxY - bb.minY) * f2;
                     final double d8 = bb.minZ + (bb.maxZ - bb.minZ) * f3;
@@ -206,7 +227,7 @@ public enum EntityUtil implements Globals {
         for (int j = 0; j < 4; j++) {
 
             ItemStack stack = player.inventory.armorInventory.get(j);
-            int dura = 100 - ( int ) ((1 - (( float ) stack.getMaxDamage() - ( float ) stack.getItemDamage()) / ( float ) stack.getMaxDamage()) * 100);
+            int dura = 100 - (int) ((1 - ((float) stack.getMaxDamage() - (float) stack.getItemDamage()) / (float) stack.getMaxDamage()) * 100);
 
             if (dura < min) min = dura;
         }

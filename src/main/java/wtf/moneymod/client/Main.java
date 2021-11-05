@@ -29,13 +29,17 @@ public class Main {
     private Screen screen;
 
     //management
+    private FpsManagement fpsManagement;
     private FriendManagement friendManagement;
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
+    private RotationManagement rotationManagement;
 
     public void init() {
         Display.setTitle("M0n3yM0d slatt_ *");
         System.out.println("init");
+        fpsManagement = new FpsManagement();
+        rotationManagement = new RotationManagement();
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
         friendManagement = new FriendManagement().register();
@@ -62,6 +66,10 @@ public class Main {
     public FriendManagement getFriendManagement() {
         return friendManagement;
     }
+
+    public FpsManagement getFpsManagement(){return fpsManagement;}
+
+    public RotationManagement getRotationManagement(){return rotationManagement;}
 
     public Screen getScreen() {
         return screen;

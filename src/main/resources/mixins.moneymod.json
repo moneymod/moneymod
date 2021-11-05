@@ -5,6 +5,8 @@
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
     "AccessorRenderManager",
+    "AccessorCPacketUseEntity",
+    "AccessorCPacketPlayer",
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinEntityPlayerSP",

@@ -3,6 +3,7 @@ package wtf.moneymod.client.impl.utility.impl.world;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,6 +46,20 @@ public enum BlockUtil implements Globals {
         }
         mc.playerController.updateController();
         return true;
+    }
+    public static boolean canPlaceCrystal ( BlockPos blockPos, boolean check ) {
+        return canPlaceCrystal( blockPos, check, true );
+    }
+
+    public static boolean canPlaceCrystal ( BlockPos blockPos, boolean check, boolean entity ) {
+        if ( BlockUtil.mc.world.getBlockState( blockPos ).getBlock( ) != Blocks.BEDROCK && BlockUtil.mc.world.getBlockState( blockPos ).getBlock( ) != Blocks.OBSIDIAN ) {
+            return false;
+        }
+        BlockPos boost = blockPos.add( 0, 1, 0 );
+        if ( BlockUtil.mc.world.getBlockState( boost ).getBlock( ) != Blocks.AIR || BlockUtil.mc.world.getBlockState( blockPos.add( 0, 2, 0 ) ).getBlock( ) != Blocks.AIR ) {
+            return false;
+        }
+        return !entity || BlockUtil.mc.world.getEntitiesWithinAABB( Entity.class, new AxisAlignedBB( boost.getX( ), boost.getY( ), boost.getZ( ), boost.getX( ) + 1, boost.getY( ) + ( check ? 2 : 1 ), boost.getZ( ) + 1 ), e -> !( e instanceof EntityEnderCrystal) ).size( ) == 0;
     }
 
     public EnumFacing calcSide(BlockPos pos) {
