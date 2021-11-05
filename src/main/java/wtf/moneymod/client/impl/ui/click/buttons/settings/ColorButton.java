@@ -18,7 +18,7 @@ import java.awt.*;
 
 public class ColorButton extends Component {
 
-    private final Option<JColor> setting;
+    public final Option<JColor> setting;
     private final ModuleButton button;
     private boolean isHovered;
     private int offset, x, y;
@@ -43,39 +43,6 @@ public class ColorButton extends Component {
         isHovered = isHovered(mouseX, mouseY);
         y = button.panel.getY() + offset;
         x = button.panel.getX();
-
-        float[] hsb = new float[] {
-                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 0 ],
-                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 1 ],
-                Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 2 ]
-        };
-
-        int alphas = (( JColor ) setting.getValue()).getColor().getAlpha();
-
-        boolean picker = mouseX > x + 2 && mouseX < x + 108 && mouseY > y + 18 && mouseY < y + 126,
-                hue = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 126 && mouseY < y + 134,
-                alpha = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 134 && mouseY < y + 141;
-
-        if (dragging) {
-            if (picker) {
-                float restrictedX = ( float ) Math.min(Math.max(x + 2, mouseX), x + 2 + 106);
-                float restrictedY = ( float ) Math.min(Math.max(y + 18, mouseY), y + 18 + 106);
-
-                hsb[ 1 ] = Math.max(Math.min((restrictedX - ( float ) x + 2) / 106, 1), 0);
-                hsb[ 2 ] = Math.max(Math.min(1f - (restrictedY - ( float ) (this.y + 18)) / 108, 1), 0);
-            } else if (hue && !(( JColor ) setting.getValue()).isRainbow()) {
-                float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
-
-                hsb[ 0 ] = Math.min((restrictedX - ( float ) x - 2) / 104, 1);
-            } else if (alpha) {
-                float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
-                alphas = ( int ) (Math.min(1 - (restrictedX - ( float ) x - 2) / 104, 1) * 255);
-            }
-
-        }
-
-        color = ColorUtil.injectAlpha(new Color(Color.HSBtoRGB(hsb[ 0 ], hsb[ 1 ], hsb[ 2 ])), alphas);
-
     }
 
     @Override
@@ -83,8 +50,39 @@ public class ColorButton extends Component {
         Screen.abstractTheme.drawColorButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 12, isHovered);
 
         if (open) {
-            Screen.abstractTheme.drawPickerButton(setting, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 142, isHovered);
-            (( JColor ) setting.getValue()).setColor(color);
+            float[] hsb = new float[] {
+                    Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 0 ],
+                    Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 1 ],
+                    Color.RGBtoHSB((( JColor ) setting.getValue()).getColor().getRed(), (( JColor ) setting.getValue()).getColor().getGreen(), (( JColor ) setting.getValue()).getColor().getBlue(), null)[ 2 ]
+            };
+
+            int alphas = (( JColor ) setting.getValue()).getColor().getAlpha();
+
+            boolean picker = mouseX > x + 2 && mouseX < x + 108 && mouseY > y + 18 && mouseY < y + 126,
+                    hue = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 126 && mouseY < y + 134,
+                    alpha = mouseX > x + 2 && mouseX < x + 109 && mouseY > y + 134 && mouseY < y + 141;
+
+            if (dragging) {
+                if (picker) {
+                    float restrictedX = ( float ) Math.min(Math.max(x + 2, mouseX), x + 2 + 106);
+                    float restrictedY = ( float ) Math.min(Math.max(y + 18, mouseY), y + 18 + 106);
+
+                    hsb[ 1 ] = Math.max(Math.min((restrictedX - ( float ) x + 2) / 106, 1), 0);
+                    hsb[ 2 ] = Math.max(Math.min(1f - (restrictedY - ( float ) (this.y + 18)) / 108, 1), 0);
+                } else if (hue && !(( JColor ) setting.getValue()).isRainbow()) {
+                    float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
+
+                    hsb[ 0 ] = Math.min((restrictedX - ( float ) x - 2) / 104, 1);
+                } else if (alpha) {
+                    float restrictedX = ( float ) Math.min(Math.max(x - 2, mouseX), x + 104);
+                    alphas = ( int ) (Math.min(1 - (restrictedX - ( float ) x - 2) / 104, 1) * 255);
+                }
+
+            }
+
+            Screen.abstractTheme.drawPickerButton(this, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 142, isHovered);
+            color = ColorUtil.injectAlpha(new Color(Color.HSBtoRGB(hsb[ 0 ], hsb[ 1 ], hsb[ 2 ])), alphas);
+            setting.setValue(new JColor(color, setting.getValue().isRainbow()));
         }
 
     }
