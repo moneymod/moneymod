@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Module.Register( label = "Notifications", cat = Module.Category.MOVEMENT )
+@Module.Register( label = "Notifications", cat = Module.Category.GLOBAL )
 public class Notifications extends Module {
 
     private List<Module> blacklist = new ArrayList<>();

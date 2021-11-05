@@ -103,6 +103,7 @@ public class SpeedMine extends Module {
                 e.cancel();
                 return;
             }
+
         }
 
         if (swap) {
