@@ -12,6 +12,8 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 @Module.Register( label = "ESP", cat = Module.Category.RENDER, exception = true )
 public class ESP extends Module {
@@ -27,15 +29,15 @@ public class ESP extends Module {
         predictChorus = null;
     }
 
-    @SubscribeEvent
-    public void onPacketReceive(PacketEvent.Receive event) {
-        if (event.getPacket() instanceof SPacketSoundEffect && chorusPredict) {
-            final SPacketSoundEffect packet = (SPacketSoundEffect) event.getPacket();
+    @Handler
+    public Listener<PacketEvent.Receive> packeEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
+        if (e.getPacket() instanceof SPacketSoundEffect && chorusPredict) {
+            final SPacketSoundEffect packet = (SPacketSoundEffect) e.getPacket();
             if (packet.getSound() == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT) {
                 predictChorus = new BlockPos(packet.getX(), packet.getY(), packet.getZ());
             }
         }
-    }
+    });
 
     @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
         if (predictChorus != null){
