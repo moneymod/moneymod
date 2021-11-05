@@ -41,7 +41,7 @@ public class PhaseWalk extends Module {
             if (timer.isPassed()) {
                 double[] dArray = EntityUtil.forward(speed / 100.0);
                 for (int i = 0; i < attempts; ++i) {
-                        sendPackets(PhaseWalk.mc.player.posX + dArray[0], PhaseWalk.mc.player.posY + (PhaseWalk.mc.gameSettings.keyBindJump.isKeyDown() ? 1 : (PhaseWalk.mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0)) * speed / 100.0, PhaseWalk.mc.player.posZ + dArray[1]);
+                        sendPackets(PhaseWalk.mc.player.posX + dArray[0], PhaseWalk.mc.player.posY + (PhaseWalk.mc.gameSettings.keyBindJump.isKeyDown() ? 5 : (PhaseWalk.mc.gameSettings.keyBindSneak.isKeyDown() ? -5 : 0)) * speed / 100.0, PhaseWalk.mc.player.posZ + dArray[1]);
                 }
                 timer.reset();
             }
