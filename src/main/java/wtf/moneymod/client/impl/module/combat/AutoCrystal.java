@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -40,18 +41,18 @@ public class AutoCrystal extends Module {
     @Value(value = "Place") public boolean place = true;
     @Value(value = "Break") public boolean hit = true;
     @Value(value = "Logic") public Logic logic = Logic.BREAKPLACE;
-    @Value(value = "Target Range") @Bounds(max = 16) public float targetRange = 12f;
+    @Value(value = "Target Range") @Bounds(max = 16) public int targetRange = 12;
     @Value(value = "Place Range ") @Bounds(max = 6) public float placeRange = 5f;
     @Value(value = "Break Range ") @Bounds(max = 6) public float breakRange = 5f;
     @Value(value = "Wall Range") @Bounds(max = 6) public float wallRange = 3.5f;
-    @Value(value = "Break Delay") @Bounds(max = 200) public float breakDelay = 40;
-    @Value(value = "Place Delay") @Bounds(max = 200) public float placeDelay = 20;
-    @Value(value = "BoostDelay") @Bounds(max = 200) public float boostdelay = 80;
-    @Value(value = "MinDamage") @Bounds(max = 36) public float mindmg = 6f;
-    @Value(value = "MaxSelfDamage") @Bounds(max = 36) public float maxselfdamage = 6f;
-    @Value(value = "FacePlaceDamage") @Bounds(max = 36) public float faceplacehp = 8f;
-    @Value(value = "ArmorScale") @Bounds(max = 100) public float armorscale = 12f;
-    @Value(value = "TickExisted") @Bounds(max = 20) public float tickexisted = 3f;
+    @Value(value = "Break Delay") @Bounds(max = 200) public int breakDelay = 40;
+    @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
+    @Value(value = "BoostDelay") @Bounds(max = 200) public int boostdelay = 80;
+    @Value(value = "MinDamage") @Bounds(max = 36) public int mindmg = 6;
+    @Value(value = "MaxSelfDamage") @Bounds(max = 36) public int maxselfdamage = 6;
+    @Value(value = "FacePlaceDamage") @Bounds(max = 36) public int faceplacehp = 8;
+    @Value(value = "ArmorScale") @Bounds(max = 100) public int armorscale = 12;
+    @Value(value = "TickExisted") @Bounds(max = 20) public int tickexisted = 3;
     @Value(value = "Boost") public boolean boost = true;
     @Value(value = "Rotate") public boolean rotateons = true;
     @Value(value = "Second") public boolean secondCheck = true;
@@ -157,25 +158,24 @@ public class AutoCrystal extends Module {
             maxDamage = targetDamage;
 
         }
-
-        if (swap == Swap.NONE) {
-            if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) {
+        if (swap == Swap.SILENT){
+            if (ItemUtil.findHotbarBlock(ItemEndCrystal.class) == -1){
                 return;
             }
-        } else if (swap == Swap.NORMAL) {
+        } else if (swap == Swap.AUTO){
             int crystal = ItemUtil.findHotbarBlock(ItemEndCrystal.class);
-            if (crystal != -1) {
-                ItemUtil.swapItemsOffhand(crystal);
+            if (crystal != -1){
+                if (!mc.player.isHandActive()){
+                    ItemUtil.switchToHotbarSlot(crystal, false);
+                } else placePos = null;
             } else return;
-        } else if (swap == Swap.SILENT) {
-            if (ItemUtil.findHotbarBlock(ItemEndCrystal.class) == -1) return;
+
+        } else if (swap == Swap.NONE){
+            if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
         if (maxDamage != 0.5 && placeTimer.passed((int)placeDelay)) {
             int old = mc.player.inventory.currentItem;
-            if (!(offhand || !!(swap == Swap.NORMAL) || mc.player.getHeldItemMainhand().getItem() == Items.GOLDEN_APPLE && mc.player.isHandActive())) {
-                ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(ItemEndCrystal.class), false);
-            }
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
             if (swap == Swap.SILENT) ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(ItemEndCrystal.class), false);
             if (rotateons) rotate(placePos);
@@ -221,15 +221,10 @@ public class AutoCrystal extends Module {
 
     public enum Swap {
         NONE,
-        NORMAL,
+        AUTO,
         SILENT
     }
 
-    public enum Break {
-        INSTANT,
-        PACKET,
-        NORMAL
-    }
 
     public enum Logic {
         BREAKPLACE,

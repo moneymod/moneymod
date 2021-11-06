@@ -20,6 +20,7 @@ import wtf.moneymod.client.impl.utility.impl.shader.FramebufferShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.GlowShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.OutlineShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.SpaceShader;
+import wtf.moneymod.client.impl.utility.impl.shader.impl.SpaceSmokeShader;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -86,6 +87,9 @@ public class ESP extends Module {
                     case SPACE:
                         framebuffer = SpaceShader.INSTANCE;
                         break;
+                    case SPACESMOKE:
+                        framebuffer = SpaceSmokeShader.INSTANCE;
+                        break;
                 }
                 framebuffer.startDraw(event.getPartialTicks());
                 nameTags = true;
@@ -107,7 +111,8 @@ public class ESP extends Module {
     public enum Shader {
         OUTLINE,
         GLOW,
-        SPACE
+        SPACE,
+        SPACESMOKE
     }
 
 }
