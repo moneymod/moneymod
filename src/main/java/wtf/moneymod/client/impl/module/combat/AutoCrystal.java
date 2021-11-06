@@ -42,8 +42,8 @@ public class AutoCrystal extends Module {
     @Value(value = "Break") public boolean hit = true;
     @Value(value = "Logic") public Logic logic = Logic.BREAKPLACE;
     @Value(value = "Target Range") @Bounds(max = 16) public int targetRange = 12;
-    @Value(value = "Place Range ") @Bounds(max = 6) public float placeRange = 5f;
-    @Value(value = "Break Range ") @Bounds(max = 6) public float breakRange = 5f;
+    @Value(value = "Place Range ") @Bounds(max = 6) public int placeRange = 5;
+    @Value(value = "Break Range ") @Bounds(max = 6) public int breakRange = 5;
     @Value(value = "Wall Range") @Bounds(max = 6) public float wallRange = 3.5f;
     @Value(value = "Break Delay") @Bounds(max = 200) public int breakDelay = 40;
     @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
@@ -53,14 +53,11 @@ public class AutoCrystal extends Module {
     @Value(value = "FacePlaceDamage") @Bounds(max = 36) public int faceplacehp = 8;
     @Value(value = "ArmorScale") @Bounds(max = 100) public int armorscale = 12;
     @Value(value = "TickExisted") @Bounds(max = 20) public int tickexisted = 3;
-    @Value(value = "Boost") public boolean boost = true;
+    @Value(value = "Predict") public boolean boost = true;
     @Value(value = "Rotate") public boolean rotateons = true;
     @Value(value = "Second") public boolean secondCheck = true;
     @Value(value = "Swap") public Swap swap = Swap.NONE;
     @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, true);
-    @Value(value = "Box") public boolean box = true;
-    @Value(value = "Outline") public boolean outline = true;
-    @Value(value = "LineWidht") @Bounds(min = 0.1f, max = 3) public float linewidht = 2f;
     private final Set<BlockPos> placeSet = new HashSet<>();
     private BlockPos renderPos;
     private BlockPos currentBlock;
@@ -137,7 +134,7 @@ public class AutoCrystal extends Module {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if (renderPos != null) {
-            Renderer3D.drawBoxESP(renderPos, color.getColor(), linewidht, outline, box, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
+            Renderer3D.drawBoxESP(renderPos, color.getColor(), 0.3, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
         }
     }
 
