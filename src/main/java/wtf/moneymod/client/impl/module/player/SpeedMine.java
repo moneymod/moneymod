@@ -81,7 +81,7 @@ public class SpeedMine extends Module {
                 }
             }
 
-            if (mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && ( !swap || delay > 2 ) ) {
+            if (instant && mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && ( !swap || delay > 2 ) ) {
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -112,6 +112,10 @@ public class SpeedMine extends Module {
                 swap = true;
                 e.cancel();
                 return;
+            }
+
+            if(e.getBlockPos().toLong() != currentPos.toLong()) {
+                mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
         }

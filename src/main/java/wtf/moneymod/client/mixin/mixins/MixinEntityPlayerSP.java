@@ -12,8 +12,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.MoveEvent;
+import wtf.moneymod.client.api.events.UpdateWalkingPlayerEvent;
 
 @Mixin( value = EntityPlayerSP.class, priority = 9999 )
 public class MixinEntityPlayerSP extends AbstractClientPlayer {
@@ -27,6 +29,18 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
         MoveEvent event = new MoveEvent(x, y, z);
         Main.EVENT_BUS.dispatch(event);
         super.move(type, event.motionX, event.motionY, event.motionZ);
+    }
+
+    @Inject( method = "onUpdateWalkingPlayer", at = @At( "HEAD" ) )
+    public void pre( CallbackInfo info ) {
+        UpdateWalkingPlayerEvent event = new UpdateWalkingPlayerEvent( 0 );
+        Main.EVENT_BUS.dispatch( event );
+    }
+
+    @Inject( method = "onUpdateWalkingPlayer", at = @At( "RETURN" ) )
+    public void post( CallbackInfo info ) {
+        UpdateWalkingPlayerEvent event = new UpdateWalkingPlayerEvent( 1 );
+        Main.EVENT_BUS.dispatch( event );
     }
 
 }
