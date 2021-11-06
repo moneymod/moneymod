@@ -12,7 +12,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.GuiScreen;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.module.global.ClickGui;

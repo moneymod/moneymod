@@ -3,13 +3,11 @@ package wtf.moneymod.client.impl.ui.click.buttons;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.settings.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class ModuleButton extends Component {

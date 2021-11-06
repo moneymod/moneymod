@@ -2,7 +2,6 @@ package wtf.moneymod.client.mixin.mixins;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +11,6 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.RenderNameTagEvent;
 import wtf.moneymod.client.impl.module.render.NameTags;
 import wtf.moneymod.client.mixin.accessors.IEntityRenderer;
-import wtf.moneymod.eventhandler.event.enums.Era;
 
 @Mixin( EntityRenderer.class )
 public class MixinEntityRenderer implements IEntityRenderer {

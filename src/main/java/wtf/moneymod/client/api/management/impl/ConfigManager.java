@@ -1,7 +1,6 @@
 package wtf.moneymod.client.api.management.impl;
 
 import com.google.gson.*;
-import scala.Int;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
