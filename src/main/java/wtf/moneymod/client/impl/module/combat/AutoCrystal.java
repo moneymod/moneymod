@@ -22,6 +22,7 @@ import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.misc.AutoGG;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -108,9 +109,10 @@ public class AutoCrystal extends Module {
 
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
-        if (currentTarget == null) return;
+        if (currentTarget != null){
+            AutoGG.target(currentTarget);
+        } else return;
         lowArmor = ItemUtil.isArmorLow(currentTarget, (int) armorscale);
-
         doAutoCrystal();
     }
 
@@ -134,7 +136,7 @@ public class AutoCrystal extends Module {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if (renderPos != null) {
-            Renderer3D.drawBoxESP(renderPos, color.getColor(), 0.3, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
+            Renderer3D.drawBoxESP(renderPos, color.getColor(), 0.3f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
         }
     }
 
