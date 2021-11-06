@@ -26,8 +26,6 @@ public class GlowShader extends FramebufferShader {
         GL20.glUniform2f(this.getUniform("texelSize"), 1.0f / this.mc.displayWidth * (this.radius * this.quality), 1.0f / this.mc.displayHeight * (this.radius * this.quality));
         GL20.glUniform3f(this.getUniform("color"), this.red, this.green, this.blue);
         GL20.glUniform1f(this.getUniform("radius"), this.radius);
-        GL20.glUniform1f(this.getUniform("devider"), 140.0f);
-        GL20.glUniform1f(this.getUniform("maxSample"), 10.0f);
         GL20.glUniform2f(this.getUniform("rainbowStrength"), x, y);
         GL20.glUniform1f(this.getUniform("rainbowSpeed"), speed);
         GL20.glUniform1f(this.getUniform("saturation"), saturation);

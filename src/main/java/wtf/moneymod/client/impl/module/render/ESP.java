@@ -107,7 +107,7 @@ public class ESP extends Module {
     public enum Shader {
         OUTLINE,
         GLOW,
-        SPACE
+        SPACE,
     }
 
 }
