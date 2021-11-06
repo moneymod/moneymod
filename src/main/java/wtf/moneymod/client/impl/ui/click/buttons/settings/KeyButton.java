@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Component;
+import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 
 import java.awt.*;
@@ -50,32 +51,7 @@ public class KeyButton extends Component {
     }
 
     @Override public void render( int mouseX, int mouseY ) {
-        Gui.drawRect( button.panel.getX( ), button.panel.getY( ) + offset, button.panel.getX( ) + button.panel.getWidth( ), button.panel.getY( ) + offset + 12, isHovered ? new Color( 0, 0, 0, 160 ).getRGB( ) : new Color( 0, 0, 0, 140 ).getRGB( ) );
-        mc.fontRenderer.drawStringWithShadow( "Key", button.panel.getX( ) + 5, button.panel.getY( ) + offset + 2, -1 );
-        if ( binding ) {
-            mc.fontRenderer.drawStringWithShadow( "...", button.panel.getX( ) + button.panel.getWidth( ) - 5 - mc.fontRenderer.getStringWidth( "..." ), button.panel.getY( ) + offset + ( ( ( ClickGui ) Main.getMain().getModuleManager( ).get( ClickGui.class ) ).bounding ? ( isHovered ? 1 : 2 ) : 2 ), -1 );
-        }
-        else {
-            String key;
-            switch ( button.module.getKey( ) ) {
-                case 345:
-                    key = "RCtrl";
-                    break;
-                case 341:
-                    key = "Ctrl";
-                    break;
-                case 346:
-                    key = "RAlt";
-                    break;
-                case -1:
-                    key = "NONE";
-                    break;
-                default:
-                    key = Keyboard.getKeyName( button.module.getKey( ) );
-            }
-
-            mc.fontRenderer.drawStringWithShadow( key, button.panel.getX( ) + button.panel.getWidth( ) - 5 - mc.fontRenderer.getStringWidth( key ), button.panel.getY( ) + offset + ( ( ( ClickGui ) Main.getMain().getModuleManager( ).get( ClickGui.class ) ).bounding ? ( isHovered ? 1 : 2 ) : 2 ), -1 );
-        }
+        Screen.abstractTheme.drawKeyButton(this, button.panel.getX(), button.panel.getY() + offset, button.panel.getWidth(), 12, isHovered(mouseX,mouseY));
     }
 
     public boolean isHovered( final double x, final double y ) {
