@@ -10,7 +10,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.Sys;
 import wtf.moneymod.client.api.events.DamageBlockEvent;
+import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -42,7 +44,7 @@ public class SpeedMine extends Module {
     private final Timer timer = new Timer();
     private long start;
     private int old, delay;
-    private boolean swap, checked;
+    public boolean swap = false, checked;
 
     @Override protected void onToggle() {
         old = -1;
@@ -53,7 +55,8 @@ public class SpeedMine extends Module {
     @Override public void onTick() {
         //this swap code is sooo trash
         if (swap) {
-            if (delay >= 5) {
+            mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
+            if (delay >= 2) {
                 if (old != -1) {
                     ItemUtil.switchToHotbarSlot(old, false);
                 }
@@ -62,7 +65,9 @@ public class SpeedMine extends Module {
             }
             delay++;
         }
+    }
 
+    @Handler public Listener<MoveEvent> moveEventListener = new Listener<>(MoveEvent.class, e -> {
         if (currentPos != null) {
             if (instant) {
                 if (mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR) {
@@ -76,7 +81,7 @@ public class SpeedMine extends Module {
                 }
             }
 
-            if (mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
+            if (mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && ( !swap || delay > 2 ) ) {
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -90,9 +95,14 @@ public class SpeedMine extends Module {
             (( IPlayerControllerMP ) mc.playerController).setBlockHitDelay(0);
         } catch (Exception ignored) {}
 
-    }
+    });
 
     @Handler public Listener<DamageBlockEvent> damageBlockEvent = new Listener<>(DamageBlockEvent.class, e -> {
+        if (swap) {
+            e.setCancelled(true);
+            return;
+        }
+
         if (nullCheck() || !BlockUtil.INSTANCE.canBlockBeBroken(e.getBlockPos())) return;
 
         if (currentPos != null) {
@@ -106,10 +116,6 @@ public class SpeedMine extends Module {
 
         }
 
-        if (swap) {
-            e.cancel();
-            return;
-        }
         mc.player.swingArm(EnumHand.MAIN_HAND);
         for (int j = 0; j < spam; j++) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, e.getBlockPos(), e.getFaceDirection()));
