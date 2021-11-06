@@ -1,12 +1,17 @@
 package wtf.moneymod.client;
 
 import akka.io.TcpListener;
+import com.google.common.hash.Hashing;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.*;
 import wtf.moneymod.client.impl.ui.click.Screen;
+import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.eventhandler.EventBus;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author cattyn
@@ -18,12 +23,12 @@ public class Main {
     //global constants
     public static final String MODID = "moneymod";
     public static final String NAME = "Money Mod";
-    public static final String VERSION = "0.0";
+    public static String VERSION = "0.0";
 
     //global values
     private static Main main;
     public static float TICK_TIMER = 1;
-    public static EventBus EVENT_BUS = new EventBus();
+    public static final EventBus EVENT_BUS = new EventBus();
 
     //objects
     private Screen screen;
@@ -36,11 +41,11 @@ public class Main {
     private RotationManagement rotationManagement;
 
     public void init() {
-        Display.setTitle("M0n3yM0d slatt_ *");
         System.out.println("init");
         fpsManagement = new FpsManagement();
         rotationManagement = new RotationManagement();
         moduleManagement = new ModuleManagement().register();
+        VERSION = getHash(moduleManagement);
         commandManagement = new CommandManagement().register();
         friendManagement = new FriendManagement().register();
         ConfigManager.getInstance().load();
@@ -48,6 +53,7 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
+        Display.setTitle(String.format("moneymod build-%s", VERSION));
     }
 
     public static Main getMain() {
@@ -73,6 +79,13 @@ public class Main {
 
     public Screen getScreen() {
         return screen;
+    }
+
+    private String getHash(ModuleManagement module) {
+        StringBuilder sb = new StringBuilder();
+        module.forEach(m -> sb.append(m.getClass().hashCode()));
+        sb.append(getClass().hashCode());
+        return Hashing.sha256().hashString(sb.toString(), StandardCharsets.UTF_8).toString().substring(0, 10);
     }
 
 }
