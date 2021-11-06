@@ -1,16 +1,10 @@
 package wtf.moneymod.client.impl.ui.click;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 import wtf.moneymod.client.impl.utility.Globals;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Panel implements Globals {

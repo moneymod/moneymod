@@ -9,7 +9,6 @@ import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Module.Register( label = "Notifications", cat = Module.Category.GLOBAL )
