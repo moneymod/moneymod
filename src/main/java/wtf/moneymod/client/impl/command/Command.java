@@ -27,6 +27,10 @@ public abstract class Command implements ICommand {
 
     @Override public abstract void execute(String[] args);
 
+    protected void print(String message){
+        ChatUtil.INSTANCE.sendMessage(message);
+    }
+
     protected void sendUsage() { ChatUtil.INSTANCE.sendMessage("Invalid Usage! " + getSyntax()); }
 
 }

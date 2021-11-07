@@ -16,29 +16,24 @@ import java.util.stream.Collectors;
 public class FriendCommand extends Command {
 
     public FriendCommand() {
-        super("<ModuleName> || <ModuleName> <SettingName/List> || <ModuleName> <SettingName> <NewValue>",
-                Main
-                        .getMain()
-                        .getModuleManager()
-                        .stream()
-                        .map(m -> m.getLabel().toLowerCase())
-                        .toArray(String[]::new));
+        super("f add/del <nick>", "f", "Friend", "friend");
     }
 
     @Override public void execute(String[] str) {
         str = Arrays.copyOfRange(str, 1, str.length);
         if (str.length < 2) {
+            sendUsage();
             return;
         } else {
             switch (str[0].toLowerCase()) {
                 case "add":
                     if (Main.getMain().getFriendManagement().is(str[1].toLowerCase())) return;
                     Main.getMain().getFriendManagement().add(str[1]);
-                    ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.GREEN + "added");
+                    print(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.GREEN + "added");
                     break;
                 case "del":
                     Main.getMain().getFriendManagement().remove(str[1]);
-                    ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.RED + "deleted");
+                    print(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.RED + "deleted");
                     break;
             }
         }

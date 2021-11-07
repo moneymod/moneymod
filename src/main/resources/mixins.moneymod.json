@@ -4,6 +4,7 @@
   "package": "wtf.moneymod.client.mixin.mixins",
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
+    "ducks.IMinecraft",
     "ducks.AccessorRenderManager",
     "ducks.AccessorCPacketUseEntity",
     "ducks.AccessorCPacketPlayer",
