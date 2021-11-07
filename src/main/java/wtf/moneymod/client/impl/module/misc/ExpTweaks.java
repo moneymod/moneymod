@@ -19,7 +19,7 @@ public class ExpTweaks extends Module {
             ((IMinecraft) mc).setRightClickDelayTimer(0);
         }
         if (silent) {
-            int old = mc.player.inventory.currentItem; int xp = ItemUtil.findHotbarBlock(ItemExpBottle.class);
+            int old = mc.player.inventory.currentItem;  int xp = ItemUtil.findHotbarBlock(ItemExpBottle.class);
             if (xp == -1) return;
             ItemUtil.switchToHotbarSlot(xp, false);
             mc.playerController.processRightClick(mc.player, mc.world, EnumHand.MAIN_HAND);
