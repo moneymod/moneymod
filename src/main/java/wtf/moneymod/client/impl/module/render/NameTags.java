@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -231,7 +232,7 @@ public class NameTags extends Module {
     private String getTagString( EntityPlayer player ) {
         StringBuilder sb = new StringBuilder( );
 
-        if ( Main.getMain().getFriendManagement().is( player.getName( ) ) && friend ) sb.append( ChatFormatting.AQUA );
+        if ( FriendManagement.getInstance().is( player.getName( ) ) && friend ) sb.append( ChatFormatting.AQUA );
 
         if ( ping ) {
             try {
@@ -254,7 +255,7 @@ public class NameTags extends Module {
             sb.append( " " ).append( ( int ) EntityUtil.getHealth( player ) ).append( ChatFormatting.RESET );
         }
 
-        if ( Main.getMain().getFriendManagement().is( player.getName( ) ) && friend ) sb.append( ChatFormatting.AQUA );
+        if ( FriendManagement.getInstance().is( player.getName( ) ) && friend ) sb.append( ChatFormatting.AQUA );
 
         if ( gamemode ) {
             sb.append( " [" );

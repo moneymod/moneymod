@@ -15,6 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.impl.utility.Globals;
 
 /**
@@ -41,7 +42,7 @@ public enum EntityUtil implements Globals {
     }
 
     public static boolean isntValid(final EntityPlayer entity, final double range) {
-        return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || Main.getMain().getFriendManagement().is(entity.getName());
+        return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || FriendManagement.getInstance().is(entity.getName());
     }
 
 

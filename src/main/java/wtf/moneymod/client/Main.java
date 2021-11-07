@@ -35,7 +35,6 @@ public class Main {
 
     //management
     private FpsManagement fpsManagement;
-    private FriendManagement friendManagement;
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
     private RotationManagement rotationManagement;
@@ -47,7 +46,6 @@ public class Main {
         moduleManagement = new ModuleManagement().register();
         VERSION = getHash(moduleManagement);
         commandManagement = new CommandManagement().register();
-        friendManagement = new FriendManagement().register();
         ConfigManager.getInstance().load();
         screen = new Screen();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
@@ -67,10 +65,6 @@ public class Main {
 
     public CommandManagement getCommandManagement() {
         return commandManagement;
-    }
-
-    public FriendManagement getFriendManagement() {
-        return friendManagement;
     }
 
     public FpsManagement getFpsManagement(){return fpsManagement;}

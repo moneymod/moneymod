@@ -23,7 +23,7 @@ public class AutoTotem extends Module {
     public void onTick() {
         if (nullCheck() || mc.currentScreen instanceof GuiInventory) return;
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
-        if (hp > health){
+        if (hp > health && mc.player.fallDistance != 5f){
             if (rightClickGapple && mc.player.getHeldItemMainhand().getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isKeyDown()){
                 ItemUtil.swapItemsOffhand(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
             } else {

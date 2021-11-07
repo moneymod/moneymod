@@ -2,6 +2,7 @@ package wtf.moneymod.client.impl.command.impl;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
@@ -27,12 +28,12 @@ public class FriendCommand extends Command {
         } else {
             switch (str[0].toLowerCase()) {
                 case "add":
-                    if (Main.getMain().getFriendManagement().is(str[1].toLowerCase())) return;
-                    Main.getMain().getFriendManagement().add(str[1]);
+                    if (FriendManagement.getInstance().is(str[1].toLowerCase())) return;
+                    FriendManagement.getInstance().add(str[1]);
                     print(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.GREEN + "added");
                     break;
                 case "del":
-                    Main.getMain().getFriendManagement().remove(str[1]);
+                    FriendManagement.getInstance().remove(str[1]);
                     print(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + str[1].toLowerCase() + " " + ChatFormatting.RED + "deleted");
                     break;
             }
