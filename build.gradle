@@ -65,10 +65,10 @@ dependencies {
 
 shadowJar {
     dependencies {
-        include('org.spongepowered:mixin')
-        include('club.minnced:java-discord-rpc')
-        include('org.reflections:reflections')
-        include('org.javassist:javassist')
+        include(dependency('org.spongepowered:mixin'))
+        include(dependency('club.minnced:java-discord-rpc'))
+        include(dependency('org.reflections:reflections'))
+        include(dependency('org.javassist:javassist'))
     }
     manifest {
         attributes(
