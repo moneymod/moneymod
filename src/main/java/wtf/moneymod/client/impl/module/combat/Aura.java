@@ -50,7 +50,7 @@ public class Aura extends Module {
                             .stream()
                             .filter(e -> e.getItem() instanceof ItemSword)
                             .max(Comparator.comparing(e -> (( ItemSword ) e.getItem()).getAttackDamage() + EnchantmentHelper.getModifierForCreature(e, EnumCreatureAttribute.UNDEFINED)))
-                            .ifPresent(bestSword -> ItemUtil.swapToHotbarSlot(ItemUtil.getHotbarItems().get(bestSword)));
+                            .ifPresent(bestSword -> ItemUtil.swapToHotbarSlot(ItemUtil.getHotbarItems().get(bestSword),false));
                     break;
                 case ONLY:
                     if (!(mc.player.getHeldItemMainhand().getItem() instanceof ItemSword)) return;

@@ -7,7 +7,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 
-@Module.Register( label = "CrystalChams", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "CrystalChams", cat = Module.Category.RENDER)
 public class CrystalChams extends Module {
 
     @Value(value = "CancelY") public boolean cancelY = false;

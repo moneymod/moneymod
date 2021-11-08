@@ -157,7 +157,7 @@ public class AutoTrap extends Module {
         for ( BlockPos bp : blockPos ) {
             if ( placed >= bpt ) return;
             int old = mc.player.inventory.currentItem;
-            if ( ItemUtil.swapToHotbarSlot( ItemUtil.findItem( BlockObsidian.class )) == -1 )
+            if ( ItemUtil.swapToHotbarSlot( ItemUtil.findItem( BlockObsidian.class ), false) == -1 )
                 return;
             switch ( BlockUtil.INSTANCE.isPlaceable( bp ) ) {
                 case 0: {
@@ -177,7 +177,7 @@ public class AutoTrap extends Module {
                     break;
                 }
             }
-            ItemUtil.swapToHotbarSlot(old);
+            ItemUtil.swapToHotbarSlot(old, false);
         }
     }
 
