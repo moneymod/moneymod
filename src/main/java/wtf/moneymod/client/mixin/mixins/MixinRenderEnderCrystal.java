@@ -25,6 +25,7 @@ public class MixinRenderEnderCrystal implements Globals {
     public void doRender(ModelBase modelBase, Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         CrystalChams cc = (CrystalChams) Main.getMain().getModuleManager().get(CrystalChams.class);
         if (cc.isToggled()) {
+
             float red = cc.color.getColor().getRed() / 255f;
             float green = cc.color.getColor().getGreen() / 255f;
             float blue = cc.color.getColor().getBlue() / 255f;
@@ -34,17 +35,6 @@ public class MixinRenderEnderCrystal implements Globals {
             float scales = (float) cc.scale;
 
             GlStateManager.scale(scales, scales, scales);
-            if(cc.glint){
-                Renderer3D.prepare();
-                mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
-                GL11.glTexCoord3d(1.0, 1.0, 1.0);
-                GL11.glEnable(3553);
-                GL11.glBlendFunc(768, 771);
-                GL11.glColor4f(red, green, blue, alpha);
-                modelBase.render(entityIn, limbSwing, limb, age, netHeadYaw, headPitch, scale);
-                GL11.glBlendFunc(770, 32772);
-                Renderer3D.release();
-            }
 
             //lines
             if (cc.line >= 0.1D) {
