@@ -29,7 +29,7 @@ minecraft {
     version = "1.12.2-14.23.5.2847"
     runDir = 'run'
     mappings = "stable_39"
-    coreMod = 'me.sleepy.loader.MoneymodEntryPoint'
+    coreMod = 'wtf.moneymod.client.mixin.Loader'
     makeObfSourceJar = false
 }
 
@@ -73,7 +73,7 @@ shadowJar {
     manifest {
         attributes(
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-                "FMLCorePlugin": 'me.sleepy.loader.MoneymodEntryPoint',
+                "FMLCorePlugin": 'wtf.moneymod.client.mixin.Loader',
                 "TweakOrder": 0,
                 'FMLCorePluginContainsFMLMod': 'true',
                 'ForceLoadAsMod': 'true',
@@ -101,43 +101,12 @@ jar {
     manifest {
         attributes(
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-                "FMLCorePlugin": 'me.sleepy.loader.MoneymodEntryPoint',
+                "FMLCorePlugin": 'wtf.moneymod.client.mixin.Loader',
                 "TweakOrder": 0,
                 "MixinConfigs": 'mixins.moneymod.json',
         )
     }
 }
-
-task clientJar(type: Jar, dependsOn: jar) {
-    from(zipTree(shadowJar.archivePath)) {
-        // все ресурсы нужно добавлять сюда
-        include "wtf/moneymod/client/**"
-
-        include "assets/minecraft/moneymod/shader/**"
-        include "mixins.moneymod.json"
-        include "mixins.moneymod.refmap.json"
-    }
-
-    baseName = ""
-    version = ""
-    classifier = "moneymod"
-}
-
-task loaderJar(type: Jar, dependsOn: jar) {
-    from(zipTree(shadowJar.archivePath)) {
-        // а здесь надо писать exclude "ресурс"
-        exclude "wtf/moneymod/client/**"
-        exclude "assets/minecraft/moneymod/shader/**"
-        exclude "mixins.moneymod.json"
-        exclude "mixins.moneymod.refmap.json"
-    }
-
-    baseName = ""
-    version = ""
-    classifier = "moneymod-loader"
-}
-
-build.dependsOn(clientJar, loaderJar)
 
 processResources {
     inputs.property "version", project.version
