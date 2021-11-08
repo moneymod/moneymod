@@ -16,6 +16,7 @@
     "MixinPlayerControllerMP",
     "MixinGuiNewChat",
     "MixinEntityRenderer",
+    "MixinRenderEnderCrystal",
     "MixinEntityOtherPlayerMP"
   ]
 }

@@ -70,7 +70,7 @@ public class ItemUtil implements Globals {
     }
 
 
-    public static void swapItemsOffhand(int slot) {
+    public static void swapToOffhandSlot(int slot) {
         if (slot == -1) return;
         mc.playerController.windowClick(0, slot, 0, ClickType.PICKUP, mc.player);
         mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, mc.player);
@@ -78,7 +78,33 @@ public class ItemUtil implements Globals {
         mc.playerController.updateController();
     }
 
-    public static int findHotbarBlock(Class clazz) {
+    public static int swapToHotbarSlot(int slot){
+        if (mc.player.inventory.currentItem == slot || slot < 0 || slot > 8) return slot;
+        PacketManagement.getInstance().addLast(new CPacketHeldItemChange(slot));
+        mc.playerController.updateController();
+        return slot;
+    }
+
+    public static int swapToHotbarSlot(int slot, boolean silent){
+        if (mc.player.inventory.currentItem == slot || slot < 0 || slot > 8) return slot;
+        PacketManagement.getInstance().addLast(new CPacketHeldItemChange(slot));
+        if (!silent) mc.player.inventory.currentItem = slot;
+        mc.playerController.updateController();
+        return slot;
+    }
+
+    public static int findItem(Block... blockIn) {
+        List<Block> list = Arrays.stream(blockIn).collect(Collectors.toList());
+        for (int i = 0; i < 9; ++i) {
+            ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock) || (!list.contains((( ItemBlock ) stack.getItem()).getBlock())))
+                continue;
+            return i;
+        }
+        return -1;
+    }
+
+    public static int findItem(Class clazz) {
         for (int i = 0; i < 9; ++i) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
             if (stack == ItemStack.EMPTY) continue;
@@ -86,27 +112,6 @@ public class ItemUtil implements Globals {
                 return i;
             }
             if (!(stack.getItem() instanceof ItemBlock) || !clazz.isInstance((( ItemBlock ) stack.getItem()).getBlock()))
-                continue;
-            return i;
-        }
-        return -1;
-    }
-
-    public static int switchToHotbarSlot(int slot, boolean silent) {
-        if (mc.player.inventory.currentItem == slot || slot < 0 || slot > 8) {
-            return slot;
-        }
-        PacketManagement.getInstance().addLast(new CPacketHeldItemChange(slot));
-        if (!silent) mc.player.inventory.currentItem = slot;
-        mc.playerController.updateController();
-        return slot;
-    }
-
-    public static int findHotbarBlock(Block... blockIn) {
-        List<Block> list = Arrays.stream(blockIn).collect(Collectors.toList());
-        for (int i = 0; i < 9; ++i) {
-            ItemStack stack = mc.player.inventory.getStackInSlot(i);
-            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock) || (!list.contains((( ItemBlock ) stack.getItem()).getBlock())))
                 continue;
             return i;
         }

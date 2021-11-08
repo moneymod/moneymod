@@ -127,7 +127,6 @@ public class AutoCrystal extends Module {
     }
 
     public void doHandActive(EnumHand hand) {
-
         if (hand != null)
             mc.player.setActiveHand(hand);
     }
@@ -136,7 +135,7 @@ public class AutoCrystal extends Module {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if (renderPos != null) {
-            Renderer3D.drawBoxESP(renderPos, color.getColor(), 0.3f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
+            Renderer3D.drawBoxESP(renderPos, color.getColor(), 1.5f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
         }
     }
 
@@ -158,14 +157,14 @@ public class AutoCrystal extends Module {
 
         }
         if (swap == Swap.SILENT){
-            if (ItemUtil.findHotbarBlock(ItemEndCrystal.class) == -1){
+            if (ItemUtil.findItem(ItemEndCrystal.class) == -1){
                 return;
             }
         } else if (swap == Swap.AUTO){
-            int crystal = ItemUtil.findHotbarBlock(ItemEndCrystal.class);
+            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1){
                 if (!mc.player.isHandActive()){
-                    ItemUtil.switchToHotbarSlot(crystal, false);
+                    ItemUtil.swapToHotbarSlot(crystal);
                 } else placePos = null;
             } else return;
 
@@ -176,13 +175,13 @@ public class AutoCrystal extends Module {
         if (maxDamage != 0.5 && placeTimer.passed((int)placeDelay)) {
             int old = mc.player.inventory.currentItem;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
-            if (swap == Swap.SILENT) ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(ItemEndCrystal.class), false);
+            if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
             if (rotateons) rotate(placePos);
             if (placePos == null || (offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND) == null) return;
             EnumFacing facing = EnumFacing.UP;
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
             mc.playerController.updateController();
-            if (swap == Swap.SILENT) ItemUtil.switchToHotbarSlot(old, false);
+            if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(old);
             doHandActive(hand);
             placeSet.add(placePos);
             renderPos = new BlockPos(placePos.getX(),placePos.getY(),placePos.getZ());

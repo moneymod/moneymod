@@ -47,7 +47,5 @@ public class Blink extends Module {
         }
     }
 
-    public enum Mode{
-        MANUAL, TICKS
-    }
+    public enum Mode{MANUAL, TICKS}
 }

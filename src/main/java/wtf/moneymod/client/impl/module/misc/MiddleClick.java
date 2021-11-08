@@ -44,21 +44,21 @@ public class MiddleClick extends Module {
                 }
                 if (mode == Mode.PEARL){
                     int old = mc.player.inventory.currentItem;
-                    int pearl = ItemUtil.findHotbarBlock(ItemEnderPearl.class);
+                    int pearl = ItemUtil.findItem(ItemEnderPearl.class);
                     if (pearl != -1){
-                        ItemUtil.switchToHotbarSlot(pearl, false);
+                        ItemUtil.swapToHotbarSlot(pearl, false);
                         mc.playerController.processRightClick(mc.player,mc.world, EnumHand.MAIN_HAND);
-                        if (silent) ItemUtil.switchToHotbarSlot(old, false);
+                        if (silent) ItemUtil.swapToHotbarSlot(old, false);
                         check = true;
                     }
                 }
                 if (mode == Mode.XP){
                     int old = mc.player.inventory.currentItem;
-                    int xp = ItemUtil.findHotbarBlock(ItemExpBottle.class);
+                    int xp = ItemUtil.findItem(ItemExpBottle.class);
                     if (xp != -1){
-                        ItemUtil.switchToHotbarSlot(xp, false);
+                        ItemUtil.swapToHotbarSlot(xp, false);
                         mc.playerController.processRightClick(mc.player,mc.world, EnumHand.MAIN_HAND);
-                        if (silent) ItemUtil.switchToHotbarSlot(old, false);
+                        if (silent) ItemUtil.swapToHotbarSlot(old, false);
                     }
                 }
             }

@@ -1,5 +1,7 @@
 package wtf.moneymod.client.api.forge;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -7,12 +9,16 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.events.TotemPopEvent;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.awt.*;
 
@@ -46,7 +52,18 @@ public class EventHandler implements Globals {
         }
     }
 
-    @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
+    @Handler
+    public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
+        if ( e.getPacket( ) instanceof SPacketEntityStatus) {
+            SPacketEntityStatus packet = e.getPacket( );
+            if ( packet.getEntity( mc.world ) instanceof EntityPlayer && packet.getOpCode( ) == 35 ) {
+                Main.EVENT_BUS.dispatch( new TotemPopEvent( ( EntityPlayer ) packet.getEntity( mc.world ) ) );
+            }
+        }
+    });
+
+
+        @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
         for (Module m : Main.getMain().getModuleManager()) {
             for (Option<?> setting : Option.getContainersForObject(m)) {
                 if (setting.getValue() instanceof JColor) {
