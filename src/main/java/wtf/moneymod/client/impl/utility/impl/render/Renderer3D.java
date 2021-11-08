@@ -39,6 +39,16 @@ public enum  Renderer3D implements Globals {
         return new AxisAlignedBB(bb.minX - mc.getRenderManager().viewerPosX, bb.minY - mc.getRenderManager().viewerPosY, bb.minZ - mc.getRenderManager().viewerPosZ, bb.maxX - mc.getRenderManager().viewerPosX, bb.maxY - mc.getRenderManager().viewerPosY, bb.maxZ - mc.getRenderManager().viewerPosZ);
     }
 
+    public static void release() {
+        GlStateManager.depthMask((boolean)true);
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.enableAlpha();
+        GlStateManager.popMatrix();
+        GL11.glEnable(3553);
+        GL11.glPolygonMode(1032, 6914);
+    }
+
     public static void drawBlockOutline(final AxisAlignedBB bb, final Color color, final float linewidth) {
         final float red = color.getRed() / Float.intBitsToFloat(Float.floatToIntBits(0.010800879f) ^ 0x7F4FF62C);
         final float green = color.getGreen() / Float.intBitsToFloat(Float.floatToIntBits(0.013595752f) ^ 0x7F21C0B8);

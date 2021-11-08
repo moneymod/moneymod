@@ -39,7 +39,7 @@ public class SelfFill extends Module {
 
         int startSlot = mc.player.inventory.currentItem;
         startPos = new BlockPos(mc.player.getPositionVector());
-        if (ItemUtil.findHotbarBlock(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST) == -1) {
+        if (ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST) == -1) {
             setToggled(false);
             tick = 0;
             return;
@@ -47,13 +47,13 @@ public class SelfFill extends Module {
         if (!check()) return;
         tick++;
         if (fill) {
-            ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST), false);
+            ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST), false);
             offsets.forEach(offset -> mc.getConnection().sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, true)));
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
             BlockUtil.INSTANCE.placeBlock(startPos);
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + height, mc.player.posZ, false));
-            ItemUtil.switchToHotbarSlot(startSlot, false);
+            ItemUtil.swapToHotbarSlot(startSlot, false);
             fill = false;
         }
         if (tick >= 8) {

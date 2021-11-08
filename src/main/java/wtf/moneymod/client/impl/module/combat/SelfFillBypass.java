@@ -29,6 +29,7 @@ public class SelfFillBypass extends Module {
     int delay, pdelay,stage,jumpdelay,toggledelay;
     boolean jump;
     Timer timer = new Timer();
+
     @Override public void onEnable(){
         position = new BlockPos(mc.player.getPositionVector());
     }
@@ -49,8 +50,7 @@ public class SelfFillBypass extends Module {
         if (position != null) {
             if(mode == Mode.PIGBYPASS){
                 firstmethod();
-            } else {
-            }
+            } else {}
         }
     }
 
@@ -89,7 +89,5 @@ public class SelfFillBypass extends Module {
             }
         }
     }
-    public enum Mode{
-        PIGBYPASS, SECONDBYPASS
-    }
+    public enum Mode{ PIGBYPASS, SECONDBYPASS }
 }

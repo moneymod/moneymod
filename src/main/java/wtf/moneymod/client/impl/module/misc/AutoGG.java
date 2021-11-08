@@ -28,8 +28,8 @@ public class AutoGG extends Module {
     public static void target(EntityPlayer name){ target = name; }
     @Override
     public void onTick(){
-        if (target != null){
-            if (target.getHealth() <= 0 || target.isDead || mc.player.getDistanceSq(target) >= 100){
+        if (target != null && mc.player.getDistanceSq(target) < 150) {
+            if (target.isDead || target.getHealth() <= 0) {
                 switch (mode){
                     case RANDOM:
                         mc.player.sendChatMessage(randomMessage[random.nextInt(randomMessage.length)]);
@@ -38,8 +38,8 @@ public class AutoGG extends Module {
                         mc.player.sendChatMessage(message);
                         break;
                 }
-                target = null;
             }
+            target = null;
         }
     }
     public enum Mode{DEFAULT, RANDOM}

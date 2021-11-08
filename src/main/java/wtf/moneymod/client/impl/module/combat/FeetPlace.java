@@ -69,7 +69,7 @@ public class FeetPlace extends Module {
         for (BlockPos bp : blocks) {
             if (placed >= bps) return;
             int old = mc.player.inventory.currentItem;
-            if (ItemUtil.switchToHotbarSlot(ItemUtil.findHotbarBlock(BlockObsidian.class), false) == -1)
+            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class)) == -1)
                 return;
             switch (BlockUtil.INSTANCE.isPlaceable(bp)) {
                 case 0: {
@@ -100,10 +100,8 @@ public class FeetPlace extends Module {
                 }
             }
             if (mc.player.inventory.currentItem != old) {
-                ItemUtil.switchToHotbarSlot(old, false);
+                ItemUtil.swapToHotbarSlot(old);
             }
         }
     }
-
-
 }

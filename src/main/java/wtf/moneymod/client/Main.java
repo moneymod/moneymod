@@ -23,7 +23,7 @@ public class Main {
     //global constants
     public static final String MODID = "moneymod";
     public static final String NAME = "Money Mod";
-    public static String VERSION = "0.0";
+    public static String VERSION = "0.1";
 
     //global values
     private static Main main;
