@@ -90,25 +90,25 @@ public class MixinRenderEnderCrystal implements Globals {
             }
 
             if(cc.glint) {
-//                GL11.glPushMatrix();
-//                GL11.glPushAttrib(1048575);
-//                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-//                GL11.glDisable(GL11.GL_LIGHTING);
-//                GL11.glDisable(GL11.GL_DEPTH_TEST);
-//                GL11.glEnable(GL11.GL_BLEND);
-//                GL11.glColor4f(red, green, blue, alpha);
-//
-//                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
-//
-//                mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
-//                modelBase.render(entityIn, limbSwing, limb, age, netHeadYaw, headPitch, scale);
-//
-//                GL11.glDisable(GL11.GL_BLEND);
-//                GL11.glEnable(GL11.GL_DEPTH_TEST);
-//                GL11.glEnable(GL11.GL_LIGHTING);
-//
-//                GL11.glPopAttrib();
-//                GL11.glPopMatrix();
+                GL11.glPushMatrix();
+                GL11.glPushAttrib(1048575);
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_BLEND);
+                GL11.glColor4f(red, green, blue, alpha);
+
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
+
+                mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
+                modelBase.render(entityIn, limbSwing, limb, age, netHeadYaw, headPitch, scale);
+
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_LIGHTING);
+
+                GL11.glPopAttrib();
+                GL11.glPopMatrix();
             }
 
         } else {
