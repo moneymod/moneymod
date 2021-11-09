@@ -58,13 +58,6 @@ public class LogoutSpot extends Module {
             spots.forEach(person -> {
 
                 if (chams) {
-                    EntityPlayer entity = new EntityPlayer(mc.world, new GameProfile(person.uuid, person.name)) {
-                        @Override public boolean isSpectator() {return false;}
-
-                        @Override public boolean isCreative() {return false;}
-                    };
-                    entity.copyLocationAndAnglesFrom(person.entity);
-                    entity.rotationYaw = ( float ) MathUtil.INSTANCE.interpolate(person.entity.rotationYaw, person.entity.prevRotationYaw, e.getPartialTicks());
 
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -88,12 +81,12 @@ public class LogoutSpot extends Module {
                     modelPlayer.bipedHeadwear.showModel = true;
                     GlStateManager.color(color.getColor().getRed() / 255f, color.getColor().getGreen() / 255f, color.getColor().getBlue() / 255f, pulse ? ColorUtil.sinFunction(0, color.getColor().getAlpha() / 255f, 1) : ( float ) color.getColor().getAlpha() / 255f);
                     GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-                    PopChams.renderEntity(entity, modelPlayer, entity.limbSwing,
-                            entity.limbSwingAmount, entity.ticksExisted, entity.rotationYawHead, entity.rotationPitch, 1);
+                    PopChams.renderEntity(person.entity, modelPlayer, person.entity.limbSwing,
+                            person.entity.limbSwingAmount, person.entity.ticksExisted, person.entity.rotationYawHead, person.entity.rotationPitch, 1);
 
                     GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-                    PopChams.renderEntity(entity, modelPlayer, entity.limbSwing,
-                            entity.limbSwingAmount, entity.ticksExisted, entity.rotationYawHead, entity.rotationPitch, 1);
+                    PopChams.renderEntity(person.entity, modelPlayer, person.entity.limbSwing,
+                            person.entity.limbSwingAmount, person.entity.ticksExisted, person.entity.rotationYawHead, person.entity.rotationPitch, 1);
                     GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
                     GlStateManager.enableCull();
@@ -126,7 +119,14 @@ public class LogoutSpot extends Module {
             if (chat)
                 ChatUtil.INSTANCE.sendMessage(String.format("%s logged out at X:%.1f, Y:%.1f, Z:%.1f", e.getName(), e.getEntity().posX, e.getEntity().posY, e.getEntity().posZ));
             if (e.getName() == null || e.getEntity() == null || e.getUuid() == null) return;
-            spots.add(new Person(e.getName(), e.getUuid(), ( EntityPlayer ) e.getEntity()));
+            EntityPlayer entity = new EntityPlayer(mc.world, new GameProfile(e.getUuid(), e.getName())) {
+                @Override public boolean isSpectator() {return false;}
+
+                @Override public boolean isCreative() {return false;}
+            };
+            entity.copyLocationAndAnglesFrom(e.getEntity());
+
+            spots.add(new Person(e.getName(), e.getUuid(), entity));
         }
 
     });
