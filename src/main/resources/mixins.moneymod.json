@@ -8,6 +8,7 @@
     "ducks.AccessorRenderManager",
     "ducks.AccessorCPacketUseEntity",
     "ducks.AccessorCPacketPlayer",
+    "ducks.AccessorKeyBinding",
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinEntity",
