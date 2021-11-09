@@ -48,7 +48,9 @@ public class Main {
         commandManagement = new CommandManagement().register();
         ConfigManager.getInstance().load();
         screen = new Screen();
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
+        EventHandler handler = new EventHandler();
+        MinecraftForge.EVENT_BUS.register(handler);
+        EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
         Display.setTitle(String.format("moneymod build-%s", VERSION));
