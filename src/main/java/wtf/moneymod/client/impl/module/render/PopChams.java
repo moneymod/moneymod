@@ -108,7 +108,7 @@ public class PopChams extends Module {
         }
     }
 
-    private void renderEntity (EntityLivingBase entity, ModelBase modelBase, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale ) {
+    public static void renderEntity (EntityLivingBase entity, ModelBase modelBase, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale ) {
         if ( modelBase instanceof ModelPlayer ) {
             ModelPlayer modelPlayer = ( ( ModelPlayer ) modelBase );
             modelPlayer.bipedBodyWear.showModel = false;
@@ -143,7 +143,7 @@ public class PopChams extends Module {
         GlStateManager.popMatrix( );
     }
 
-    private float prepareScale ( EntityLivingBase entity, float scale ) {
+    private static float prepareScale ( EntityLivingBase entity, float scale ) {
         GlStateManager.enableRescaleNormal( );
         GlStateManager.scale( -1.0F, -1.0F, 1.0F );
         double widthX = entity.getRenderBoundingBox( ).maxX - entity.getRenderBoundingBox( ).minX;

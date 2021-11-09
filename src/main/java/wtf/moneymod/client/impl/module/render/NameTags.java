@@ -104,7 +104,7 @@ public class NameTags extends Module {
 
     private void renderNameTage( EntityPlayer player ) {
         if ( mc.getRenderViewEntity( ) == null ) return;
-        double x = MathUtil.INSTANCE.INSTANCE.interpolate( player.lastTickPosX, player.posX, mc.getRenderPartialTicks( ) ) - renderManager.getRenderPosX( );
+        double x = MathUtil.INSTANCE.interpolate( player.lastTickPosX, player.posX, mc.getRenderPartialTicks( ) ) - renderManager.getRenderPosX( );
         double y = MathUtil.INSTANCE.interpolate( player.lastTickPosY, player.posY, mc.getRenderPartialTicks( ) ) - renderManager.getRenderPosY( ) + ( player.isSneaking( ) ? 0.5 : 0.7 );
         double z = MathUtil.INSTANCE.interpolate( player.lastTickPosZ, player.posZ, mc.getRenderPartialTicks( ) ) - renderManager.getRenderPosZ( );
         double delta = mc.getRenderPartialTicks( );

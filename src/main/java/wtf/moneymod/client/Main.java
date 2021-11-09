@@ -69,9 +69,9 @@ public class Main {
         return commandManagement;
     }
 
-    public FpsManagement getFpsManagement(){return fpsManagement;}
+    public FpsManagement getFpsManagement() {return fpsManagement;}
 
-    public RotationManagement getRotationManagement(){return rotationManagement;}
+    public RotationManagement getRotationManagement() {return rotationManagement;}
 
     public Screen getScreen() {
         return screen;
