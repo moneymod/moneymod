@@ -77,14 +77,7 @@ public class ItemUtil implements Globals {
         mc.playerController.windowClick(0, slot, 0, ClickType.PICKUP, mc.player);
         mc.playerController.updateController();
     }
-
-    public static int swapToHotbarSlot(int slot){
-        if (mc.player.inventory.currentItem == slot || slot < 0 || slot > 8) return slot;
-        PacketManagement.getInstance().addLast(new CPacketHeldItemChange(slot));
-        mc.playerController.updateController();
-        return slot;
-    }
-
+    
     public static int swapToHotbarSlot(int slot, boolean silent){
         if (mc.player.inventory.currentItem == slot || slot < 0 || slot > 8) return slot;
         PacketManagement.getInstance().addLast(new CPacketHeldItemChange(slot));

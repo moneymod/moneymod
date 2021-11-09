@@ -164,7 +164,7 @@ public class AutoCrystal extends Module {
             int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1){
                 if (!mc.player.isHandActive()){
-                    ItemUtil.swapToHotbarSlot(crystal);
+                    ItemUtil.swapToHotbarSlot(crystal, false);
                 } else placePos = null;
             } else return;
 
@@ -181,7 +181,7 @@ public class AutoCrystal extends Module {
             EnumFacing facing = EnumFacing.UP;
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
             mc.playerController.updateController();
-            if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(old);
+            if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(old, false);
             doHandActive(hand);
             placeSet.add(placePos);
             renderPos = new BlockPos(placePos.getX(),placePos.getY(),placePos.getZ());
