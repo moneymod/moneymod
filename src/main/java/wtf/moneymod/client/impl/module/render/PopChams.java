@@ -27,6 +27,7 @@ public class PopChams extends Module {
 
     @Value( value = "Color" ) public JColor color = new JColor(0, 255, 0, true);
     @Value( value = "Self" ) public boolean self = false;
+    @Value(value = "Copy Animations") public boolean anim = true;
     @Value( value = "MaxOffset" ) @Bounds(max = 15) public double maxOffset = 5d;
     @Value( value = "Speed" ) @Bounds(max = 5) public double speed = 1d;
 
@@ -37,12 +38,18 @@ public class PopChams extends Module {
         if ( !self ) {
             if ( e.getEntityPlayerSP( ) == mc.player ) return;
         }
-        EntityPlayer entity = new EntityPlayer( mc.world, new GameProfile( e.getEntityPlayerSP( ).getUniqueID( ), e.getEntityPlayerSP( ).getName( ) ) ) {
+        EntityPlayer sp = e.getEntityPlayerSP();
+        EntityPlayer entity = new EntityPlayer( mc.world, new GameProfile( sp.getUniqueID( ), sp.getName( ) ) ) {
             @Override public boolean isSpectator ( ) {return false;}
 
             @Override public boolean isCreative ( ) {return false;}
         };
-        entity.copyLocationAndAnglesFrom( e.getEntityPlayerSP( ) );
+        entity.copyLocationAndAnglesFrom( sp );
+
+        if(anim) {
+            entity.limbSwing = sp.limbSwing;
+            entity.limbSwingAmount = sp.limbSwingAmount;
+        }
         popList.add( new Person( entity ) );
     });
 
