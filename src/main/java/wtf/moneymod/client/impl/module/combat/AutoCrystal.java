@@ -36,7 +36,7 @@ import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.*;
 
-@Module.Register(label = "AutoCrystal", cat = Module.Category.COMBAT)
+@Module.Register(label = "Ak-47", cat = Module.Category.COMBAT)
 public class AutoCrystal extends Module {
 
     @Value(value = "Place") public boolean place = true;

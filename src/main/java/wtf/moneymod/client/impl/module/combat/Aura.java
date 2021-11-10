@@ -21,7 +21,7 @@ import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-@Module.Register( label = "Aura", cat = Module.Category.COMBAT )
+@Module.Register( label = "Knife-Bot", cat = Module.Category.COMBAT )
 public class Aura extends Module {
 
     @Value( value = "Mode" ) public Mode mode = Mode.SWITCH;

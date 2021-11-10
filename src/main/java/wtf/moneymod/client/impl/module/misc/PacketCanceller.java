@@ -33,5 +33,7 @@ public class PacketCanceller extends Module {
         if (packetVehicleMove && e.getPacket() instanceof CPacketVehicleMove) e.setCancelled(true);
         if (packetTryuseitemOnBlock && e.getPacket() instanceof CPacketPlayerTryUseItemOnBlock) e.setCancelled(true);
         if (packetTryUseItem && e.getPacket() instanceof CPacketPlayerTryUseItem) e.setCancelled(true);
+
+
     });
 }

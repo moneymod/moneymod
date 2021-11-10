@@ -69,6 +69,7 @@ shadowJar {
         include(dependency('club.minnced:java-discord-rpc'))
         include(dependency('org.reflections:reflections'))
         include(dependency('org.javassist:javassist'))
+
     }
     manifest {
         attributes(
