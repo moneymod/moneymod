@@ -27,34 +27,39 @@ public class AntiBow extends Module {
     @Value(value = "MaxUse") @Bounds(max = 20) public int maxUse = 10;
 
     int old;
+    boolean b;
 
-    @Override public void onToggle(){
+    @Override
+    public void onToggle() {
+        b = false;
         old = -1;
         target = null;
     }
 
-    @Override public void onTick() {
+    @Override
+    public void onTick() {
         target = EntityUtil.getTarget(range);
-        if (target != null){
+
+        if (target == null) {
+            if (b) {
+                ((AccessorKeyBinding) mc.gameSettings.keyBindUseItem).setPressed(false);
+                if (old != -1) ItemUtil.swapToHotbarSlot(old, false);
+                target = null;
+                b = false;
+            }
+            return;
+        } else {
             old = mc.player.inventory.currentItem;
             int shield = ItemUtil.findItem(ItemShield.class);
-
-            //s hit code
-            if (target.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemBow || target.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemBow){ ;
-                ((AccessorKeyBinding)mc.gameSettings.keyBindUseItem).setPressed(true);
-                if (FriendManagement.getInstance().is(target.getName())) return;
-                if (checkUse){ if (target.getItemInUseMaxCount() <= maxUse ) return; }
+            if (shield == -1){ target = null; return; }
+            if (FriendManagement.getInstance().is(target.getName())) return;
+            if (checkUse) if (target.getItemInUseMaxCount() <= maxUse) return;
+            if (mc.player.getHeldItemMainhand().getItem() instanceof ItemShield) {
+                ((AccessorKeyBinding) mc.gameSettings.keyBindUseItem).setPressed(true);
                 ItemUtil.swapToHotbarSlot(shield, false);
                 Main.getMain().getRotationManagement().look(target, packetLook);
-            } else target = null;
-
-        } else {
-            ((AccessorKeyBinding)mc.gameSettings.keyBindUseItem).setPressed(false);
-            return;
+                b = true;
+            }
         }
-    }
-
-    public enum Swap{
-        MAINHAND, OFFHAND
     }
 }
