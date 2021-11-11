@@ -6,10 +6,9 @@ import wtf.moneymod.client.impl.module.Module;
 @Module.Register( label = "FastFall", cat = Module.Category.MOVEMENT)
 public class ReverseStep extends Module {
 
-    @Override public void onTick() {
-        if (!mc.player.isInWater() || !mc.player.isInLava()) {
-            if (mc.player.onGround)
-                mc.player.motionY = -0.8;
-        } else return;
+    @Override
+    public void onTick() {
+        if (mc.player.isInWater() || mc.player.isInLava()) return;
+        if (mc.player.onGround) mc.player.motionY = -0.8;
     }
 }

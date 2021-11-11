@@ -163,10 +163,11 @@ public class AutoCrystal extends Module {
         } else if (swap == Swap.AUTO){
             int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1){
-                if (!mc.player.isHandActive()){
                     ItemUtil.swapToHotbarSlot(crystal, false);
-                } else placePos = null;
-            } else return;
+            } else {
+                placePos = null;
+                return;
+            };
 
         } else if (swap == Swap.NONE){
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;

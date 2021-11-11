@@ -23,10 +23,13 @@ public class Blink extends Module {
 
     @Override public void onToggle(){
         ticks = 0;
-        clearPackets();
+        while (!this.packets.isEmpty()) {
+            mc.getConnection().sendPacket(this.packets.poll());
+        }
     }
 
     @Override public void onTick() {
+        if (nullCheck()) return;
         if (mode == Mode.TICKS){
             ticks++;
             if (ticks >= tick) setToggled(false);
@@ -40,12 +43,6 @@ public class Blink extends Module {
             e.setCancelled(true);
         }
     });
-
-    public void clearPackets(){
-        while (!this.packets.isEmpty()) {
-            mc.getConnection().sendPacket(this.packets.poll());
-        }
-    }
 
     public enum Mode{MANUAL, TICKS}
 }

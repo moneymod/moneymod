@@ -3,6 +3,8 @@ package wtf.moneymod.client.api.management.impl;
 import net.minecraft.network.Packet;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import wtf.moneymod.client.Main;
+import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.utility.Globals;
 
 import java.util.ArrayDeque;
