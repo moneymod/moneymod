@@ -93,6 +93,7 @@ public class AutoCrystal extends Module {
                 hitPacket.setEntityId(entityId);
                 hitPacket.setAction(CPacketUseEntity.Action.ATTACK);
                 mc.getConnection().sendPacket((CPacketUseEntity) hitPacket);
+                mc.player.swingArm(EnumHand.MAIN_HAND);
                 predictTimer.reset();
             }
         }
@@ -211,6 +212,7 @@ public class AutoCrystal extends Module {
             if (!(maxCrystal.ticksExisted >= tickexisted)) return;
             if (rotateons) rotate(maxCrystal);
             mc.getConnection().sendPacket(new CPacketUseEntity(maxCrystal));
+            mc.player.swingArm(EnumHand.MAIN_HAND);
             breakTimer.reset();
         } else {
             rotating = false;
