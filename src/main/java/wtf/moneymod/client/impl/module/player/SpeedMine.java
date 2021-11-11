@@ -55,11 +55,6 @@ public class SpeedMine extends Module {
 
     @Override public void onTick() {
         //this swap code is sooo trash
-        if (!instant) {
-            if (currentPos != null) {
-                if (mc.world.getBlockState(currentPos).getBlock() instanceof BlockAir) currentPos = null;
-            }
-        }
         if (swap) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             if (delay >= 2) {
@@ -67,6 +62,7 @@ public class SpeedMine extends Module {
                     ItemUtil.swapToHotbarSlot(old, false);
                 }
                 swap = false;
+                if (!instant) currentPos = null;
                 delay = 0;
             }
             delay++;

@@ -16,5 +16,6 @@ public class AutoLog extends Module {
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
         if (hp <= hpLog && mc.player.getHeldItemOffhand().getItem() != Items.TOTEM_OF_UNDYING)
             mc.getConnection().handleDisconnect(new SPacketDisconnect(new TextComponentString("AutoLog, gg")));
+            setToggled(false);
     }
 }
