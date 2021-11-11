@@ -47,19 +47,30 @@ public enum BlockUtil implements Globals {
         mc.playerController.updateController();
         return true;
     }
-    public static boolean canPlaceCrystal ( BlockPos blockPos, boolean check ) {
-        return canPlaceCrystal( blockPos, check, true );
+
+    public static boolean canPlaceCrystal(BlockPos blockPos, boolean check) {
+        return canPlaceCrystal(blockPos, check, true);
     }
 
-    public static boolean canPlaceCrystal ( BlockPos blockPos, boolean check, boolean entity ) {
-        if ( BlockUtil.mc.world.getBlockState( blockPos ).getBlock( ) != Blocks.BEDROCK && BlockUtil.mc.world.getBlockState( blockPos ).getBlock( ) != Blocks.OBSIDIAN ) {
+    public static void placeCrystalOnBlock(BlockPos pos, EnumHand hand, boolean swing) {
+        if (pos == null || hand == null) return;
+        EnumFacing facing = EnumFacing.UP;
+        mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, hand, 0f, 0f, 0f));
+        if (swing) {
+            mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
+        }
+        mc.playerController.updateController();
+    }
+
+    public static boolean canPlaceCrystal(BlockPos blockPos, boolean check, boolean entity) {
+        if (BlockUtil.mc.world.getBlockState(blockPos).getBlock() != Blocks.BEDROCK && BlockUtil.mc.world.getBlockState(blockPos).getBlock() != Blocks.OBSIDIAN) {
             return false;
         }
-        BlockPos boost = blockPos.add( 0, 1, 0 );
-        if ( BlockUtil.mc.world.getBlockState( boost ).getBlock( ) != Blocks.AIR || BlockUtil.mc.world.getBlockState( blockPos.add( 0, 2, 0 ) ).getBlock( ) != Blocks.AIR ) {
+        BlockPos boost = blockPos.add(0, 1, 0);
+        if (BlockUtil.mc.world.getBlockState(boost).getBlock() != Blocks.AIR || BlockUtil.mc.world.getBlockState(blockPos.add(0, 2, 0)).getBlock() != Blocks.AIR) {
             return false;
         }
-        return !entity || BlockUtil.mc.world.getEntitiesWithinAABB( Entity.class, new AxisAlignedBB( boost.getX( ), boost.getY( ), boost.getZ( ), boost.getX( ) + 1, boost.getY( ) + ( check ? 2 : 1 ), boost.getZ( ) + 1 ), e -> !( e instanceof EntityEnderCrystal) ).size( ) == 0;
+        return !entity || BlockUtil.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(boost.getX(), boost.getY(), boost.getZ(), boost.getX() + 1, boost.getY() + (check ? 2 : 1), boost.getZ() + 1), e -> !(e instanceof EntityEnderCrystal)).size() == 0;
     }
 
     public EnumFacing calcSide(BlockPos pos) {
@@ -83,43 +94,43 @@ public enum BlockUtil implements Globals {
         return block.getBlockHardness(blockState, mc.world, pos) != -1;
     }
 
-    public List<BlockPos> getUnsafePositions ( Vec3d vector, int level ) {
-        return getLevels( level ).stream( ).map( vec -> new BlockPos( vector ).add( vec.x, vec.y, vec.z ) ).filter( bp -> mc.world.getBlockState( bp ).getMaterial( ).isReplaceable( ) ).collect( Collectors.toList( ) );
+    public List<BlockPos> getUnsafePositions(Vec3d vector, int level) {
+        return getLevels(level).stream().map(vec -> new BlockPos(vector).add(vec.x, vec.y, vec.z)).filter(bp -> mc.world.getBlockState(bp).getMaterial().isReplaceable()).collect(Collectors.toList());
     }
 
-    public List<Vec3d> getLevels (int y ) {
-        return Arrays.asList( new Vec3d( -1, y, 0 ), new Vec3d( 1, y, 0 ), new Vec3d( 0, y, 1 ), new Vec3d( 0, y, -1 ) );
+    public List<Vec3d> getLevels(int y) {
+        return Arrays.asList(new Vec3d(-1, y, 0), new Vec3d(1, y, 0), new Vec3d(0, y, 1), new Vec3d(0, y, -1));
     }
 
     //1 - not placeable, 0 - placeable, -1 - not placeable cuz fuckin entity
-    public int isPlaceable ( BlockPos bp ) {
-        if ( mc.world == null || bp == null ) return 1;
-        if ( !mc.world.getBlockState( bp ).getMaterial( ).isReplaceable( ) ) return 1;
-        for ( Entity e : mc.world.getEntitiesWithinAABB( Entity.class, new AxisAlignedBB( bp ) ) ) {
-            if ( e instanceof EntityXPOrb || e instanceof EntityItem) continue;
-            if ( e instanceof EntityPlayer) return 1;
+    public int isPlaceable(BlockPos bp) {
+        if (mc.world == null || bp == null) return 1;
+        if (!mc.world.getBlockState(bp).getMaterial().isReplaceable()) return 1;
+        for (Entity e : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(bp))) {
+            if (e instanceof EntityXPOrb || e instanceof EntityItem) continue;
+            if (e instanceof EntityPlayer) return 1;
             return -1;
         }
         return 0;
     }
 
-    public List<BlockPos> getSphere ( float radius, boolean ignoreAir ) {
-        ArrayList<BlockPos> sphere = new ArrayList<BlockPos>( );
-        BlockPos pos = new BlockPos( BlockUtil.mc.player.getPositionVector( ) );
-        int posX = pos.getX( );
-        int posY = pos.getY( );
-        int posZ = pos.getZ( );
-        int radiuss = ( int ) radius;
+    public List<BlockPos> getSphere(float radius, boolean ignoreAir) {
+        ArrayList<BlockPos> sphere = new ArrayList<BlockPos>();
+        BlockPos pos = new BlockPos(BlockUtil.mc.player.getPositionVector());
+        int posX = pos.getX();
+        int posY = pos.getY();
+        int posZ = pos.getZ();
+        int radiuss = (int) radius;
         int x = posX - radiuss;
-        while ( ( float ) x <= ( float ) posX + radius ) {
+        while ((float) x <= (float) posX + radius) {
             int z = posZ - radiuss;
-            while ( ( float ) z <= ( float ) posZ + radius ) {
+            while ((float) z <= (float) posZ + radius) {
                 int y = posY - radiuss;
-                while ( ( float ) y < ( float ) posY + radius ) {
-                    if ( ( float ) ( ( posX - x ) * ( posX - x ) + ( posZ - z ) * ( posZ - z ) + ( posY - y ) * ( posY - y ) ) < radius * radius ) {
-                        BlockPos position = new BlockPos( x, y, z );
-                        if ( !ignoreAir || BlockUtil.mc.world.getBlockState( position ).getBlock( ) != Blocks.AIR ) {
-                            sphere.add( position );
+                while ((float) y < (float) posY + radius) {
+                    if ((float) ((posX - x) * (posX - x) + (posZ - z) * (posZ - z) + (posY - y) * (posY - y)) < radius * radius) {
+                        BlockPos position = new BlockPos(x, y, z);
+                        if (!ignoreAir || BlockUtil.mc.world.getBlockState(position).getBlock() != Blocks.AIR) {
+                            sphere.add(position);
                         }
                     }
                     ++y;
