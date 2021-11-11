@@ -22,7 +22,7 @@ public class VClip extends Module {
             mc.player.setPosition(mc.player.posX,mc.player.posY + offset, mc.player.posZ);
             mc.player.setPositionAndUpdate(mc.player.posX, mc.player.posY + offset, mc.player.posZ);
             if (disable) setToggled(false);
-        } else if (mode == Mode.TEST) {
+        } else if (mode == Mode.BYPASS) {
             if (mc.player.onGround) {
                 mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                 for (double jumpOffset : packets)
@@ -34,6 +34,6 @@ public class VClip extends Module {
         }
     }
 
-    public enum Mode{DEFAULT, TEST}
+    public enum Mode{DEFAULT, BYPASS}
 
 }

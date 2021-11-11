@@ -65,7 +65,7 @@ public class AutoCrystal extends Module {
     public EntityPlayer currentTarget;
     private boolean offhand, rotating, lowArmor;
     private double currentDamage;
-    private int ticks;
+    private int ticks, old;
     private float yaw = 0f, pitch = 0f;
 
     private final Timer breakTimer = new Timer();
@@ -80,6 +80,13 @@ public class AutoCrystal extends Module {
         breakTimer.reset();
         placeTimer.reset();
         predictTimer.reset();
+    }
+    @Override
+    public void onDisable(){
+        if (swap == Swap.AUTO){
+            ItemUtil.swapToHotbarSlot(old, false);
+            old = -1;
+        }
     }
 
     @Handler
@@ -175,7 +182,7 @@ public class AutoCrystal extends Module {
         }
 
         if (maxDamage != 0.5 && placeTimer.passed((int)placeDelay)) {
-            int old = mc.player.inventory.currentItem;
+            old = mc.player.inventory.currentItem;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
             if (rotateons) rotate(placePos);
