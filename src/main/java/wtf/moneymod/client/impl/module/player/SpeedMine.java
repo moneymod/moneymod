@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.player;
 
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -54,6 +55,10 @@ public class SpeedMine extends Module {
 
     @Override public void onTick() {
         //this swap code is sooo trash
+        if (!instant){
+            if (currentPos != null)
+            if (mc.world.getBlockState(currentPos).getBlock() instanceof BlockAir) currentPos = null;
+        }
         if (swap) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             if (delay >= 2) {
