@@ -56,9 +56,14 @@ public class ConfigManager extends Thread implements Globals {
                         case "Boolean":
                             (( Option<Boolean> ) s).setValue(settingObject.getAsBoolean());
                             break;
-                        case "Number":
-                            if (settingObject.getAsDouble() < s.getMax() && settingObject.getAsDouble() > s.getMin())
-                                (( Option<Number> ) s).setValue(settingObject.getAsDouble());
+                        case "Integer":
+                            (( Option<Number> ) s).setValue(settingObject.getAsInt());
+                            break;
+                        case "Double":
+                            (( Option<Number> ) s).setValue(settingObject.getAsDouble());
+                            break;
+                        case "Float":
+                            (( Option<Number> ) s).setValue(settingObject.getAsFloat());
                             break;
                         case "JColor":
                             JsonArray jsonElements = settingObject.getAsJsonArray();
@@ -118,6 +123,9 @@ public class ConfigManager extends Thread implements Globals {
                         break;
                     case "Integer":
                         jsonObject.add(s.getName(), new JsonPrimitive(( Integer ) s.getValue()));
+                        break;
+                    case "Float":
+                        jsonObject.add(s.getName(), new JsonPrimitive(( Float ) s.getValue()));
                         break;
                     case "JColor":
                         JsonArray jsonColors = new JsonArray();
