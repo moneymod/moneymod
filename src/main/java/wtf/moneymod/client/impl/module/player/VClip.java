@@ -6,7 +6,7 @@ import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "Clip", cat = Module.Category.MOVEMENT )
+@Module.Register( label = "Clip", cat = Module.Category.PLAYER )
 public class VClip extends Module {
 
     @Value(value = "Offset") @Bounds(min = -5f, max = 5f) public float offset = 0.2f;
