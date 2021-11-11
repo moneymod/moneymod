@@ -23,52 +23,58 @@ public class ConfigManager extends Thread implements Globals {
     public static File getMainFolder() {return mainFolder;}
 
     public void load() {
-        try {
-            loadModules();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        loadModules();
     }
 
-    private void loadModules() throws Exception {
+    private void loadModules() {
         for (Module m : Main.getMain().getModuleManager()) {
             loadModule(m);
         }
     }
 
-    private void loadModule(Module m) throws Exception {
-        Path path = Paths.get(modulesFolder, m.getLabel() + ".json");
-        if (!path.toFile().exists()) return;
-        String rawJson = loadFile(path.toFile());
-        JsonObject jsonObject = new JsonParser().parse(rawJson).getAsJsonObject();
-        if (jsonObject.get("Enabled") != null && jsonObject.get("KeyBind") != null) {
-            if (jsonObject.get("Enabled").getAsBoolean() && !m.isConfigException()) m.setToggled(true);
-            m.setKey(jsonObject.get("KeyBind").getAsInt());
-        }
-        Option.getContainersForObject(m).forEach(s -> {
-            JsonElement settingObject = jsonObject.get(s.getName());
-            if (settingObject != null) {
-                if (s.getValue().getClass().isEnum()) {
-                    try {
-                        ((Option<Enum>) s).setValue(SettingUtils.INSTANCE.getProperEnum(( Enum ) s.getValue(), settingObject.getAsString()));
-                    } catch (Exception ignored) { }
-                    return;
-                }
-                switch (s.getValue().getClass().getSimpleName()) {
-                    case "Boolean":
-                        ((Option<Boolean>) s).setValue(settingObject.getAsBoolean());
-                        break;
-                    case "Number":
-                        if (settingObject.getAsDouble() < s.getMax() && settingObject.getAsDouble() > s.getMin())
-                            ((Option<Number>) s).setValue(settingObject.getAsDouble());
-                        break;
-                    case "JColor":
-                        JsonArray jsonElements = settingObject.getAsJsonArray();
-                        ((Option<JColor>) s).setValue(new JColor(jsonElements.get(0).getAsInt(), jsonElements.get(1).getAsInt(), jsonElements.get(2).getAsInt(), jsonElements.get(3).getAsInt(), jsonElements.get(4).getAsBoolean()));
-                        break;
-                }
+    private void loadModule(Module m) {
+        try {
+            Path path = Paths.get(modulesFolder, m.getLabel() + ".json");
+            if (!path.toFile().exists()) return;
+            String rawJson = loadFile(path.toFile());
+            JsonObject jsonObject = new JsonParser().parse(rawJson).getAsJsonObject();
+            if (jsonObject.get("Enabled") != null && jsonObject.get("KeyBind") != null) {
+                if (jsonObject.get("Enabled").getAsBoolean() && !m.isConfigException()) m.setToggled(true);
+                m.setKey(jsonObject.get("KeyBind").getAsInt());
             }
-        });
+            Option.getContainersForObject(m).forEach(s -> {
+                JsonElement settingObject = jsonObject.get(s.getName());
+                if (settingObject != null) {
+                    if (s.getValue().getClass().isEnum()) {
+                        try {
+                            (( Option<Enum> ) s).setValue(SettingUtils.INSTANCE.getProperEnum(( Enum ) s.getValue(), settingObject.getAsString()));
+                        } catch (Exception ignored) { }
+                        return;
+                    }
+                    switch (s.getValue().getClass().getSimpleName()) {
+                        case "Boolean":
+                            (( Option<Boolean> ) s).setValue(settingObject.getAsBoolean());
+                            break;
+                        case "Integer":
+                            (( Option<Number> ) s).setValue(settingObject.getAsInt());
+                            break;
+                        case "Double":
+                            (( Option<Number> ) s).setValue(settingObject.getAsDouble());
+                            break;
+                        case "Float":
+                            (( Option<Number> ) s).setValue(settingObject.getAsFloat());
+                            break;
+                        case "JColor":
+                            JsonArray jsonElements = settingObject.getAsJsonArray();
+                            (( Option<JColor> ) s).setValue(new JColor(jsonElements.get(0).getAsInt(), jsonElements.get(1).getAsInt(), jsonElements.get(2).getAsInt(), jsonElements.get(3).getAsInt(), jsonElements.get(4).getAsBoolean()));
+                            break;
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String loadFile(File file) throws IOException {
@@ -87,52 +93,55 @@ public class ConfigManager extends Thread implements Globals {
         if (!mainFolder.exists() && !mainFolder.mkdirs()) System.out.println("Failed to create config folder");
         if (!new File(modulesFolder).exists() && !new File(modulesFolder).mkdirs())
             System.out.println("Failed to create modules folder");
-        try {
-            saveModules();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveModules();
     }
 
-    private void saveModules() throws IOException {
+    private void saveModules() {
         for (Module m : Main.getMain().getModuleManager()) {
             saveModule(m);
         }
     }
 
-    private void saveModule(Module m) throws IOException {
-        Path path = Paths.get(modulesFolder, m.getLabel() + ".json");
-        createFile(path);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("Enabled", new JsonPrimitive(m.isToggled()));
-        jsonObject.add("KeyBind", new JsonPrimitive(m.getKey()));
-        Option.getContainersForObject(m).forEach(s -> {
-            if (s.getValue().getClass().isEnum()) {
-                jsonObject.add(s.getName(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(( Enum ) s.getValue())));
-                return;
-            }
-            switch (s.getValue().getClass().getSimpleName()) {
-                case "Boolean":
-                    jsonObject.add(s.getName(), new JsonPrimitive(( Boolean ) s.getValue()));
-                    break;
-                case "Double":
-                    jsonObject.add(s.getName(), new JsonPrimitive(( Double ) s.getValue()));
-                    break;
-                case "Integer":
-                    jsonObject.add(s.getName(), new JsonPrimitive(( Integer ) s.getValue()));
-                    break;
-                case "JColor":
-                    JsonArray jsonColors = new JsonArray();
-                    JColor color =  ((Option<JColor>) s).getValue();
-                    jsonColors.add(color.getColor().getRed());
-                    jsonColors.add(color.getColor().getGreen());
-                    jsonColors.add(color.getColor().getBlue());
-                    jsonColors.add(color.getColor().getAlpha());
-                    jsonColors.add(color.isRainbow());
-                    jsonObject.add(s.getName(), jsonColors);
-            }
-        });
-        Files.write(path, gson.toJson(new JsonParser().parse(jsonObject.toString())).getBytes());
+    private void saveModule(Module m) {
+        try {
+            Path path = Paths.get(modulesFolder, m.getLabel() + ".json");
+            createFile(path);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("Enabled", new JsonPrimitive(m.isToggled()));
+            jsonObject.add("KeyBind", new JsonPrimitive(m.getKey()));
+            Option.getContainersForObject(m).forEach(s -> {
+                if (s.getValue().getClass().isEnum()) {
+                    jsonObject.add(s.getName(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(( Enum ) s.getValue())));
+                    return;
+                }
+                switch (s.getValue().getClass().getSimpleName()) {
+                    case "Boolean":
+                        jsonObject.add(s.getName(), new JsonPrimitive(( Boolean ) s.getValue()));
+                        break;
+                    case "Double":
+                        jsonObject.add(s.getName(), new JsonPrimitive(( Double ) s.getValue()));
+                        break;
+                    case "Integer":
+                        jsonObject.add(s.getName(), new JsonPrimitive(( Integer ) s.getValue()));
+                        break;
+                    case "Float":
+                        jsonObject.add(s.getName(), new JsonPrimitive(( Float ) s.getValue()));
+                        break;
+                    case "JColor":
+                        JsonArray jsonColors = new JsonArray();
+                        JColor color = (( Option<JColor> ) s).getValue();
+                        jsonColors.add(color.getColor().getRed());
+                        jsonColors.add(color.getColor().getGreen());
+                        jsonColors.add(color.getColor().getBlue());
+                        jsonColors.add(color.getColor().getAlpha());
+                        jsonColors.add(color.isRainbow());
+                        jsonObject.add(s.getName(), jsonColors);
+                }
+            });
+            Files.write(path, gson.toJson(new JsonParser().parse(jsonObject.toString())).getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void createFile(Path path) {

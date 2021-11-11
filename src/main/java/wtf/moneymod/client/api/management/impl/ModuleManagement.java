@@ -33,16 +33,6 @@ public class ModuleManagement extends ArrayList<Module> implements IManager<Modu
         return this;
     }
 
-    public boolean isShitExist() {
-        System.out.println("хуй");
-        try {
-            Class.forName("me.sleepy.loader.MoneymodEntryPoint");
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public ArrayList<Module> get(Predicate<Module> predicate) {
         return stream().filter(predicate).collect(Collectors.toCollection(ArrayList::new));
     }
