@@ -24,9 +24,9 @@ public class Notifications extends Module {
     @Handler public Listener<ToggleEvent> eventListener = new Listener<>(ToggleEvent.class, e -> {
         if (blacklist.contains(e.getModule()) || nullCheck()) return;
         if (e.getAction() == ToggleEvent.Action.ENABLE) {
-            ChatUtil.INSTANCE.sendMessage("" + ChatFormatting.WHITE + ChatFormatting.BOLD + e.getModule().getLabel() + " : " + ChatFormatting.GREEN + "Enabled", true);
+            ChatUtil.INSTANCE.sendMessage("" + ChatFormatting.WHITE + ChatFormatting.BOLD + e.getModule().getLabel() + " " + ChatFormatting.GREEN + "Enabled", true);
         } else {
-            ChatUtil.INSTANCE.sendMessage("" + ChatFormatting.WHITE + ChatFormatting.BOLD + e.getModule().getLabel() + " : " + ChatFormatting.RED + "Disabled", true);
+            ChatUtil.INSTANCE.sendMessage("" + ChatFormatting.WHITE + ChatFormatting.BOLD + e.getModule().getLabel() + " " + ChatFormatting.RED + "Disabled", true);
         }
     });
 

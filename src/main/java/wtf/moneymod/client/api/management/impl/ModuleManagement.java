@@ -22,9 +22,9 @@ public class ModuleManagement extends ArrayList<Module> implements IManager<Modu
     @Override public ModuleManagement register() {
         new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
             try {
+                if (c.getSimpleName().equalsIgnoreCase("HudModule")) return;
                 Module module = c.newInstance();
                 add(module);
-                Option.getContainersForObject(module);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }

@@ -34,6 +34,7 @@ public class Main {
     private Screen screen;
 
     //management
+    private PulseManagement pulseManagement;
     private FpsManagement fpsManagement;
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
@@ -48,6 +49,7 @@ public class Main {
         commandManagement = new CommandManagement().register();
         ConfigManager.getInstance().load();
         screen = new Screen();
+        pulseManagement = new PulseManagement();
         EventHandler handler = new EventHandler();
         MinecraftForge.EVENT_BUS.register(handler);
         EVENT_BUS.register(handler);
@@ -75,6 +77,10 @@ public class Main {
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public PulseManagement getPulseManagement() {
+        return pulseManagement;
     }
 
     private String getHash(ModuleManagement module) {

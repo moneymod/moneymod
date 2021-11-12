@@ -4,6 +4,8 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.ToggleEvent;
+import wtf.moneymod.client.api.setting.Option;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.utility.Globals;
 
 import java.lang.annotation.ElementType;
@@ -23,6 +25,7 @@ public class Module implements Globals {
     private boolean toggled;
     private final boolean configException;
     private int key;
+    public boolean drawn;
 
     public Module() {
         Register register = getClass().getAnnotation(Register.class);
@@ -31,6 +34,7 @@ public class Module implements Globals {
         category = register.cat();
         configException = register.exception();
         key = register.key();
+        drawn = true;
     }
 
     public String getLabel() {

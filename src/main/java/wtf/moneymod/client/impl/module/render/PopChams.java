@@ -49,6 +49,7 @@ public class PopChams extends Module {
         if(anim) {
             entity.limbSwing = sp.limbSwing;
             entity.limbSwingAmount = sp.limbSwingAmount;
+            entity.setSneaking(sp.isSneaking());
         }
         popList.add( new Person( entity ) );
     });
@@ -72,16 +73,18 @@ public class PopChams extends Module {
             person.modelPlayer.bipedLeftArmwear.showModel = false;
             person.modelPlayer.bipedRightArmwear.showModel = false;
             person.modelPlayer.bipedBodyWear.showModel = false;
-            person.modelPlayer.bipedHead.showModel = false;
-            person.modelPlayer.bipedHeadwear.showModel = true;
+            person.modelPlayer.bipedHead.showModel = true;
+            person.modelPlayer.bipedHeadwear.showModel = false;
             GlStateManager.color( color.getColor().getRed() / 255f, color.getColor().getGreen( ) / 255f, color.getColor().getBlue( ) / 255f, ( float ) person.alpha / 255f );
             GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
             renderEntity( person.player, person.modelPlayer, person.player.limbSwing,
                     person.player.limbSwingAmount, person.player.ticksExisted, person.player.rotationYawHead, person.player.rotationPitch, 1 );
 
+
             GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
             renderEntity( person.player, person.modelPlayer, person.player.limbSwing,
                     person.player.limbSwingAmount, person.player.ticksExisted, person.player.rotationYawHead, person.player.rotationPitch, 1 );
+
             GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
         } );
         GlStateManager.enableCull( );

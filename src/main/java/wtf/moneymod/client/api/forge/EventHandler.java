@@ -93,6 +93,7 @@ public class EventHandler implements Globals {
 
     @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
         Main.getMain().getFpsManagement().update();
+        Main.getMain().getPulseManagement().update();
         for (Module m : Main.getMain().getModuleManager()) {
             for (Option<?> setting : Option.getContainersForObject(m)) {
                 if (setting.getValue() instanceof JColor) {

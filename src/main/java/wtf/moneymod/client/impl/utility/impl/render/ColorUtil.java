@@ -32,9 +32,10 @@ public class ColorUtil {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
     }
 
-    public static float sinFunction(int min, float max, int delay) {
-        if (max > 1) max = 1;
-        float brightness = Math.abs((( float ) (System.currentTimeMillis() % 2000L) / 1000.0F + ( float ) min / ( float ) delay * max * 2f) % (max * 2f) - max);
+    public static float sinFunction(int min, int max_, int delay) {
+        if (max_ > 255) max_ = 255;
+        float max = max_ / 255f;
+        float brightness = Math.abs(((System.currentTimeMillis() % 2000L) / 1000F / ( float ) delay * (max * 2f)) % (max * 2f) - max);
         brightness = max / 2f + ((max / 2f) * brightness);
         return brightness % max * 2f;
     }

@@ -79,7 +79,7 @@ public class LogoutSpot extends Module {
                     modelPlayer.bipedBodyWear.showModel = false;
                     modelPlayer.bipedHead.showModel = false;
                     modelPlayer.bipedHeadwear.showModel = true;
-                    GlStateManager.color(color.getColor().getRed() / 255f, color.getColor().getGreen() / 255f, color.getColor().getBlue() / 255f, pulse ? ColorUtil.sinFunction(0, color.getColor().getAlpha() / 255f, 1) : ( float ) color.getColor().getAlpha() / 255f);
+                    GlStateManager.color(color.getColor().getRed() / 255f, color.getColor().getGreen() / 255f, color.getColor().getBlue() / 255f, pulse ? ColorUtil.sinFunction(0, color.getColor().getAlpha(), 1) : ( float ) color.getColor().getAlpha() / 255f);
                     GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                     PopChams.renderEntity(person.entity, modelPlayer, person.entity.limbSwing,
                             person.entity.limbSwingAmount, person.entity.ticksExisted, person.entity.rotationYawHead, person.entity.rotationPitch, 1);
