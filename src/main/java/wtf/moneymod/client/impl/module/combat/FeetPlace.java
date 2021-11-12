@@ -25,7 +25,7 @@ public class FeetPlace extends Module {
     @Value( value = "Retry" ) public boolean retry = true;
     @Value( value = "Retries" ) @Bounds( max = 25, min = 1 ) public int retries = 5;
     @Value( value = "Cleaner" ) public boolean cleaner = true;
-    @Value( value = "Help" ) public boolean help = true;
+    @Value( value = "Helping Blocks" ) public boolean help = true;
     @Value( value = "Jump Disable" ) public boolean jumpDisable = true;
     @Value( value = "Disable" ) public boolean disable = false;
     @Value( value = "AutoCenter" ) public boolean center = false;

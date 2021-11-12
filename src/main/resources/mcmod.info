@@ -1,6 +1,6 @@
 [{
     "modid": "moneymod",
-    "name": "MoneyMod+3",
+    "name": "MoneyMod",
     "description": "rich hack for minecraft 1.12.2 (i hate dis version pls kys)",
     "version": "${version}",
     "mcversion": "${mcversion}",

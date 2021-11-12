@@ -15,7 +15,7 @@ import wtf.moneymod.eventhandler.listener.Listener;
 @Module.Register( label = "Criticals", cat = Module.Category.COMBAT)
 public class Criticals extends Module {
 
-    @Value(value = "Only KA") public boolean onlyKillaura = true;
+    @Value(value = "Only When KA") public boolean onlyKillaura = true;
     @Value(value = "Strict") public boolean strict = false;
 
     @Handler

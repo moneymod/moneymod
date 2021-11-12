@@ -4,7 +4,7 @@ import net.minecraft.util.EnumHand;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 
-@Module.Register( label = "Swing", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "Swing", cat = Module.Category.RENDER)
 public class Swing extends Module {
 
     @Value(value = "Offhand") public boolean offhand = true;

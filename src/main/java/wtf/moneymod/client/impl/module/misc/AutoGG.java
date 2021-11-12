@@ -7,7 +7,7 @@ import wtf.moneymod.client.impl.module.combat.AutoCrystal;
 
 import java.util.Random;
 
-@Module.Register( label = "AutoGG", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "AutoGG", cat = Module.Category.MISC)
 public class AutoGG extends Module {
 
     @Value(value = "Logic") public Mode mode = Mode.DEFAULT;

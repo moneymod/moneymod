@@ -8,7 +8,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-@Module.Register( label = "Changer", cat = Module.Category.MOVEMENT )
+@Module.Register( label = "Changer", cat = Module.Category.RENDER )
 public class Changer extends Module {
 
     @Value( value = "Fps" ) public boolean fps = true;
