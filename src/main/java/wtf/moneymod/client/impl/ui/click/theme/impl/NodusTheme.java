@@ -150,7 +150,7 @@ public class NodusTheme extends AbstractTheme {
 
         drawHueSlider(x + 2,
                 y + 127,
-                109,
+                105,
                 6,
                 hsb[ 0 ]);
 
