@@ -13,6 +13,7 @@ import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorKeyBinding;
 
 @Module.Register( label = "BurrowBypass", cat = Module.Category.COMBAT)
 public class SelfFillBypass extends Module {
@@ -57,23 +58,24 @@ public class SelfFillBypass extends Module {
     public void firstmethod(){
         if (stage == 1) {
             delay++;
-            if (mc.player.onGround) mc.player.jump();
+            ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(true);
             Main.TICK_TIMER = ticks;
             if (delay >= oneDelays) {
                 stage = 2;
                 delay = 0;
                 Main.TICK_TIMER = 1;
-                jump = true;
+                ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(false);
             }
         }
         if (stage == 2){
             Main.TICK_TIMER = 1;
-            if (mc.player.onGround) mc.player.jump();
+            if (mc.player.onGround) ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(true);;
             BlockUtil.INSTANCE.placeBlock(position);
             pdelay++;
             if (pdelay >= placeDelay){
                 stage = 3;
                 pdelay = 0;
+                ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(false);
                 Main.TICK_TIMER = 1;
 
             }
@@ -81,10 +83,11 @@ public class SelfFillBypass extends Module {
         if (stage == 3){
             toggledelay++;
             Main.TICK_TIMER = ticks;
-            if (mc.player.onGround) mc.player.jump();
+            ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(true);
             if (toggledelay >= toggleDelays) {
                 mc.player.motionY -= 0.4;
                 Main.TICK_TIMER = 1;
+                ((AccessorKeyBinding) mc.gameSettings.keyBindJump).setPressed(false);
                 setToggled(false);
             }
         }
