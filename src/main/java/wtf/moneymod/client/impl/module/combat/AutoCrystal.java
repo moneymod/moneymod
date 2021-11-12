@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.input.Mouse;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
@@ -58,6 +59,7 @@ public class AutoCrystal extends Module {
     @Value(value = "Rotate") public boolean rotateons = true;
     @Value(value = "Second") public boolean secondCheck = true;
     @Value(value = "Swap") public Swap swap = Swap.NONE;
+    @Value(value = "Swing") public Swing swing = Swing.MAINHAND;
     @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, true);
     private final Set<BlockPos> placeSet = new HashSet<>();
     private BlockPos renderPos;
@@ -65,7 +67,7 @@ public class AutoCrystal extends Module {
     public EntityPlayer currentTarget;
     private boolean offhand, rotating, lowArmor;
     private double currentDamage;
-    private int ticks, old;
+    private int ticks, old, autoOld;
     private float yaw = 0f, pitch = 0f;
 
     private final Timer breakTimer = new Timer();
@@ -74,6 +76,7 @@ public class AutoCrystal extends Module {
 
     @Override
     public void onToggle() {
+        autoOld = -1;
         rotating = false;
         placeSet.clear();
         renderPos = null;
@@ -81,30 +84,16 @@ public class AutoCrystal extends Module {
         placeTimer.reset();
         predictTimer.reset();
     }
-    @Override
-    public void onDisable(){
-        if (swap == Swap.AUTO){
-            ItemUtil.swapToHotbarSlot(old, false);
-            old = -1;
-        }
+
+    @Override()
+    public void onEnable(){
+        autoOld = mc.player.inventory.currentItem;
     }
 
-    @Handler
-    public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
-        SPacketSoundEffect packet;
-        if (e.getPacket() instanceof SPacketSpawnObject && boost) {
-            final SPacketSpawnObject packet2 = e.getPacket();
-            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed((int)boostdelay)) {
-                AccessorCPacketUseEntity hitPacket = (AccessorCPacketUseEntity) new CPacketUseEntity();
-                int entityId = packet2.getEntityID();
-                hitPacket.setEntityId(entityId);
-                hitPacket.setAction(CPacketUseEntity.Action.ATTACK);
-                mc.getConnection().sendPacket((CPacketUseEntity) hitPacket);
-                mc.player.swingArm(EnumHand.MAIN_HAND);
-                predictTimer.reset();
-            }
-        }
-    });
+    @Override
+    public void onDisable(){
+        if (swap == Swap.AUTO) ItemUtil.swapToHotbarSlot(autoOld, false);
+    }
 
     @Override
     public void onTick() {
@@ -113,6 +102,11 @@ public class AutoCrystal extends Module {
             ticks = 0;
             placeSet.clear();
             renderPos = null;
+        }
+
+        if (swap == Swap.AUTO) {
+            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
+            if (crystal != -1) ItemUtil.swapToHotbarSlot(crystal, false);
         }
 
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
@@ -165,19 +159,10 @@ public class AutoCrystal extends Module {
 
         }
         if (swap == Swap.SILENT){
-            if (ItemUtil.findItem(ItemEndCrystal.class) == -1){
+            if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
                 return;
             }
-        } else if (swap == Swap.AUTO){
-            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
-            if (crystal != -1){
-                    ItemUtil.swapToHotbarSlot(crystal, false);
-            } else {
-                placePos = null;
-                return;
-            };
-
-        } else if (swap == Swap.NONE){
+        } else if (swap == Swap.NONE || swap == Swap.AUTO){
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
@@ -219,25 +204,35 @@ public class AutoCrystal extends Module {
             if (!(maxCrystal.ticksExisted >= tickexisted)) return;
             if (rotateons) rotate(maxCrystal);
             mc.getConnection().sendPacket(new CPacketUseEntity(maxCrystal));
-            mc.player.swingArm(EnumHand.MAIN_HAND);
+            setSwing();
             breakTimer.reset();
         } else {
             rotating = false;
         }
     }
 
-
-    public enum Swap {
-        NONE,
-        AUTO,
-        SILENT
+    public void setSwing(){
+        if (swing == Swing.MAINHAND){ mc.player.swingArm(EnumHand.MAIN_HAND);
+        } else if (swing == Swing.OFFHAND){ mc.player.swingArm(EnumHand.OFF_HAND);
+        } else {}
     }
 
-
-    public enum Logic {
-        BREAKPLACE,
-        PLACEBREAK;
-    }
+    @Handler
+    public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
+        SPacketSoundEffect packet;
+        if (e.getPacket() instanceof SPacketSpawnObject && boost) {
+            final SPacketSpawnObject packet2 = e.getPacket();
+            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed((int)boostdelay)) {
+                AccessorCPacketUseEntity hitPacket = (AccessorCPacketUseEntity) new CPacketUseEntity();
+                int entityId = packet2.getEntityID();
+                hitPacket.setEntityId(entityId);
+                hitPacket.setAction(CPacketUseEntity.Action.ATTACK);
+                mc.getConnection().sendPacket((CPacketUseEntity) hitPacket);
+                setSwing();
+                predictTimer.reset();
+            }
+        }
+    });
 
     @Handler
     public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
@@ -260,5 +255,22 @@ public class AutoCrystal extends Module {
         yaw = angles[0];
         pitch = angles[1];
         rotating = true;
+    }
+
+    public enum Swap {
+        NONE,
+        AUTO,
+        SILENT
+    }
+
+    public enum Swing {
+        OFFHAND,
+        MAINHAND,
+        NONE
+    }
+
+    public enum Logic {
+        BREAKPLACE,
+        PLACEBREAK;
     }
 }

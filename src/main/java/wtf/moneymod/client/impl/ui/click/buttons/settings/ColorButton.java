@@ -161,7 +161,7 @@ public class ColorButton extends Component {
 
         drawHueSlider(button.panel.getX() + 2,
                 button.panel.getY() + offset + 127,
-                109,
+                105,
                 6,
                 hsb[ 0 ]);
 
