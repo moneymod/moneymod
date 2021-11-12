@@ -17,6 +17,7 @@ import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -82,8 +83,7 @@ public class Scout extends Module {
         GlStateManager.pushMatrix();
         ScaledResolution sr = new ScaledResolution(mc);
         if (render) {
-            mc.fontRenderer.drawStringWithShadow(String.format("%s/100", percent) + "%",
-                    (int)(sr.getScaledWidth() / 2f - mc.fontRenderer.getStringWidth(String.format("%s/100", percent) + "%") / 2f),
+            FontRender.drawStringWithShadow(String.format("%s/100", percent) + "%", (int)(sr.getScaledWidth() / 2f - mc.fontRenderer.getStringWidth(String.format("%s/100", percent) + "%") / 2f),
                     (int)(sr.getScaledHeight() / 2f + 10f), new Color(170, 170, 170 ).getRGB());
             Renderer2D.drawRect(sr.getScaledWidth() / 2f - 21, sr.getScaledHeight() / 2f + 20f, sr.getScaledWidth() / 2f + 23, sr.getScaledHeight() / 2f + 25f, new Color( 0, 0, 0, 140 ).getRGB());
             Renderer2D.drawRect(sr.getScaledWidth() / 2f - 20, sr.getScaledHeight() / 2f + 21f, sr.getScaledWidth() / 2f - 20 + (percent * 0.42f), sr.getScaledHeight() / 2f + 24f, percent == 100 ? Color.green.getRGB() : Color.red.getRGB( ) );

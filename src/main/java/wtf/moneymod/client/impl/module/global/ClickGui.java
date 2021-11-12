@@ -15,7 +15,7 @@ public class ClickGui extends Module {
     @Value( value = "Color" ) public JColor color = new JColor(0, 255, 0, true);
     @Value( value = "Blur" ) public boolean blur = false;
     @Value( value = "Bounding" ) public boolean bounding = true;
-
+    @Value( value = "Font" ) public boolean font = true;
     @Override protected void onEnable() {
         if (mc.currentScreen == null) mc.displayGuiScreen(Main.getMain().getScreen());
         disable();

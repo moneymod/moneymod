@@ -22,6 +22,7 @@ import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 import wtf.moneymod.eventhandler.listener.Handler;
@@ -164,7 +165,7 @@ public class LogoutSpot extends Module {
             Renderer2D.drawRect(-width - 2, -(mc.fontRenderer.FONT_HEIGHT + 1), ( float ) width + 2.0f, 1.5f, 0x55000000);
         }
         GlStateManager.disableBlend();
-        mc.fontRenderer.drawStringWithShadow(displayTag, -width, -(mc.fontRenderer.FONT_HEIGHT - 1), color.getColor().getRGB());
+        FontRender.drawStringWithShadow(displayTag, -width, -(mc.fontRenderer.FONT_HEIGHT - 1), color.getColor().getRGB());
         camera.posX = originalPositionX;
         camera.posY = originalPositionY;
         camera.posZ = originalPositionZ;

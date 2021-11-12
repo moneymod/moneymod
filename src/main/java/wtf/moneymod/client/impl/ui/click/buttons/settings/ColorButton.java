@@ -13,6 +13,7 @@ import wtf.moneymod.client.impl.ui.click.buttons.ModuleButton;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
 
@@ -185,7 +186,7 @@ public class ColorButton extends Component {
         //        Renderer2D.drawPolygon( xPos - 2, yPos + 2, 1, 360, -1 );
         GlStateManager.popMatrix();
 
-        mc.fontRenderer.drawStringWithShadow("Rainbow", ( int ) (button.panel.getX() + button.panel.getWidth() / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), button.panel.getY() + offset + 142, (( JColor ) setting.getValue()).isRainbow() ? (( JColor ) setting.getValue()).getColor().getRGB() : -1);
+        FontRender.drawStringWithShadow("Rainbow", ( int ) (button.panel.getX() + button.panel.getWidth() / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), button.panel.getY() + offset + 142, (( JColor ) setting.getValue()).isRainbow() ? (( JColor ) setting.getValue()).getColor().getRGB() : -1);
 
         color = injectAlpha(new Color(Color.HSBtoRGB(hsb[ 0 ], hsb[ 1 ], hsb[ 2 ])), alphas);
 

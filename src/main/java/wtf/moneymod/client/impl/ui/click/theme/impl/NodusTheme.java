@@ -16,6 +16,7 @@ import wtf.moneymod.client.impl.ui.click.theme.AbstractTheme;
 import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
 
@@ -32,8 +33,8 @@ public class NodusTheme extends AbstractTheme {
         drawRect(x, y, x + w, y + h - 2, new Color(0, 0, 0, 210).getRGB());
         if (panel.isOpen())
             Gui.drawRect(x, y + h - 2, x + w, y + h, new Color(255, 255, 255, 90).getRGB());
-        mc.fontRenderer.drawStringWithShadow(panel.category.name() + ChatFormatting.WHITE + " (" + panel.components.size() + ")", x + 3, y + 4, Screen.color.getRGB());
-        mc.fontRenderer.drawStringWithShadow(panel.isOpen() ? "-" : "+", x + w - 10, y + 4, Color.GRAY.getRGB());
+        FontRender.drawStringWithShadow(panel.category.name() + ChatFormatting.WHITE + " (" + panel.components.size() + ")", x + 3, y + 4, Screen.color.getRGB());
+        FontRender.drawStringWithShadow(panel.isOpen() ? "-" : "+", x + w - 10, y + 4, Color.GRAY.getRGB());
     }
 
     @Override public void drawPanelOutline(Panel panel, int x, int y, int w, int h, boolean hovered) {
@@ -45,33 +46,33 @@ public class NodusTheme extends AbstractTheme {
 
     @Override public void drawModuleButton(ModuleButton module, int x, int y, int w, int h, boolean hovered) {
         drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(module.module.getLabel(), x + 3, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), module.module.isToggled() ? Screen.color.getRGB() : -1);
+        FontRender.drawStringWithShadow(module.module.getLabel(), x + 3, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), module.module.isToggled() ? Screen.color.getRGB() : -1);
 
         String openText;
         if (module.open) {
             openText = "-";
         } else openText = "+";
 
-        mc.fontRenderer.drawStringWithShadow(openText, x + w - 10, y + 2, -1);
+        FontRender.drawStringWithShadow(openText, x + w - 10, y + 2, -1);
     }
 
     @Override public void drawBooleanButton(Option<Boolean> container, int x, int y, int w, int h, boolean hovered) {
         drawRect(x, y, x + w, y + 12, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), container.getValue() ? (( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).color.getColor().getRGB() : new Color(160, 160, 160).getRGB());
+        FontRender.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), container.getValue() ? (( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).color.getColor().getRGB() : new Color(160, 160, 160).getRGB());
     }
 
     @Override
     public void drawSliderButton(Option<Number> container, int x, int y, int w, int h, double sliderWidth, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
         Gui.drawRect(x + 3, y + h - 1, ( int ) (x + 3 + sliderWidth), y + 10, hovered ? Screen.color.darker().getRGB() : Screen.color.getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getName() + ": " + ChatFormatting.GRAY + container.getValue(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 0 : 1.5f) : 1.5f), hovered ? new Color(170, 170, 170).getRGB() : -1);
+        FontRender.drawStringWithShadow(container.getName() + ": " + ChatFormatting.GRAY + container.getValue(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 0 : 1.5f) : 1.5f), hovered ? new Color(170, 170, 170).getRGB() : -1);
     }
 
     @Override public void drawKeyButton(KeyButton button, int x, int y, int w, int h, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow("Key", x + 5, y + 2, -1);
+        FontRender.drawStringWithShadow("Key", x + 5, y + 2, -1);
         if (button.isBinding()) {
-            mc.fontRenderer.drawStringWithShadow("...", x + w - 5 - mc.fontRenderer.getStringWidth("..."), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
+            FontRender.drawStringWithShadow("...", x + w - 5 - mc.fontRenderer.getStringWidth("..."), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
         } else {
             String key;
             switch (button.button.module.getKey()) {
@@ -91,19 +92,19 @@ public class NodusTheme extends AbstractTheme {
                     key = Keyboard.getKeyName(button.button.module.getKey());
             }
 
-            mc.fontRenderer.drawStringWithShadow(key, x + w - 5 - mc.fontRenderer.getStringWidth(key), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
+            FontRender.drawStringWithShadow(key, x + w - 5 - mc.fontRenderer.getStringWidth(key), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
         }
     }
 
     @Override public void drawModeButton(Option<Enum> container, int x, int y, int w, int h, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + 2, -1);
-        mc.fontRenderer.drawStringWithShadow(SettingUtils.INSTANCE.getProperName(container.getValue()), x + w - 5 - mc.fontRenderer.getStringWidth(SettingUtils.INSTANCE.getProperName(container.getValue())), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
+        FontRender.drawStringWithShadow(container.getName(), x + 5, y + 2, -1);
+        FontRender.drawStringWithShadow(SettingUtils.INSTANCE.getProperName(container.getValue()), x + w - 5 - mc.fontRenderer.getStringWidth(SettingUtils.INSTANCE.getProperName(container.getValue())), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
     }
 
     @Override public void drawSubModeButton(SubMode container, String current, int x, int y, int w, int h, boolean hovered) {
         Gui.drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        mc.fontRenderer.drawStringWithShadow(current, (x + w / 2f) - mc.fontRenderer.getStringWidth(current) / 2f, y + 2, SettingUtils.INSTANCE.getProperName(container.getModeButton().getSetting().getValue()).equalsIgnoreCase(current) ? Screen.color.getRGB() : -1);
+        FontRender.drawStringWithShadow(current, (x + w / 2f) - mc.fontRenderer.getStringWidth(current) / 2f, y + 2, SettingUtils.INSTANCE.getProperName(container.getModeButton().getSetting().getValue()).equalsIgnoreCase(current) ? Screen.color.getRGB() : -1);
     }
 
     @Override public void drawColorButton(Option<JColor> container, int x, int y, int w, int h, boolean hovered) {
@@ -121,7 +122,7 @@ public class NodusTheme extends AbstractTheme {
                 y + 10,
                 1f, new Color(255, 255, 255, 90).getRGB());
 
-        mc.fontRenderer.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
+        FontRender.drawStringWithShadow(container.getName(), x + 5, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
     }
 
     @Override public void drawPickerButton(ColorButton container, int x, int y, int w, int h, boolean hovered) {
@@ -171,7 +172,7 @@ public class NodusTheme extends AbstractTheme {
         drawPolygonOutline(xPos - 2, yPos + 2, 2f, 3, 360, Color.black.getRGB());
         popMatrix();
 
-        mc.fontRenderer.drawStringWithShadow("Rainbow", ( int ) (x + w / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), y + h, (( JColor ) container.setting.getValue()).isRainbow() ? (( JColor ) container.setting.getValue()).getColor().getRGB() : -1);
+        FontRender.drawStringWithShadow("Rainbow", ( int ) (x + w / 2f - mc.fontRenderer.getStringWidth("Rainbow") / 2f), y + h, (( JColor ) container.setting.getValue()).isRainbow() ? (( JColor ) container.setting.getValue()).getColor().getRGB() : -1);
 
 
     }

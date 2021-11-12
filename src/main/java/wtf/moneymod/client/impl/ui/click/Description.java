@@ -5,6 +5,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
 
@@ -53,7 +54,7 @@ public class Description implements Globals
                                 : mouseX + 2;
 
                 Gui.drawRect( startx, mouseY - height - 1, startx + width + 3, mouseY + 1, new Color( 0, 0, 0, 170 ).getRGB( ) );
-                mc.fontRenderer.drawStringWithShadow( text, startx + 2, mouseY - height + 1, new Color( 255, 255, 255, 255 ).getRGB( ) );
+                FontRender.drawStringWithShadow( text, startx + 2, mouseY - height + 1, new Color( 255, 255, 255, 255 ).getRGB( ) );
             }
         }
     }
