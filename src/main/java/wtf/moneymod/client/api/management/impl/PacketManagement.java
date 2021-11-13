@@ -15,7 +15,7 @@ public class PacketManagement extends ArrayDeque<Packet> implements Globals {
 
     @SubscribeEvent public void onTick(TickEvent.ClientTickEvent event) {
         if(mc.world == null || mc.player == null) return;
-        for(int j = 0; j < 6; j++) {
+        for(int j = 0; j < 8; j++) {
             if(peekFirst() != null) mc.player.connection.sendPacket(pollFirst());
         }
     }

@@ -1,8 +1,10 @@
 package wtf.moneymod.client.impl.module.combat;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemEndCrystal;
@@ -14,6 +16,7 @@ import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,6 +27,7 @@ import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.module.misc.AutoGG;
+import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -37,34 +41,35 @@ import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.*;
 
-@Module.Register(label = "Ak-47", cat = Module.Category.COMBAT)
+@Module.Register( label = "Ak-47", cat = Module.Category.COMBAT )
 public class AutoCrystal extends Module {
 
-    @Value(value = "Place") public boolean place = true;
-    @Value(value = "Break") public boolean hit = true;
-    @Value(value = "Logic") public Logic logic = Logic.BREAKPLACE;
-    @Value(value = "Target Range") @Bounds(max = 16) public int targetRange = 12;
-    @Value(value = "Place Range ") @Bounds(max = 6) public int placeRange = 5;
-    @Value(value = "Break Range ") @Bounds(max = 6) public int breakRange = 5;
-    @Value(value = "Wall Range") @Bounds(max = 6) public float wallRange = 3.5f;
-    @Value(value = "Break Delay") @Bounds(max = 200) public int breakDelay = 40;
-    @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
-    @Value(value = "MinDamage") @Bounds(max = 36) public int mindmg = 6;
-    @Value(value = "MaxSelfDamage") @Bounds(max = 36) public int maxselfdamage = 6;
-    @Value(value = "FacePlaceDamage") @Bounds(max = 36) public int faceplacehp = 8;
-    @Value(value = "ArmorScale") @Bounds(max = 100) public int armorscale = 12;
-    @Value(value = "TickExisted") @Bounds(max = 20) public int tickexisted = 3;
-    @Value(value = "Predict") public boolean boost = true;
-    @Value(value = "Rotate") public boolean rotateons = true;
-    @Value(value = "Second") public boolean secondCheck = true;
-    @Value(value = "Swap") public Swap swap = Swap.NONE;
-    @Value(value = "Swing") public Swing swing = Swing.MAINHAND;
-    @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, true);
+    @Value( value = "Place" ) public boolean place = true;
+    @Value( value = "Break" ) public boolean hit = true;
+    @Value( value = "Logic" ) public Logic logic = Logic.BREAKPLACE;
+    @Value( value = "Target Range" ) @Bounds( max = 16 ) public int targetRange = 12;
+    @Value( value = "Place Range " ) @Bounds( max = 6 ) public int placeRange = 5;
+    @Value( value = "Break Range " ) @Bounds( max = 6 ) public int breakRange = 5;
+    @Value( value = "Wall Range" ) @Bounds( max = 6 ) public float wallRange = 3.5f;
+    @Value( value = "Break Delay" ) @Bounds( max = 200 ) public int breakDelay = 40;
+    @Value( value = "Place Delay" ) @Bounds( max = 200 ) public int placeDelay = 20;
+    @Value( value = "MinDamage" ) @Bounds( max = 36 ) public int mindmg = 6;
+    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int maxselfdamage = 6;
+    @Value( value = "FacePlaceDamage" ) @Bounds( max = 36 ) public int faceplacehp = 8;
+    @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
+    @Value( value = "TickExisted" ) @Bounds( max = 20 ) public int tickexisted = 3;
+    @Value( value = "Predict" ) public boolean boost = true;
+    @Value( value = "Rotate" ) public boolean rotateons = true;
+    @Value( value = "Second" ) public boolean secondCheck = true;
+    @Value( value = "AutoObbyPlace" ) public boolean autoPlace = true;
+    @Value( value = "Swap" ) public Swap swap = Swap.NONE;
+    @Value( value = "Swing" ) public Swing swing = Swing.MAINHAND;
+    @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0, 180, true);
     private final Set<BlockPos> placeSet = new HashSet<>();
-    private BlockPos renderPos;
+    private BlockPos renderPos, lastPlaced;
     private BlockPos currentBlock;
     public EntityPlayer currentTarget;
-    private boolean offhand, rotating, lowArmor;
+    private boolean offhand, rotating, lowArmor, blackPeople;
     private double currentDamage;
     private int ticks, old, autoOld;
     private float yaw = 0f, pitch = 0f;
@@ -77,6 +82,7 @@ public class AutoCrystal extends Module {
     public void onToggle() {
         autoOld = -1;
         rotating = false;
+        blackPeople = false;
         placeSet.clear();
         renderPos = null;
         breakTimer.reset();
@@ -85,12 +91,12 @@ public class AutoCrystal extends Module {
     }
 
     @Override()
-    public void onEnable(){
+    public void onEnable() {
         autoOld = mc.player.inventory.currentItem;
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         if (swap == Swap.AUTO) ItemUtil.swapToHotbarSlot(autoOld, false);
     }
 
@@ -110,10 +116,10 @@ public class AutoCrystal extends Module {
 
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
-        if (currentTarget != null){
+        if (currentTarget != null) {
             AutoGG.target(currentTarget);
         } else return;
-        lowArmor = ItemUtil.isArmorLow(currentTarget, (int) armorscale);
+        lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
         doAutoCrystal();
     }
 
@@ -148,7 +154,7 @@ public class AutoCrystal extends Module {
         for (BlockPos pos : BlockUtil.INSTANCE.getSphere(placeRange, true)) {
             double selfDamage, targetDamage;
 
-                if (!BlockUtil.INSTANCE.canPlaceCrystal(pos, secondCheck) || (targetDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
+            if (!BlockUtil.canPlaceCrystal(pos, secondCheck) || (targetDamage = EntityUtil.INSTANCE.calculate(( double ) pos.getX() + 0.5, ( double ) pos.getY() + 1.0, ( double ) pos.getZ() + 0.5, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > ( float ) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(( double ) pos.getX() + 0.5, ( double ) pos.getY() + 1.0, ( double ) pos.getZ() + 0.5, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
                 continue;
 
             if (currentTarget.isDead)
@@ -157,16 +163,61 @@ public class AutoCrystal extends Module {
             maxDamage = targetDamage;
 
         }
-        if (swap == Swap.SILENT){
+
+        if (placePos == null && autoPlace) {
+            maxDamage = 0;
+            if (ItemUtil.findItem(Blocks.OBSIDIAN) != -1) {
+                if (lastPlaced != null && mc.player.getDistanceSq(lastPlaced) < MathUtil.INSTANCE.square(placeRange) && BlockUtil.canPlaceCrystal(lastPlaced, true) && EntityUtil.INSTANCE.calculate(( double ) lastPlaced.getX() + 0.5, ( double ) lastPlaced.getY() + 1.0, ( double ) lastPlaced.getZ() + 0.5, currentTarget) > mindmg) {
+                    placePos = lastPlaced;
+                } else {
+
+                    for (BlockPos pos : BlockUtil.INSTANCE.getSphere(placeRange, true)) {
+                        double selfDamage, targetDamage;
+
+                        if (!mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) || !BlockUtil.canPlaceCrystal(pos.up()))
+                            continue;
+
+                        mc.world.setBlockState(pos.up(), Blocks.OBSIDIAN.getBlockState().getBaseState());
+
+                        if ((targetDamage = EntityUtil.INSTANCE.calculate(( double ) pos.getX() + 0.5, ( double ) pos.getY() + 2.0, ( double ) pos.getZ() + 0.5, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > ( float ) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(( double ) pos.getX() + 0.5, ( double ) pos.getY() + 2.0, ( double ) pos.getZ() + 0.5, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage) {
+                            mc.world.setBlockToAir(pos.up());
+                            continue;
+                        }
+
+                        mc.world.setBlockToAir(pos.up());
+
+                        if (currentTarget.isDead)
+                            continue;
+                        placePos = pos.up();
+                        lastPlaced = pos.up();
+                        maxDamage = targetDamage;
+
+                    }
+
+                    if (placePos != null) {
+                        old = mc.player.inventory.currentItem;
+                        ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.OBSIDIAN), false);
+                        BlockUtil.INSTANCE.placeBlock(placePos);
+                        ItemUtil.swapToHotbarSlot(old, false);
+                        blackPeople = true;
+                        return;
+                    }
+                }
+
+            }
+        }
+
+        if (swap == Swap.SILENT) {
             if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
                 return;
             }
-        } else if (swap == Swap.NONE || swap == Swap.AUTO){
+        } else if (swap == Swap.NONE || swap == Swap.AUTO) {
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
-        if (maxDamage != 0.5 && placeTimer.passed((int)placeDelay)) {
-            old = mc.player.inventory.currentItem;
+        if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
+            if(!blackPeople) old = mc.player.inventory.currentItem;
+            blackPeople = false;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
             if (rotateons) rotate(placePos);
@@ -177,7 +228,7 @@ public class AutoCrystal extends Module {
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(old, false);
             doHandActive(hand);
             placeSet.add(placePos);
-            renderPos = new BlockPos(placePos.getX(),placePos.getY(),placePos.getZ());
+            renderPos = new BlockPos(placePos.getX(), placePos.getY(), placePos.getZ());
             currentBlock = placePos;
             currentDamage = maxDamage;
             placeTimer.reset();
@@ -194,12 +245,12 @@ public class AutoCrystal extends Module {
             double selfDamage, targetDamage;
             if (!(crystal instanceof EntityEnderCrystal)) continue;
             float f = mc.player.canEntityBeSeen(crystal) ? breakRange : wallRange;
-            if (!(f > mc.player.getDistance(crystal)) || (targetDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > (float) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
+            if (!(f > mc.player.getDistance(crystal)) || (targetDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, currentTarget)) < mindmg && EntityUtil.getHealth(currentTarget) > ( float ) faceplacehp && !lowArmor || (selfDamage = EntityUtil.INSTANCE.calculate(crystal.posX, crystal.posY, crystal.posZ, mc.player)) + 2.0 >= maxselfdamage || selfDamage >= targetDamage || maxDamage > targetDamage)
                 continue;
             maxCrystal = crystal;
             maxDamage = targetDamage;
         }
-        if (maxCrystal != null && breakTimer.passed((int)breakDelay)) {
+        if (maxCrystal != null && breakTimer.passed(( int ) breakDelay)) {
             if (!(maxCrystal.ticksExisted >= tickexisted)) return;
             if (rotateons) rotate(maxCrystal);
             mc.getConnection().sendPacket(new CPacketUseEntity(maxCrystal));
@@ -210,9 +261,11 @@ public class AutoCrystal extends Module {
         }
     }
 
-    public void setSwing(){
-        if (swing == Swing.MAINHAND){ mc.player.swingArm(EnumHand.MAIN_HAND);
-        } else if (swing == Swing.OFFHAND){ mc.player.swingArm(EnumHand.OFF_HAND);
+    public void setSwing() {
+        if (swing == Swing.MAINHAND) {
+            mc.player.swingArm(EnumHand.MAIN_HAND);
+        } else if (swing == Swing.OFFHAND) {
+            mc.player.swingArm(EnumHand.OFF_HAND);
         } else {}
     }
 
@@ -222,11 +275,11 @@ public class AutoCrystal extends Module {
         if (e.getPacket() instanceof SPacketSpawnObject && boost) {
             final SPacketSpawnObject packet2 = e.getPacket();
             if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed(20)) {
-                AccessorCPacketUseEntity hitPacket = (AccessorCPacketUseEntity) new CPacketUseEntity();
+                AccessorCPacketUseEntity hitPacket = ( AccessorCPacketUseEntity ) new CPacketUseEntity();
                 int entityId = packet2.getEntityID();
                 hitPacket.setEntityId(entityId);
                 hitPacket.setAction(CPacketUseEntity.Action.ATTACK);
-                mc.getConnection().sendPacket((CPacketUseEntity) hitPacket);
+                mc.getConnection().sendPacket(( CPacketUseEntity ) hitPacket);
                 setSwing();
                 predictTimer.reset();
             }
@@ -237,22 +290,22 @@ public class AutoCrystal extends Module {
     public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
 
         if (e.getPacket() instanceof CPacketPlayer && rotating && rotateons) {
-            ((AccessorCPacketPlayer) e.getPacket()).setYaw(yaw);
-            ((AccessorCPacketPlayer) e.getPacket()).setPitch(pitch);
+            (( AccessorCPacketPlayer ) e.getPacket()).setYaw(yaw);
+            (( AccessorCPacketPlayer ) e.getPacket()).setPitch(pitch);
         }
     });
 
     private void rotate(BlockPos bp) {
         float[] angles = RotationManagement.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(bp.getX() + .5f, bp.getY() + .5f, bp.getZ() + .5f));
-        yaw = angles[0];
-        pitch = angles[1];
+        yaw = angles[ 0 ];
+        pitch = angles[ 1 ];
         rotating = true;
     }
 
     private void rotate(Entity e) {
         float[] angles = RotationManagement.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), e.getPositionEyes(mc.getRenderPartialTicks()));
-        yaw = angles[0];
-        pitch = angles[1];
+        yaw = angles[ 0 ];
+        pitch = angles[ 1 ];
         rotating = true;
     }
 
@@ -272,4 +325,5 @@ public class AutoCrystal extends Module {
         BREAKPLACE,
         PLACEBREAK;
     }
+
 }

@@ -73,6 +73,14 @@ public enum BlockUtil implements Globals {
         return !entity || BlockUtil.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(boost.getX(), boost.getY(), boost.getZ(), boost.getX() + 1, boost.getY() + (check ? 2 : 1), boost.getZ() + 1), e -> !(e instanceof EntityEnderCrystal)).size() == 0;
     }
 
+    public static boolean canPlaceCrystal(BlockPos blockPos) {
+        BlockPos boost = blockPos.add(0, 1, 0);
+        if (BlockUtil.mc.world.getBlockState(boost).getBlock() != Blocks.AIR || BlockUtil.mc.world.getBlockState(blockPos.add(0, 2, 0)).getBlock() != Blocks.AIR) {
+            return false;
+        }
+        return BlockUtil.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(boost.getX(), boost.getY(), boost.getZ(), boost.getX() + 1, boost.getY() + (2), boost.getZ() + 1), e -> !(e instanceof EntityEnderCrystal)).size() == 0;
+    }
+
     public EnumFacing calcSide(BlockPos pos) {
         for (EnumFacing side : EnumFacing.values()) {
             IBlockState offsetState = mc.world.getBlockState(pos.offset(side));
