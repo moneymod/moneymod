@@ -19,11 +19,14 @@ public class ConfigManager extends Thread implements Globals {
 
     private static final File mainFolder = new File("moneymod");
     private static final String modulesFolder = mainFolder.getAbsolutePath() + "/modules";
+    private static final String FRIEND = "Friends.json";
 
     public static File getMainFolder() {return mainFolder;}
 
     public void load() {
-
+        try {
+            loadFriends();
+        } catch (Exception e) { }
         loadModules();
     }
 
@@ -77,6 +80,27 @@ public class ConfigManager extends Thread implements Globals {
         }
     }
 
+    private void loadFriends ( ) throws IOException {
+        Path path = Paths.get( mainFolder.getAbsolutePath( ), FRIEND );
+        if ( !path.toFile( ).exists( ) ) return;
+        String rawJson = loadFile( path.toFile( ) );
+        JsonObject jsonObject = new JsonParser( ).parse( rawJson ).getAsJsonObject( );
+        if ( jsonObject.get( "Friends" ) != null ) {
+            JsonArray friendObject = jsonObject.get( "Friends" ).getAsJsonArray( );
+            friendObject.forEach( object -> FriendManagement.getInstance().add( object.getAsString( ) ) );
+        }
+    }
+
+    private void saveFriends ( ) throws IOException {
+        Path path = Paths.get( mainFolder.getAbsolutePath( ), FRIEND );
+        createFile( path );
+        JsonObject jsonObject = new JsonObject( );
+        JsonArray friends = new JsonArray( );
+        FriendManagement.getInstance().forEach( friends::add );
+        jsonObject.add( "Friends", friends );
+        Files.write( path, gson.toJson( new JsonParser( ).parse( jsonObject.toString( ) ) ).getBytes( ) );
+    }
+
     public String loadFile(File file) throws IOException {
         FileInputStream stream = new FileInputStream(file.getAbsolutePath());
         StringBuilder resultStringBuilder = new StringBuilder();
@@ -94,6 +118,9 @@ public class ConfigManager extends Thread implements Globals {
         if (!new File(modulesFolder).exists() && !new File(modulesFolder).mkdirs())
             System.out.println("Failed to create modules folder");
         saveModules();
+        try {
+            saveFriends();
+        } catch (Exception e) { }
     }
 
     private void saveModules() {
