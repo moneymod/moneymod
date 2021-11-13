@@ -25,7 +25,6 @@ public class HoleEsp extends Module {
 
     @SubscribeEvent public void onRender3D(RenderWorldLastEvent e) {
         Main.getMain().getHoleManagement().forEach(hole -> {
-            System.out.println(hole.getBlockPos());
             if(hole.getType().equals(HoleManagement.HoleType.BEDROCK)) {
                 Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), (float) widht, (widht > 0.1 ? true : false), box, bedrockColor.getColor().getAlpha(), bedrockColor.getColor().getAlpha(), (float) height);
             } else {
@@ -33,5 +32,4 @@ public class HoleEsp extends Module {
             }
         });
     }
-
 }
