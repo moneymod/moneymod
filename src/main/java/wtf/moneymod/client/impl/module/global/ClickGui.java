@@ -7,7 +7,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.ui.click.theme.Themes;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 
-@Module.Register( label = "ClickGui", cat = Module.Category.GLOBAL, key = Keyboard.KEY_RETURN )
+@Module.Register( label = "ClickGui", cat = Module.Category.GLOBAL, key = Keyboard.KEY_INSERT )
 public class ClickGui extends Module {
 
     @Value( value = "Theme" ) public Themes theme = Themes.NODUS;
