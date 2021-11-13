@@ -11,10 +11,12 @@ import wtf.moneymod.client.api.events.UpdateWalkingPlayerEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
+import javax.swing.text.html.parser.Entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
@@ -145,7 +147,7 @@ public class Speed extends Module {
             val *= getBaseMoveSpeed( );
             moveSpeed = Math.max( moveSpeed, val );
 
-            float[] dir = rhc( moveSpeed );
+            float[] dir = getYaw( moveSpeed );
             event.motionX = dir[ 0 ];
             event.motionZ = dir[ 1 ];
 
@@ -179,7 +181,7 @@ public class Speed extends Module {
                 }
 
                 moveSpeed = Math.max( moveSpeed, getBaseMoveSpeed( ) );
-                rhQ_rhP( event, moveSpeed );
+                EntityUtil.INSTANCE.setVanilaSpeed( event, moveSpeed );
             }
         } else if ( mode.equals( "groundstrafe" ) ) {
             if ( mc.player.collidedHorizontally || mc.player.movementInput.sneak ) return;
@@ -211,10 +213,10 @@ public class Speed extends Module {
             }
 
             moveSpeed = Math.max( moveSpeed, getBaseMoveSpeed( ) );
-            rhQ_rhP( event, moveSpeed );
+            EntityUtil.INSTANCE.setVanilaSpeed( event, moveSpeed );
         } else if ( mode.equals( "vanilla" ) ) {
             double speedval = ( double ) speed / 5.0f;
-            rhQ_rhP( event, speedval );
+            EntityUtil.INSTANCE.setVanilaSpeed( event, speedval );
         }
     });
 
@@ -231,44 +233,9 @@ public class Speed extends Module {
         return d;
     }
 
-    public void rhQ_rhP (MoveEvent event, double speed ) {
-        float moveForward = mc.player.movementInput.moveForward;
-        float moveStrafe = mc.player.movementInput.moveStrafe;
-        float rotationYaw = mc.player.rotationYaw;
-
-        if ( moveForward == 0.0f && moveStrafe == 0.0f ) {
-            event.motionX = 0;
-            event.motionZ = 0;
-
-            return;
-        } else if ( moveForward != 0.0f ) {
-            if ( moveStrafe >= 1.0f ) {
-                rotationYaw += moveForward > 0.0f ? -45.0f : 45.0f;
-                moveStrafe = 0.0f;
-            } else if ( moveStrafe <= -1.0f ) {
-                rotationYaw += moveForward > 0.0f ? 45.0f : -45.0f;
-                moveStrafe = 0.0f;
-            }
-
-            if ( moveForward > 0.0f )
-                moveForward = 1.0f;
-            else if ( moveForward < 0.0f )
-                moveForward = -1.0f;
-        }
-
-        double motionX = Math.cos( Math.toRadians( rotationYaw + 90.0f ) );
-        double motionZ = Math.sin( Math.toRadians( rotationYaw + 90.0f ) );
-
-        double newX = moveForward * speed * motionX + moveStrafe * speed * motionZ;
-        double newZ = moveForward * speed * motionZ - moveStrafe * speed * motionX;
-
-        event.motionX = newX;
-        event.motionZ = newZ;
-    }
-
-    // rh_v.rhf
+    // rh_v.rhf //rhf
     // я просто спастил код выше поэтому это не оно
-    public float[] rhf ( float yaw, double niggers ) {
+    public float[] setYaw ( float yaw, double niggers ) {
         float moveForward = mc.player.movementInput.moveForward;
         float moveStrafe = mc.player.movementInput.moveStrafe;
         float rotationYaw = yaw;
@@ -306,9 +273,11 @@ public class Speed extends Module {
     }
 
     // rh_v.rhc
-    public float[] rhc ( double niggers ) {
+
+    //rhc
+    public float[] getYaw ( double niggers ) {
         float yaw = mc.player.prevRotationYaw + ( mc.player.rotationYaw - mc.player.prevRotationYaw ) * mc.getRenderPartialTicks( );
-        return rhf( yaw, niggers );
+        return setYaw( yaw, niggers );
     }
 
     public boolean isMoving ( ) {

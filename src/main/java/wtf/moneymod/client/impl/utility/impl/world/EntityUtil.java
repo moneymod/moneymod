@@ -16,6 +16,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.impl.utility.Globals;
 
@@ -50,6 +51,42 @@ public enum EntityUtil implements Globals {
     public static boolean isntValid(final EntityPlayer entity, final double range) {
         return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || FriendManagement.getInstance().is(entity.getName());
     }
+
+    public void setVanilaSpeed (MoveEvent event, double speed ) {
+        float moveForward = mc.player.movementInput.moveForward;
+        float moveStrafe = mc.player.movementInput.moveStrafe;
+        float rotationYaw = mc.player.rotationYaw;
+
+        if ( moveForward == 0.0f && moveStrafe == 0.0f ) {
+            event.motionX = 0;
+            event.motionZ = 0;
+
+            return;
+        } else if ( moveForward != 0.0f ) {
+            if ( moveStrafe >= 1.0f ) {
+                rotationYaw += moveForward > 0.0f ? -45.0f : 45.0f;
+                moveStrafe = 0.0f;
+            } else if ( moveStrafe <= -1.0f ) {
+                rotationYaw += moveForward > 0.0f ? 45.0f : -45.0f;
+                moveStrafe = 0.0f;
+            }
+
+            if ( moveForward > 0.0f )
+                moveForward = 1.0f;
+            else if ( moveForward < 0.0f )
+                moveForward = -1.0f;
+        }
+
+        double motionX = Math.cos( Math.toRadians( rotationYaw + 90.0f ) );
+        double motionZ = Math.sin( Math.toRadians( rotationYaw + 90.0f ) );
+
+        double newX = moveForward * speed * motionX + moveStrafe * speed * motionZ;
+        double newZ = moveForward * speed * motionZ - moveStrafe * speed * motionX;
+
+        event.motionX = newX;
+        event.motionZ = newZ;
+    }
+
 
 
     public boolean isMoving(EntityLivingBase entity) {

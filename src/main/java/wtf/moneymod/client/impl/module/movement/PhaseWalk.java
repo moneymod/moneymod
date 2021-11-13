@@ -37,13 +37,13 @@ public class PhaseWalk extends Module {
     public void onTick() {
         if (nullCheck()) return;
         mc.player.motionX = 0.0; mc.player.motionY = 0.0; mc.player.motionZ = 0.0;
-        if (mc.player.collidedHorizontally) {
+        if (mc.player.collidedHorizontally || mc.player.collidedVertically) {
             if (timer.isPassed()) {
 
                 double[] dArray = EntityUtil.forward(speed / 100.0);
 
                 for (int i = 0; i < attempts; ++i)
-                    sendPackets(mc.player.posX + dArray[0], mc.player.posY + (mc.gameSettings.keyBindJump.isKeyDown() ? 1 : (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0)) * speed / 100.0, mc.player.posZ + dArray[1]);
+                    sendPackets(mc.player.posX + dArray[0], mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 100.0, mc.player.posZ + dArray[1]);
 
                 timer.reset();
 
