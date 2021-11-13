@@ -30,7 +30,7 @@ public class HoleManagement extends ArrayList<HoleManagement.Hole> implements IM
     }
 
     private boolean isHole(BlockPos bp) {
-        if(mc.world.getBlockState(bp).getBlock() != Blocks.AIR || mc.world.getBlockState(bp.down()).getBlock() == Blocks.AIR) return false;
+        if(mc.world.getBlockState(bp).getBlock() != Blocks.AIR || mc.world.getBlockState(bp.down()).getBlock() == Blocks.AIR || mc.world.getBlockState(bp.up()).getBlock() != Blocks.AIR || mc.world.getBlockState(bp.up(2)).getBlock() != Blocks.AIR) return false;
         for (BlockPos pos : convert(bp)) {
             Block block = mc.world.getBlockState(pos).getBlock();
             if (!block.equals(Blocks.BEDROCK) && !block.equals(Blocks.OBSIDIAN)) return false;
