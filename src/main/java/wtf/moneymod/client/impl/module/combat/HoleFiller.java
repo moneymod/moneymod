@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.management.impl.HoleManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
@@ -52,7 +53,7 @@ public class HoleFiller extends Module {
             if (!holes.isEmpty()) {
                 if (boost) Main.TICK_TIMER = boostSpeed;
                 int old = mc.player.inventory.currentItem;
-                if(autoSwitch) {
+                if (autoSwitch) {
                     if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false) == -1) return;
                 }
 
@@ -73,7 +74,8 @@ public class HoleFiller extends Module {
         List<HoleManagement.Hole> holes = new ArrayList<>();
         for (Entity entityPlayer : targets) {
             for (HoleManagement.Hole hole : Main.getMain().getHoleManagement()) {
-                if (entityPlayer.getDistanceSq(hole.getBlockPos()) < MathUtil.INSTANCE.square(smartRange) && mc.player.getDistanceSq(hole.getBlockPos()) < MathUtil.INSTANCE.square(placeRange)) holes.add(hole);
+                if (entityPlayer.getDistanceSq(hole.getBlockPos()) < MathUtil.INSTANCE.square(smartRange) && mc.player.getDistanceSq(hole.getBlockPos()) < MathUtil.INSTANCE.square(placeRange))
+                    holes.add(hole);
             }
         }
         if (!holes.isEmpty()) {
@@ -105,10 +107,8 @@ public class HoleFiller extends Module {
         }
     }
 
-
-
-    public List<Entity> getTargets(double range) {
-        return mc.world.loadedEntityList.stream().filter(e -> e instanceof EntityPlayer && e != mc.player && e.getDistance(mc.player) < range && !e.isDead && (( EntityPlayer ) e).getHealth() > 0).collect(Collectors.toList());
+    List<Entity> getTargets(double range) {
+        return mc.world.loadedEntityList.stream().filter(e -> e instanceof EntityPlayer && e != mc.player && !FriendManagement.getInstance().is(e.getName()) && e.getDistance(mc.player) < range && !e.isDead && (( EntityPlayer ) e).getHealth() > 0).collect(Collectors.toList());
     }
 
 }
