@@ -54,16 +54,16 @@ public class Hud extends Module {
             String facing = "null";
             switch (mc.player.getHorizontalFacing()){
                 case EAST:
-                    facing = "East [X+]";
+                    facing = "East [+X]";
                     break;
                 case SOUTH:
-                    facing = "South [Z+]";
+                    facing = "South [+Z]";
                     break;
                 case WEST:
-                    facing = "West [X-]";
+                    facing = "West [-X]";
                     break;
                 case NORTH:
-                    facing = "North [Z-]";
+                    facing = "North [-Z]";
                     break;
             }
             FontRender.drawStringWithShadow(facing, 1, (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs, Color.HSBtoRGB(0, 0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
