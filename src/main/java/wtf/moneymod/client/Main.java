@@ -42,6 +42,7 @@ public class Main {
     private CommandManagement commandManagement;
     private RotationManagement rotationManagement;
     private CFontRenderer fontRenderer;
+    private HoleManagement holeManagement;
 
     public void init() {
         System.out.println("init");
@@ -57,6 +58,7 @@ public class Main {
 
         fpsManagement = new FpsManagement();
         rotationManagement = new RotationManagement();
+        holeManagement = new HoleManagement();
         moduleManagement = new ModuleManagement().register();
         VERSION = getHash(moduleManagement);
         commandManagement = new CommandManagement().register();
@@ -96,6 +98,10 @@ public class Main {
 
     public PulseManagement getPulseManagement() {
         return pulseManagement;
+    }
+
+    public HoleManagement getHoleManagement() {
+        return holeManagement;
     }
 
     private String getHash(ModuleManagement module) {
