@@ -92,7 +92,7 @@ public class AutoCrystal extends Module {
 
     @Override()
     public void onEnable() {
-        autoOld = mc.player.inventory.currentItem;
+        if(!nullCheck())autoOld = mc.player.inventory.currentItem;
     }
 
     @Override

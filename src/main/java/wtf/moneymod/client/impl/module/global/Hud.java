@@ -7,6 +7,8 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
+import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
@@ -26,6 +28,7 @@ public class Hud extends Module {
     @Value(value = "Facing") public boolean facing = true;
     @Value(value = "Feature List") public boolean features = true;
     @Value(value = "Offset") @Bounds(max = 5) public int offset = 1;
+    @Value(value = "Color") public JColor color = new JColor(255, 255, 255, false);
 
     @SubscribeEvent
     public void onRenderer2D(RenderGameOverlayEvent.Text event) {
@@ -46,7 +49,7 @@ public class Hud extends Module {
                     position = String.format("%s, %s, %s : [%s,%s]",x,y,z, x / 8, z / 8);
                     break;
             }
-            FontRender.drawStringWithShadow(position,1,  (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs, Color.HSBtoRGB(0, 0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow(position,1,  (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs,  getColor(1));
             ofs -= FontRender.getFontHeight() + offset;
         }
 
@@ -66,26 +69,26 @@ public class Hud extends Module {
                     facing = "North [-Z]";
                     break;
             }
-            FontRender.drawStringWithShadow(facing, 1, (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs, Color.HSBtoRGB(0, 0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow(facing, 1, (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs,  getColor(1));
             ofs -= FontRender.getFontHeight() + offset;
         }
 
         if (watermark) {
-            FontRender.drawStringWithShadow("moneymod", 1, 1, Color.HSBtoRGB(0, 0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
         }
         if (fps){
             String fps = "Fps " + Main.getMain().getFpsManagement().getFPS();
-            FontRender.drawStringWithShadow(fps, sr.getScaledWidth() - FontRender.getStringWidth(fps) - 2, (sr.getScaledHeight() - 11) + offsets, Color.HSBtoRGB(0,0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow(fps, sr.getScaledWidth() - FontRender.getStringWidth(fps) - 2, (sr.getScaledHeight() - 11) + offsets,  getColor(1));
             offsets -= FontRender.getFontHeight() + offset;
         }
         if (ping) {
             String ping = "Ping " + getPlayerPing();
-            FontRender.drawStringWithShadow(ping, sr.getScaledWidth() - FontRender.getStringWidth(ping) - 2 ,(sr.getScaledHeight() - 11) + offsets, Color.HSBtoRGB(0,0,Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow(ping, sr.getScaledWidth() - FontRender.getStringWidth(ping) - 2 ,(sr.getScaledHeight() - 11) + offsets,  getColor(1));
             offsets -= FontRender.getFontHeight() + offset;
         }
         if (welcomer){
             String text = "Welcome to Moneymod!";
-            FontRender.drawStringWithShadow(text, (int)(sr.getScaledWidth() / 2f - FontRender.getStringWidth(text) / 2f),1, Color.HSBtoRGB(0,0, Main.getMain().getPulseManagement().getDifference(1) / 255f));
+            FontRender.drawStringWithShadow(text, (int)(sr.getScaledWidth() / 2f - FontRender.getStringWidth(text) / 2f),1, getColor(1));
         }
 
         if (features) {
@@ -93,11 +96,15 @@ public class Hud extends Module {
             int y = 0, count = 1;
             for (Module module : modules) {
                 if (!module.isToggled() || !module.drawn) continue;
-                FontRender.drawStringWithShadow(module.getLabel(), sr.getScaledWidth() - FontRender.getStringWidth(module.getLabel()) - 2, y + 1, Color.HSBtoRGB(0, 0, Main.getMain().getPulseManagement().getDifference(y * 2) / 255f));
+                FontRender.drawStringWithShadow(module.getLabel(), sr.getScaledWidth() - FontRender.getStringWidth(module.getLabel()) - 2, y + 1, getColor(y * 2));
                 y += FontRender.getFontHeight() + offset;
                 count++;
             }
         }
+    }
+
+    private int getColor(int diff) {
+        return ColorUtil.injectBrightness(color.getColor(), Main.getMain().getPulseManagement().getDifference(diff) / 255f).getRGB();
     }
 
     static int getPlayerPing() {

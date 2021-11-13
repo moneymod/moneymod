@@ -46,6 +46,9 @@ public class ConfigManager extends Thread implements Globals {
                 if (jsonObject.get("Enabled").getAsBoolean() && !m.isConfigException()) m.setToggled(true);
                 m.setKey(jsonObject.get("KeyBind").getAsInt());
             }
+            if(jsonObject.get("Drawn") != null) {
+                m.drawn = jsonObject.get("Drawn").getAsBoolean();
+            }
             Option.getContainersForObject(m).forEach(s -> {
                 JsonElement settingObject = jsonObject.get(s.getName());
                 if (settingObject != null) {
@@ -136,6 +139,7 @@ public class ConfigManager extends Thread implements Globals {
             JsonObject jsonObject = new JsonObject();
             jsonObject.add("Enabled", new JsonPrimitive(m.isToggled()));
             jsonObject.add("KeyBind", new JsonPrimitive(m.getKey()));
+            jsonObject.add("Drawn", new JsonPrimitive(m.drawn));
             Option.getContainersForObject(m).forEach(s -> {
                 if (s.getValue().getClass().isEnum()) {
                     jsonObject.add(s.getName(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(( Enum ) s.getValue())));
