@@ -7,7 +7,6 @@ import wtf.moneymod.client.impl.module.Module;
 @Module.Register( label = "Globals", cat = Module.Category.GLOBAL )
 public class Global extends Module {
 
-    @Value( value = "Chat Animation" ) public boolean chatAnim = true;
     private static Global INSTANCE;
 
     public Global() {

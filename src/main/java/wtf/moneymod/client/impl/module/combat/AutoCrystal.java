@@ -49,7 +49,6 @@ public class AutoCrystal extends Module {
     @Value(value = "Wall Range") @Bounds(max = 6) public float wallRange = 3.5f;
     @Value(value = "Break Delay") @Bounds(max = 200) public int breakDelay = 40;
     @Value(value = "Place Delay") @Bounds(max = 200) public int placeDelay = 20;
-    @Value(value = "BoostDelay") @Bounds(max = 200) public int boostdelay = 80;
     @Value(value = "MinDamage") @Bounds(max = 36) public int mindmg = 6;
     @Value(value = "MaxSelfDamage") @Bounds(max = 36) public int maxselfdamage = 6;
     @Value(value = "FacePlaceDamage") @Bounds(max = 36) public int faceplacehp = 8;
@@ -222,7 +221,7 @@ public class AutoCrystal extends Module {
         SPacketSoundEffect packet;
         if (e.getPacket() instanceof SPacketSpawnObject && boost) {
             final SPacketSpawnObject packet2 = e.getPacket();
-            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed((int)boostdelay)) {
+            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed(20)) {
                 AccessorCPacketUseEntity hitPacket = (AccessorCPacketUseEntity) new CPacketUseEntity();
                 int entityId = packet2.getEntityID();
                 hitPacket.setEntityId(entityId);

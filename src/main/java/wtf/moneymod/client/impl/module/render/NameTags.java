@@ -25,6 +25,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 
@@ -168,7 +169,7 @@ public class NameTags extends Module {
             GlStateManager.popMatrix( );
         }
 
-        mc.fontRenderer.drawStringWithShadow( tag, -width, -8.0f, textColor.getColor().getRGB() );
+        FontRender.drawStringWithShadow( tag, -width, -8.0f, textColor.getColor().getRGB() );
         localPlayer.posX = originalPositionX;
         localPlayer.posY = originalPositionY;
         localPlayer.posZ = originalPositionZ;
@@ -209,7 +210,7 @@ public class NameTags extends Module {
             Enchantment enc = Enchantment.getEnchantmentByID( ( int ) value );
             if ( enc == null || enc.getName( ).contains( "fall" ) || !enc.getName( ).contains( "all" ) && !enc.getName( ).contains( "explosion" ) )
                 continue;
-            mc.fontRenderer.drawStringWithShadow( enc.isCurse( ) ? TextFormatting.RED + enc.getTranslatedName( ( int ) level ).substring( 11 ).substring( 0, 1 ).toLowerCase( ) : enc.getTranslatedName( ( int ) level ).substring( 0, 1 ).toLowerCase( ) + level, ( float ) ( x * 2 ), ( float ) enchantmentY, -1 );
+            FontRender.drawStringWithShadow( enc.isCurse( ) ? TextFormatting.RED + enc.getTranslatedName( ( int ) level ).substring( 11 ).substring( 0, 1 ).toLowerCase( ) : enc.getTranslatedName( ( int ) level ).substring( 0, 1 ).toLowerCase( ) + level, ( float ) ( x * 2 ), ( float ) enchantmentY, -1 );
             enchantmentY -= 8;
         }
     }
@@ -223,7 +224,7 @@ public class NameTags extends Module {
             float red = 1 - green;
             int dmg = 100 - ( int ) ( red * 100 );
             // ^^^
-            mc.fontRenderer.drawStringWithShadow( dmg + "%", x * 2 + 4, y - 10, new Color( ( int ) ( red * 255 ), ( int ) ( green * 255 ), 0 ).getRGB( ) );
+            FontRender.drawStringWithShadow( dmg + "%", x * 2 + 4, y - 10, new Color( ( int ) ( red * 255 ), ( int ) ( green * 255 ), 0 ).getRGB( ) );
         }
         GlStateManager.enableDepth( );
         GlStateManager.scale( 2.0f, 2.0f, 2.0f );

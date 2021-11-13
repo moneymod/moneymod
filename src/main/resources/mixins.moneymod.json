@@ -5,6 +5,8 @@
   "refmap": "mixins.moneymod.refmap.json",
   "mixins": [
     "ducks.IMinecraft",
+    "ducks.ICPacketChatMessage",
+    "ducks.AccessorSPacketChat",
     "ducks.AccessorRenderManager",
     "ducks.AccessorCPacketUseEntity",
     "ducks.AccessorCPacketPlayer",

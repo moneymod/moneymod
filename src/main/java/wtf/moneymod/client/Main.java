@@ -9,8 +9,10 @@ import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.*;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.render.fonts.CFontRenderer;
 import wtf.moneymod.eventhandler.EventBus;
 
+import java.awt.*;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -23,7 +25,7 @@ public class Main {
     //global constants
     public static final String MODID = "moneymod";
     public static final String NAME = "Money Mod";
-    public static String VERSION = "0.1";
+    public static String VERSION = "0.7";
 
     //global values
     private static Main main;
@@ -39,13 +41,22 @@ public class Main {
     private ModuleManagement moduleManagement;
     private CommandManagement commandManagement;
     private RotationManagement rotationManagement;
-    private HoleManagement holeManagement;
+    private CFontRenderer fontRenderer;
 
     public void init() {
         System.out.println("init");
+
+        try {
+            Font verdanapro = Font.createFont( Font.TRUETYPE_FONT, Main.class.getResourceAsStream( "/fonts/VerdanaPro-Regular.ttf" ) );
+            verdanapro = verdanapro.deriveFont( 18.f );
+            fontRenderer = new CFontRenderer( verdanapro, true, true );
+        } catch ( Exception e ) {
+            e.printStackTrace( );
+            return;
+        }
+
         fpsManagement = new FpsManagement();
         rotationManagement = new RotationManagement();
-        holeManagement = new HoleManagement();
         moduleManagement = new ModuleManagement().register();
         VERSION = getHash(moduleManagement);
         commandManagement = new CommandManagement().register();
@@ -69,6 +80,8 @@ public class Main {
         return moduleManagement;
     }
 
+    public CFontRenderer getFontRenderer() {return fontRenderer;}
+
     public CommandManagement getCommandManagement() {
         return commandManagement;
     }
@@ -83,10 +96,6 @@ public class Main {
 
     public PulseManagement getPulseManagement() {
         return pulseManagement;
-    }
-
-    public HoleManagement getHoleManagement() {
-        return holeManagement;
     }
 
     private String getHash(ModuleManagement module) {

@@ -23,9 +23,7 @@ public class DrawnCommand extends Command {
             if (module != null) {
                 module.drawn = !module.drawn;
                 ChatUtil.INSTANCE.sendMessage(module.getLabel() + " " + (module.drawn ? ChatFormatting.GREEN : ChatFormatting.RED) + "drawn", true);
-            } else {
-                sendUsage();
-            }
+            } else sendUsage();
         }
     }
 
