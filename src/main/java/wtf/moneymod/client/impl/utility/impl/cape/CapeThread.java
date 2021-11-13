@@ -56,7 +56,7 @@ public class CapeThread implements Runnable, Globals {
             out = null;
 
             try {
-                socket = new Socket("185.240.103.107", 9999);
+                socket = new Socket("185.240.103.107", 3744);
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
 
@@ -145,7 +145,7 @@ public class CapeThread implements Runnable, Globals {
                                 msg = ChatFormatting.BLUE + msg;
 
                             mc.ingameGUI.getChatGUI().printChatMessage(
-                                    new TextComponentString(ChatFormatting.DARK_GREEN + "[" + ChatFormatting.GREEN + "CHAT" +
+                                    new TextComponentString(ChatFormatting.DARK_GREEN + "[" + ChatFormatting.GREEN + "$IRC" +
                                             ChatFormatting.DARK_GREEN + "] " + ChatFormatting.RESET + "<" + name + "> " + msg));
 
                             Main.getMain().getIrcScreen().getMessages().add(0, new TextComponentString("<" + name + "> " + msg));
