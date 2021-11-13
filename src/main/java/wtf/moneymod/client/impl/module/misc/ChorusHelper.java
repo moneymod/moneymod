@@ -23,7 +23,7 @@ import java.util.Queue;
 public class ChorusHelper extends Module {
 
     boolean checkChorus = false, hackPacket = false, posTp = false;
-    double posX, posY, posZ;
+    BlockPos pos;
     Queue<CPacketPlayer> packets = new LinkedList<>();
     Queue<CPacketConfirmTeleport> packetss = new LinkedList<>();
     SPacketPlayerPosLook serverPos;
@@ -32,6 +32,7 @@ public class ChorusHelper extends Module {
 
     @Override
     public void onToggle() {
+        pos = null;
         checkChorus = false;
         hackPacket = false;
         posTp = false;
@@ -42,9 +43,9 @@ public class ChorusHelper extends Module {
     @Override
     public void onTick() {
         if (checkChorus) {
-            if (!mc.player.getPosition().equals(new BlockPos(posX, posY, posZ)) && !posTp) {
-                if (mc.player.getDistance(posX, posY, posZ) > 1) {
-                    mc.player.setPosition(posX, posY, posZ);
+            if (!mc.player.getPosition().equals(pos) && !posTp) {
+                if (mc.player.getDistance(pos.getX(),pos.getY(),pos.getZ()) > 1) {
+                    mc.player.setPosition(pos.getX(),pos.getY(),pos.getZ());
                     posTp = true;
                 }
             }
@@ -70,9 +71,7 @@ public class ChorusHelper extends Module {
     public void finishEating(LivingEntityUseItemEvent.Finish event) {
         if (event.getEntity() == mc.player) {
             if (event.getResultStack().getItem().equals(Items.CHORUS_FRUIT)) {
-                posX = mc.player.posX;
-                posY = mc.player.posY;
-                posZ = mc.player.posZ;
+                pos = new BlockPos(mc.player.posX,mc.player.posY,mc.player.posZ);
                 posTp = false;
                 checkChorus = true;
             }
