@@ -36,6 +36,7 @@ public class EventHandler implements Globals {
 
     @SubscribeEvent public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START || nullCheck()) return;
+        Main.getMain().getHoleManagement().register();
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(Module::onTick);
     }
 
