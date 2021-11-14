@@ -27,7 +27,7 @@ public class Warp extends Module {
         mc.player.stepHeight = 0.6f;
     }
     @Override public void onTick() {
-        if (onlyMoving) if (EntityUtil.INSTANCE.isMoving(mc.player)){} else {
+        if (!EntityUtil.INSTANCE.isMoving(mc.player) && onlyMoving) {
             Main.TICK_TIMER = 1;
             setToggled(false);
         }
