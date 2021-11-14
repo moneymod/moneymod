@@ -18,12 +18,6 @@ public class PhaseWalk extends Module {
 
     @Value(value = "Attempts") @Bounds(min = 1, max = 5) public int attempts = 1;
     @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
-    @Value(value = "Skip") public boolean skiper = false;
-    @Value(value = "SkipMode") public Skip skip = Skip.NPC1;
-
-    public enum Skip{
-        NPC1, NCP2, NCP3;
-    }
 
     Timer timer = new Timer();
     boolean cancel = false;
@@ -46,7 +40,7 @@ public class PhaseWalk extends Module {
 //        mc.player.motionX = 0.0;
 //        mc.player.motionY = 0.0;
 //        mc.player.motionZ = 0.0;
-        double[] dArray = EntityUtil.forward(speed / 150.0);
+        double[] dArray = EntityUtil.forward(speed / 200.0);
         for (int i = 0; i < attempts; ++i) {
             sendPackets(mc.player.posX + dArray[0], mc.player.posY, mc.player.posZ + dArray[1]);
         }
@@ -59,14 +53,17 @@ public class PhaseWalk extends Module {
     public void onTick() {
         if (nullCheck()) return;
         mc.player.motionX = 0.0; mc.player.motionY = 0.0; mc.player.motionZ = 0.0;
-        if (mc.player.collidedHorizontally || mc.player.collidedVertically) {
+        if (mc.gameSettings.keyBindSprint.isKeyDown()) {
+            mc.player.movementInput.moveForward = 0.01f;
+            System.out.println("Test");
+        }
+            if (mc.player.collidedHorizontally || mc.player.collidedVertically) {
             double y = mc.player.rotationYaw * 0.017453292;
             double p = 0.01;
             for (int i = 0; i < attempts; ++i) {
                 if (mc.gameSettings.keyBindSprint.isKeyDown()) {
-                    mc.player.movementInput.moveForward = 0.1f;
-                    sendPackets(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 100.0, mc.player.posZ + Math.cos(y) * p);
-                    mc.player.setPosition(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 100.0, mc.player.posZ + Math.cos(y) * p);
+                    sendPackets(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 200.0, mc.player.posZ + Math.cos(y) * p);
+                    mc.player.setPosition(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 200.0, mc.player.posZ + Math.cos(y) * p);
 
                 }
             }
