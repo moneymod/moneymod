@@ -64,7 +64,6 @@ public class Main {
         rotationManagement = new RotationManagement();
         holeManagement = new HoleManagement();
         moduleManagement = new ModuleManagement().register();
-        VERSION = getHash(moduleManagement);
         commandManagement = new CommandManagement().register();
         ConfigManager.getInstance().load();
         screen = new Screen();
@@ -74,7 +73,7 @@ public class Main {
         EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
-        Display.setTitle(String.format("moneymod build-%s", VERSION));
+        Display.setTitle(String.format("moneymod build-%s", GitInfo.GIT_SHA.substring(0,7)));
     }
 
     public static Main getMain() {
@@ -110,12 +109,4 @@ public class Main {
     public HoleManagement getHoleManagement() {
         return holeManagement;
     }
-
-    private String getHash(ModuleManagement module) {
-        StringBuilder sb = new StringBuilder();
-        module.forEach(m -> sb.append(m.getClass().hashCode()));
-        sb.append(getClass().hashCode());
-        return Hashing.sha256().hashString(sb.toString(), StandardCharsets.UTF_8).toString().substring(0, 10);
-    }
-
 }

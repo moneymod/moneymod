@@ -3,6 +3,7 @@ package wtf.moneymod.client.impl.module.global;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import wtf.moneymod.client.GitInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
@@ -74,7 +75,8 @@ public class Hud extends Module {
         }
 
         if (watermark) {
-            FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
+            //FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
+            FontRender.drawStringWithShadow("moneymod v" + Main.VERSION + "-" + GitInfo.GIT_SHA.substring( 0, 7 ), 1, 1,  getColor(1));
         }
         if (fps){
             String fps = "Fps " + Main.getMain().getFpsManagement().getFPS();
