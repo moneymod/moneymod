@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.events.UpdateWalkingPlayerEvent;
+import wtf.moneymod.client.impl.module.movement.ElytraFly;
 
 @Mixin( value = EntityPlayerSP.class, priority = 9999 )
 public class MixinEntityPlayerSP extends AbstractClientPlayer {
@@ -41,6 +42,11 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     public void post( CallbackInfo info ) {
         UpdateWalkingPlayerEvent event = new UpdateWalkingPlayerEvent( 1 );
         Main.EVENT_BUS.dispatch( event );
+    }
+
+    @Override public boolean isElytraFlying() {
+        if(Main.getMain().getModuleManager().get(ElytraFly.class).isToggled()) return false;
+        return super.isElytraFlying();
     }
 
 }
