@@ -16,22 +16,12 @@ import wtf.moneymod.eventhandler.listener.Listener;
 @Module.Register( label = "PhaseWalk", cat = Module.Category.MOVEMENT)
 public class PhaseWalk extends Module {
 
+    @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
     @Value(value = "Attempts") @Bounds(min = 1, max = 5) public int attempts = 1;
     @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
-    @Value(value = "Mode") public Mode mode = Mode.SLOW;
-    @Value(value = "Movement") public Movement move = Movement.SPRINT;
-
-
-    public enum Mode{
-        SLOW, FAST, MEDIUM
-    }
-
-    public enum Movement{
-        FORWARD, SPRINT
-    }
+    @Value(value = "CheckGround") public boolean checkGround = true;
 
     Timer timer = new Timer();
-    boolean cancel = false;
     int teleportID = 0;
 
     @Handler
@@ -43,63 +33,51 @@ public class PhaseWalk extends Module {
         }
     });
 
+    @Override
+    public void onTick() {
+        if (nullCheck()) return;
+        if (mode == Mode.DEFAULT) {
+            mc.player.motionX = 0.0; mc.player.motionY = 0.0; mc.player.motionZ = 0.0;
+            if (mc.player.collidedHorizontally) {
+                if (timer.isPassed()) {
+                    double[] move = EntityUtil.forward(get(Type.SPEED));
+                    for (int i = 0; i < attempts; ++i) {
+                        sendPackets(mc.player.posX + move[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[1]);
+                    }
+                    timer.reset();
+                }
+            }
+        }
+
+    }
 
     @Handler
     public Listener<MoveEvent> onMove = new Listener<>(MoveEvent.class, e -> {
         if (nullCheck()) return;
-
-        mc.player.motionX = 0.0;
-        mc.player.motionY = 0.0;
-        mc.player.motionZ = 0.0;
-
-        if (move == Movement.FORWARD){
-            if (!mc.gameSettings.keyBindForward.isKeyDown()) return;
-        } else if (!mc.gameSettings.keyBindSprint.isKeyDown()) return;
-
-        EntityUtil.INSTANCE.setVanilaSpeed(e, 0.003);
-        double[] dArray = EntityUtil.forward(speed / 200.0);
-        for (int i = 0; i < attempts; ++i) {
-            sendPackets(mc.player.posX + dArray[0], mc.player.posY, mc.player.posZ + dArray[1]);
+        if (mode == Mode.BYPASS) {
+            double[] forward = EntityUtil.forward(get(Type.SPEED));
+            for (int i = 0; i < this.attempts; ++i)
+                this.sendPackets(mc.player.posX + forward[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[1]);
+            e.motionX = e.motionX * 0.0001 / 10.0; e.motionZ = e.motionZ * 0.0001 / 10.0; e.motionY = e.motionY * 0.0001 / 10.0;
+        } else {
+            if (mc.player.collidedHorizontally){
+                e.motionX = 0; e.motionZ = 0; e.motionY = 0;
+            }
         }
-        if (mc.player.collidedHorizontally) {
-            e.motionX = 0.0;
-            e.motionY = 0.0;
-            e.motionZ = 0.0;
-        }
+
     });
 
-    @Override
-    public void onTick() {
-        if (nullCheck()) return;
-        mc.player.motionX = 0.0; mc.player.motionY = 0.0; mc.player.motionZ = 0.0;
-            if (mc.player.collidedHorizontally || mc.player.collidedVertically) {
-            double y = mc.player.rotationYaw * 0.017453292;
-            double p = 0.01;
-            switch (mode){
-                case FAST:
-                    p = 0.05;
-                    break;
-                case SLOW:
-                    p = 0.01;
-                    break;
-                case MEDIUM:
-                    p = 0.35;
-                    break;
-            }
-            for (int i = 0; i < attempts; ++i) {
-
-                if (move == Movement.FORWARD){
-                    if (!mc.gameSettings.keyBindForward.isKeyDown()) return;
-                } else if (!mc.gameSettings.keyBindSprint.isKeyDown()) return;
-
-                sendPackets(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 200.0, mc.player.posZ + Math.cos(y) * p);
-                mc.player.setPosition(mc.player.posX - Math.sin(y) * p, mc.player.posY + (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0) * speed / 200.0, mc.player.posZ + Math.cos(y) * p);
-            }
-        }
+    public void sendPackets(double q, double w, double r) {
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(q, w, r, checkGround));
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(0.0, 666, 0.0, checkGround));
     }
 
-    public void sendPackets(double x, double y, double z) {
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(x, y, z, mc.player.onGround));
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(0.0, 666, 0.0, mc.player.onGround));
+    double get(Type type){
+        if (type == Type.SPEED){return this.speed / 100.0;
+        } else return (double)(mc.gameSettings.keyBindJump.isKeyDown() ? 1 : (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0)) * speed / 100;
     }
+
+    public enum Mode{DEFAULT, BYPASS}
+    public enum Type{SPEED,UPPOS}
+
 }
