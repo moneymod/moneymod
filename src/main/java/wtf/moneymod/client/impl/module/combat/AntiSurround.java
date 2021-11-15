@@ -19,7 +19,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;

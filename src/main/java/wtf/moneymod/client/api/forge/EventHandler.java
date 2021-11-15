@@ -1,13 +1,16 @@
 package wtf.moneymod.client.api.forge;
 
 import com.google.common.base.Strings;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -40,6 +43,13 @@ public class EventHandler implements Globals {
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(Module::onTick);
     }
 
+    @SubscribeEvent public void onDeath(LivingDeathEvent event) {
+        if(event.getEntity().equals(mc.player)){
+            Main.getMain().getSessionManagement().addDeath();
+            System.out.println(event.getEntityLiving());
+        }
+    }
+
     @SubscribeEvent public void onClientChat(ClientChatEvent event) {
         String message = event.getMessage();
         if (message.startsWith(Main.getMain().getCommandManagement().getPrefix())) {
@@ -64,6 +74,9 @@ public class EventHandler implements Globals {
             SPacketEntityStatus packet = e.getPacket();
             if (packet.getEntity(mc.world) instanceof EntityPlayer && packet.getOpCode() == 35) {
                 Main.EVENT_BUS.dispatch(new TotemPopEvent(( EntityPlayer ) packet.getEntity(mc.world)));
+                if (packet.getEntity(mc.world) == mc.player) {
+                    Main.getMain().getSessionManagement().addPops();
+                }
             }
         } else if (e.getPacket() instanceof SPacketPlayerListItem && !nullCheck()) {
             SPacketPlayerListItem packet = e.getPacket();

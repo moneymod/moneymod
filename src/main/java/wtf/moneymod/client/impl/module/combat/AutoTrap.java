@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.misc.AutoGG;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
@@ -68,7 +67,6 @@ public class AutoTrap extends Module {
     @Override public void onTick ( ) {
         if ( nullCheck( ) ) return;
         target = EntityUtil.getTarget( range );
-        if (target != null) AutoGG.target((EntityPlayer)target);
 
         /* CODED BY PIGHAX  23.10.21-22:30*/
 

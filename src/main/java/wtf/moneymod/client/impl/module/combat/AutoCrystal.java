@@ -1,12 +1,10 @@
 package wtf.moneymod.client.impl.module.combat;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -16,17 +14,14 @@ import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Mouse;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.misc.AutoGG;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -116,9 +111,6 @@ public class AutoCrystal extends Module {
 
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
-        if (currentTarget != null) {
-            AutoGG.target(currentTarget);
-        } else return;
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
         doAutoCrystal();
     }

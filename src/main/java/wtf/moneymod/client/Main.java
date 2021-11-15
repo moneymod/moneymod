@@ -1,6 +1,5 @@
 package wtf.moneymod.client;
 
-import com.google.common.hash.Hashing;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
@@ -12,7 +11,6 @@ import wtf.moneymod.client.impl.utility.impl.cape.CapeThread;
 import wtf.moneymod.eventhandler.EventBus;
 
 import java.awt.*;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author cattyn
@@ -44,6 +42,7 @@ public class Main {
     private HoleManagement holeManagement;
     private CapeThread capeThread;
     private IrcScreen ircScreen;
+    private SessionManagement sessionManagement;
 
     public void init() {
         System.out.println("init");
@@ -60,12 +59,14 @@ public class Main {
         capeThread = new CapeThread();
         ircScreen = new IrcScreen();
 
+        sessionManagement = new SessionManagement();
         fpsManagement = new FpsManagement();
         rotationManagement = new RotationManagement();
         holeManagement = new HoleManagement();
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
         ConfigManager.getInstance().load();
+        sessionManagement.reset();
         screen = new Screen();
         pulseManagement = new PulseManagement();
         EventHandler handler = new EventHandler();
@@ -95,6 +96,8 @@ public class Main {
 
     public RotationManagement getRotationManagement() {return rotationManagement;}
 
+    public SessionManagement getSessionManagement(){return sessionManagement;}
+
     public Screen getScreen() {
         return screen;
     }
@@ -104,6 +107,7 @@ public class Main {
     }
 
     public IrcScreen getIrcScreen(){ return ircScreen; }
+
     public CapeThread getCapeThread() { return capeThread; }
 
     public HoleManagement getHoleManagement() {

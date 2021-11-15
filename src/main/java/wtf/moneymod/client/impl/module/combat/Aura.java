@@ -13,7 +13,6 @@ import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.misc.AutoGG;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
@@ -40,7 +39,6 @@ public class Aura extends Module {
     @Override public void onTick() {
         if (nullCheck()) return;
         target = findTarget(EntityPlayer.class::isInstance);
-        if (target != null) AutoGG.target((EntityPlayer)target);
         if (target != null) {
             switch (mode) {
                 case NONE:
