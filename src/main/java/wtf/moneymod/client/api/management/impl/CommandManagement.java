@@ -18,9 +18,10 @@ public class CommandManagement extends ArrayList<Command> implements IManager<Co
     String prefix = "$";
 
     @Override public CommandManagement register() {
-        new Reflections("wtf.moneymod.client.impl.command").getSubTypesOf(Command.class).forEach(c -> {
+        new Reflections("wtf.moneymod.client.impl.command.impl").getSubTypesOf(Command.class).forEach(c -> {
             try {
                 add(c.newInstance());
+                System.out.println(c.getName());
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
