@@ -21,13 +21,14 @@ public class Changer extends Module {
     @Value( value = "Time Value" ) @Bounds( min = 5, max = 24 ) public int timeValue = 24;
     //shit setting name
     @Value( value = "Infinity Cycle" ) public boolean infinity = true;
+    @Value( value = "Speed" ) @Bounds( min = 10, max = 1000 ) public int speed = 100;
     int cycle = 0;
     @Override public void onTick() {
         if (fps) mc.gameSettings.limitFramerate = fpsValue;
         if (fov) mc.gameSettings.fovSetting = fovValue;
         if (gamma) mc.gameSettings.gammaSetting = gammaValue;
 
-        cycle+=100;
+        cycle+=speed;
         if (time) mc.world.setWorldTime(infinity ? cycle : timeValue * 1000);
         if (cycle >= 24000) cycle = 0;
     }
