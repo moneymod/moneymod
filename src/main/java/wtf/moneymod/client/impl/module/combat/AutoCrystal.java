@@ -108,7 +108,7 @@ public class AutoCrystal extends Module {
             int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1) ItemUtil.swapToHotbarSlot(crystal, false);
         }
-
+        if (currentTarget == null) return;
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
