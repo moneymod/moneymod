@@ -1,12 +1,14 @@
 package wtf.moneymod.client.api.management.impl;
 
 import com.google.gson.*;
+import net.minecraft.util.math.BlockPos;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.misc.SettingUtils;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
+import wtf.moneymod.client.impl.waypoint.Waypoint;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,6 +22,7 @@ public class ConfigManager extends Thread implements Globals {
     private static final File mainFolder = new File("moneymod");
     private static final String modulesFolder = mainFolder.getAbsolutePath() + "/modules";
     private static final String FRIEND = "Friends.json";
+    private static final String WAYPOINTS = "Waypoints.json";
 
     public static File getMainFolder() {return mainFolder;}
 
@@ -27,6 +30,9 @@ public class ConfigManager extends Thread implements Globals {
         try {
             loadFriends();
         } catch (Exception e) { }
+        try {
+            loadWaypoints();
+        } catch (Exception ignored) { }
         loadModules();
     }
 
@@ -46,7 +52,7 @@ public class ConfigManager extends Thread implements Globals {
                 if (jsonObject.get("Enabled").getAsBoolean() && !m.isConfigException()) m.setToggled(true);
                 m.setKey(jsonObject.get("KeyBind").getAsInt());
             }
-            if(jsonObject.get("Drawn") != null) {
+            if (jsonObject.get("Drawn") != null) {
                 m.drawn = jsonObject.get("Drawn").getAsBoolean();
             }
             Option.getContainersForObject(m).forEach(s -> {
@@ -83,25 +89,59 @@ public class ConfigManager extends Thread implements Globals {
         }
     }
 
-    private void loadFriends ( ) throws IOException {
-        Path path = Paths.get( mainFolder.getAbsolutePath( ), FRIEND );
-        if ( !path.toFile( ).exists( ) ) return;
-        String rawJson = loadFile( path.toFile( ) );
-        JsonObject jsonObject = new JsonParser( ).parse( rawJson ).getAsJsonObject( );
-        if ( jsonObject.get( "Friends" ) != null ) {
-            JsonArray friendObject = jsonObject.get( "Friends" ).getAsJsonArray( );
-            friendObject.forEach( object -> FriendManagement.getInstance().add( object.getAsString( ) ) );
+    private void loadFriends() throws IOException {
+        Path path = Paths.get(mainFolder.getAbsolutePath(), FRIEND);
+        if (!path.toFile().exists()) return;
+        String rawJson = loadFile(path.toFile());
+        JsonObject jsonObject = new JsonParser().parse(rawJson).getAsJsonObject();
+        if (jsonObject.get("Friends") != null) {
+            JsonArray friendObject = jsonObject.get("Friends").getAsJsonArray();
+            friendObject.forEach(object -> FriendManagement.getInstance().add(object.getAsString()));
         }
     }
 
-    private void saveFriends ( ) throws IOException {
-        Path path = Paths.get( mainFolder.getAbsolutePath( ), FRIEND );
-        createFile( path );
-        JsonObject jsonObject = new JsonObject( );
-        JsonArray friends = new JsonArray( );
-        FriendManagement.getInstance().forEach( friends::add );
-        jsonObject.add( "Friends", friends );
-        Files.write( path, gson.toJson( new JsonParser( ).parse( jsonObject.toString( ) ) ).getBytes( ) );
+    private void loadWaypoints() throws IOException {
+        Path path = Paths.get(mainFolder.getAbsolutePath(), WAYPOINTS);
+        if (!path.toFile().exists()) return;
+        String rawJson = loadFile(path.toFile());
+        JsonObject jsonObject = new JsonParser().parse(rawJson).getAsJsonObject();
+        JsonArray waypoints = null;
+        if ((waypoints = jsonObject.get("waypoints").getAsJsonArray()) != null) {
+            for (JsonElement element : waypoints) {
+                JsonObject waypointJson = element.getAsJsonObject();
+                if (waypointJson.size() != 4) continue;
+                try {
+                    Waypoint waypoint = new Waypoint().fromJson(waypointJson);
+                    WaypointManager.getInstance().add(waypoint);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void saveWaypoints() {
+        Path path = Paths.get(mainFolder.getAbsolutePath(), WAYPOINTS);
+        createFile(path);
+        JsonObject jsonObject = new JsonObject();
+        JsonArray jsonArray = new JsonArray();
+        for (Waypoint waypoint : WaypointManager.getInstance()) {
+            jsonArray.add(waypoint.toJson(waypoint));
+        }
+        jsonObject.add("waypoints", jsonArray);
+        try {
+            Files.write(path, gson.toJson(new JsonParser().parse(jsonObject.toString())).getBytes());
+        } catch (Exception ignored) {}
+    }
+
+    private void saveFriends() throws IOException {
+        Path path = Paths.get(mainFolder.getAbsolutePath(), FRIEND);
+        createFile(path);
+        JsonObject jsonObject = new JsonObject();
+        JsonArray friends = new JsonArray();
+        FriendManagement.getInstance().forEach(friends::add);
+        jsonObject.add("Friends", friends);
+        Files.write(path, gson.toJson(new JsonParser().parse(jsonObject.toString())).getBytes());
     }
 
     public String loadFile(File file) throws IOException {
@@ -121,6 +161,7 @@ public class ConfigManager extends Thread implements Globals {
         if (!new File(modulesFolder).exists() && !new File(modulesFolder).mkdirs())
             System.out.println("Failed to create modules folder");
         saveModules();
+        saveWaypoints();
         try {
             saveFriends();
         } catch (Exception e) { }
