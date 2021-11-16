@@ -27,5 +27,5 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: moneymod+3
+          name: moneymod
           path: ./build/libs/*-release.jar
