@@ -45,8 +45,16 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     }
 
     @Override public boolean isElytraFlying() {
-        if(Main.getMain().getModuleManager().get(ElytraFly.class).isToggled()) return false;
-        return super.isElytraFlying();
+        try
+        {
+            if(Main.getMain().getModuleManager().get(ElytraFly.class).isToggled()) return false;
+            return super.isElytraFlying();
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace( );
+        }
+        return false;
     }
 
 }
