@@ -233,4 +233,30 @@ public enum  Renderer3D implements Globals {
         GlStateManager.popMatrix();
     }
 
+    public void drawProgressBox(AxisAlignedBB pos, float progress, Color color, boolean outline,float linewidht, boolean box, int alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+
+        float nxOff = ( float ) (pos.minX + (pos.getCenter().x - pos.minX) * progress);
+        float nyOff = ( float ) (pos.minY + (pos.getCenter().y - pos.minY) * progress);
+        float nzOff = ( float ) (pos.minZ + (pos.getCenter().z - pos.minZ) * progress);
+        float mxOff = ( float ) (pos.maxX + (pos.getCenter().x - pos.maxX) * progress);
+        float myOff = ( float ) (pos.maxY + (pos.getCenter().y - pos.maxY) * progress);
+        float mzOff = ( float ) (pos.maxZ + (pos.getCenter().z - pos.maxZ) * progress);
+
+        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(nxOff, nyOff, nzOff, mxOff, myOff, mzOff);
+
+        drawBoxESP(axisAlignedBB, color, linewidht, outline, box, color.getAlpha(), alpha);
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+
 }

@@ -13,6 +13,7 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -60,6 +61,10 @@ public class AutoCrystal extends Module {
     @Value( value = "Swap" ) public Swap swap = Swap.NONE;
     @Value( value = "Swing" ) public Swing swing = Swing.MAINHAND;
     @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0, 180, true);
+    @Value( value = "Outline" ) public boolean outlines = false;
+    @Value( value = "Box" ) public boolean boxes = true;
+    @Value( value = "Line Widht ") @Bounds(max = 3f) public float lineWidht = 0.6f;
+    @Value( value = "Expand" ) @Bounds(max = 1f) public float expands = 1;
     private final Set<BlockPos> placeSet = new HashSet<>();
     private BlockPos renderPos, lastPlaced;
     private BlockPos currentBlock;
@@ -110,7 +115,10 @@ public class AutoCrystal extends Module {
         }
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
-        if (currentTarget == null) return;
+        if (currentTarget == null){
+            renderPos = null;
+            return;
+        }
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
         doAutoCrystal();
     }
@@ -134,7 +142,7 @@ public class AutoCrystal extends Module {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if (renderPos != null) {
-            Renderer3D.drawBoxESP(renderPos, color.getColor(), 1.5f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
+             Renderer3D.INSTANCE.drawBoxESP(renderPos,color.getColor(),lineWidht,outlines,boxes,color.getColor().getAlpha(), color.getColor().getAlpha(),1);
         }
     }
 
