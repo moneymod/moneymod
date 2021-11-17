@@ -12,7 +12,7 @@ public class SelfFillBypass extends Module {
 
     /**
     @author: PigHax
-    client: moneymod rewrtie
+    client: moneymod rewrite
     date: Nov 4, 2021
      */
 
