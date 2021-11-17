@@ -18,6 +18,8 @@ public class Waypoint implements JsonSerializable<Waypoint> {
         this.dimension = dimension;
     }
 
+    public Waypoint() { }
+
     public String getName() { return name; }
 
     public BlockPos getPos() { return pos; }
