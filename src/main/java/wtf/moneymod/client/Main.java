@@ -81,6 +81,20 @@ public class Main {
         if (main == null) main = new Main();
         return main;
     }
+    
+    public static boolean isLoaderPresent( )
+    {
+        try
+        {
+            Class.forName( "wtf.moneymod.loader.LoaderMod" );
+            return true;
+        }
+        catch( Exception e )
+        {
+        }
+        
+        return false;
+    }
 
     public ModuleManagement getModuleManager() {
         return moduleManagement;
