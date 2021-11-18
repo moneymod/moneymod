@@ -11,7 +11,6 @@ public class VClip extends Module {
 
     @Value(value = "Offset") @Bounds(min = -5f, max = 5f) public float offset = 0.2f;
     @Value(value = "Disable") public boolean disable = true;
-    @Value(value = "Ground") public boolean ground = false;
     @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
 
     double[] packets = new double[] {0.41, 0.75, 1, 1.16 };
@@ -23,7 +22,7 @@ public class VClip extends Module {
             mc.player.setPositionAndUpdate(mc.player.posX, mc.player.posY + offset, mc.player.posZ);
             if (disable) setToggled(false);
         } else if (mode == Mode.BYPASS) {
-            if (mc.player.onGround) {
+            if (mc.player.onGround && mc.player.posY == 1) {
                 mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                 for (double jumpOffset : packets)
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + jumpOffset, mc.player.posZ, true));
