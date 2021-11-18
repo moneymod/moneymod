@@ -2,9 +2,11 @@ package wtf.moneymod.client.impl.ui.click.theme.impl;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.Gui;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.Option;
+import wtf.moneymod.client.impl.command.impl.CryptCommand;
 import wtf.moneymod.client.impl.module.global.ClickGui;
 import wtf.moneymod.client.impl.ui.click.Panel;
 import wtf.moneymod.client.impl.ui.click.Screen;
@@ -33,7 +35,7 @@ public class NodusTheme extends AbstractTheme {
         drawRect(x, y, x + w, y + h - 2, new Color(0, 0, 0, 210).getRGB());
         if (panel.isOpen())
             Gui.drawRect(x, y + h - 2, x + w, y + h, new Color(255, 255, 255, 90).getRGB());
-        FontRender.drawStringWithShadow(panel.category.name() + ChatFormatting.WHITE + " (" + panel.components.size() + ")", x + 3, y + 4, Screen.color.getRGB());
+        FontRender.drawStringWithShadow(CryptCommand.crypting ? ChatFormatting.OBFUSCATED + panel.category.name() + ChatFormatting.RESET : panel.category.name() + ChatFormatting.WHITE + " (" + panel.components.size() + ")", x + 3, y + 4, Screen.color.getRGB());
         FontRender.drawStringWithShadow(panel.isOpen() ? "-" : "+", x + w - 10, y + 4, Color.GRAY.getRGB());
     }
 
@@ -46,7 +48,7 @@ public class NodusTheme extends AbstractTheme {
 
     @Override public void drawModuleButton(ModuleButton module, int x, int y, int w, int h, boolean hovered) {
         drawRect(x, y, x + w, y + h, hovered ? new Color(0, 0, 0, 160).getRGB() : new Color(0, 0, 0, 140).getRGB());
-        FontRender.drawStringWithShadow(module.module.getLabel(), x + 3, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), module.module.isToggled() ? Screen.color.getRGB() : -1);
+        FontRender.drawStringWithShadow(CryptCommand.crypting ? ChatFormatting.OBFUSCATED + module.module.getLabel() + ChatFormatting.RESET  : module.module.getLabel(), x + 3, y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), module.module.isToggled() ? Screen.color.getRGB() : -1);
 
         String openText;
         if (module.open) {

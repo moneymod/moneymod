@@ -18,8 +18,9 @@ public class PhaseWalk extends Module {
 
     @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
     @Value(value = "Attempts") @Bounds(min = 1, max = 5) public int attempts = 1;
-    @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
+    @Value(value = "Speed") @Bounds(min = 1, max = 15) public int speed = 1;
     @Value(value = "CheckGround") public boolean checkGround = true;
+    @Value(value = "Control") public boolean test = true;
 
     Timer timer = new Timer();
     int teleportID = 0;
@@ -37,18 +38,19 @@ public class PhaseWalk extends Module {
     public void onTick() {
         if (nullCheck()) return;
         if (mode == Mode.DEFAULT) {
-            mc.player.motionX = 0.0; mc.player.motionY = 0.0; mc.player.motionZ = 0.0;
+            mc.player.motionX = 0.0;
+            mc.player.motionY = 0.0;
+            mc.player.motionZ = 0.0;
             if (mc.player.collidedHorizontally) {
                 if (timer.isPassed()) {
                     double[] move = EntityUtil.forward(get(Type.SPEED));
                     for (int i = 0; i < attempts; ++i) {
                         sendPackets(mc.player.posX + move[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[1]);
                     }
-                    timer.reset();
                 }
+                timer.reset();
             }
         }
-
     }
 
     @Handler
@@ -56,8 +58,9 @@ public class PhaseWalk extends Module {
         if (nullCheck()) return;
         if (mode == Mode.BYPASS) {
             double[] forward = EntityUtil.forward(get(Type.SPEED));
-            for (int i = 0; i < this.attempts; ++i)
-                this.sendPackets(mc.player.posX + forward[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[1]);
+            for (int i = 0; i < this.attempts; ++i) {
+                 this.sendPackets(mc.player.posX + forward[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[1]);
+            }
             e.motionX = e.motionX * 0.0001 / 10.0; e.motionZ = e.motionZ * 0.0001 / 10.0; e.motionY = e.motionY * 0.0001 / 10.0;
         } else {
             if (mc.player.collidedHorizontally){
