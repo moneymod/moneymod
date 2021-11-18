@@ -70,7 +70,8 @@ public class Main {
         screen = new Screen();
         pulseManagement = new PulseManagement();
         EventHandler handler = new EventHandler();
-        MinecraftForge.EVENT_BUS.register(handler);
+        if( !isLoaderPresent( ) ) // loader handles events
+            MinecraftForge.EVENT_BUS.register(handler);
         EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());

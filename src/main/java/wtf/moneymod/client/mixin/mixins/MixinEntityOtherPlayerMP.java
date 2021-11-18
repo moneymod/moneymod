@@ -8,6 +8,9 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.render.NoInterp;
 
@@ -41,6 +44,7 @@ public class MixinEntityOtherPlayerMP extends AbstractClientPlayer
      * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
      * use this to react to sunlight and start to burn.
      */
+
     @Overwrite
     public void onLivingUpdate()
     {
@@ -88,4 +92,17 @@ public class MixinEntityOtherPlayerMP extends AbstractClientPlayer
         this.collideWithNearbyEntities();
         this.world.profiler.endSection();
     }
+
+    @Inject(method = "onUpdate", at = @At ("HEAD"), cancellable = true)
+    public void prikol(CallbackInfo ci) {
+        if(((NoInterp)Main.getMain().getModuleManager().get(NoInterp.class)).animation) {
+            renderOffsetY = 0;
+            super.onUpdate();
+            limbSwing = 0;
+            limbSwingAmount = 0;
+            prevLimbSwingAmount = 0;
+            ci.cancel();
+        }
+    }
+
 }
