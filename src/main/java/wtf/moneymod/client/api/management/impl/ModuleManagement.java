@@ -3,6 +3,7 @@ package wtf.moneymod.client.api.management.impl;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.reflections.Reflections;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.management.IManager;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
@@ -20,15 +21,38 @@ import java.util.stream.Collectors;
 public class ModuleManagement extends ArrayList<Module> implements IManager<ModuleManagement> {
 
     @Override public ModuleManagement register() {
-        new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
-            try {
-                if (c.getSimpleName().equalsIgnoreCase("HudModule")) return;
-                Module module = c.newInstance();
-                add(module);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+        if( !Main.isLoaderPresent( ) )
+        {
+            new Reflections("wtf.moneymod.client.impl.module").getSubTypesOf(Module.class).forEach(c -> {
+                try {
+                    if (c.getSimpleName().equalsIgnoreCase("HudModule")) return;
+                    Module module = c.newInstance();
+                    add(module);
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        else
+        {
+            try
+            {
+                Field f = Class.forName( "wtf.moneymod.loader.LoaderMod", false, Launch.classLoader ).getDeclaredField( "modules" );
+                f.setAccessible( true );
+                List< Class< ? > > modclasses = ( List< Class< ? > > )f.get( null );
+                for( Class< ? > clazz : modclasses )
+                {
+                    if( clazz.getName( ).contains( "HudModule" ) || clazz.getName( ).contains( "$" ) ) continue;
+
+                    Module module = ( Module )clazz.newInstance( );
+                    add( module );
+                }
             }
-        });
+            catch( Exception e )
+            {
+                e.printStackTrace( );
+            }
+        }
         sort(Comparator.comparing(Module::getLabel));
         return this;
     }
