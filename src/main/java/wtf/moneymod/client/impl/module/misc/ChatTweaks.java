@@ -28,10 +28,10 @@ public class ChatTweaks extends Module {
         return INSTANCE;
     }
 
-    @Value(value = "Prefix") public boolean prefix = false;
-    @Value( value = "Chat Animation" ) public boolean chatAnim = true;
-    @Value(value = "Time") public boolean time = false;
+    @Value(value = "Suffix") public boolean suffix = false;
     @Value(value = "Mode") public Mode mode = Mode.NORMAL;
+    @Value(value = "Chat Animation") public boolean chatAnim = true;
+    @Value(value = "Time") public boolean time = false;
     @Handler
     public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if ( this.time && e.getPacket( ) instanceof SPacketChat) {
@@ -47,7 +47,7 @@ public class ChatTweaks extends Module {
 
     @Handler
     public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
-        if (e.getPacket() instanceof CPacketChatMessage) {
+        if (e.getPacket() instanceof CPacketChatMessage && suffix) {
             CPacketChatMessage packet = (CPacketChatMessage) e.getPacket();
             String prefix = "";
             switch (mode){

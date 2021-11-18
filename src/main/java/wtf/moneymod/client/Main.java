@@ -70,7 +70,8 @@ public class Main {
         screen = new Screen();
         pulseManagement = new PulseManagement();
         EventHandler handler = new EventHandler();
-        MinecraftForge.EVENT_BUS.register(handler);
+        if( !isLoaderPresent( ) ) // loader handles events
+            MinecraftForge.EVENT_BUS.register(handler);
         EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
@@ -80,6 +81,20 @@ public class Main {
     public static Main getMain() {
         if (main == null) main = new Main();
         return main;
+    }
+    
+    public static boolean isLoaderPresent( )
+    {
+        try
+        {
+            Class.forName( "wtf.moneymod.loader.LoaderMod" );
+            return true;
+        }
+        catch( Exception e )
+        {
+        }
+        
+        return false;
     }
 
     public ModuleManagement getModuleManager() {
