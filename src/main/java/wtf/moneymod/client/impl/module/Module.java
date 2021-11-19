@@ -78,7 +78,6 @@ public class Module implements Globals {
         onToggle();
         onEnable();
         Main.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(this);
         Main.EVENT_BUS.dispatch(new ToggleEvent(ToggleEvent.Action.ENABLE, this));
     }
 
@@ -87,7 +86,6 @@ public class Module implements Globals {
         onToggle();
         onDisable();
         Main.EVENT_BUS.unregister(this);
-        MinecraftForge.EVENT_BUS.unregister(this);
         Main.EVENT_BUS.dispatch(new ToggleEvent(ToggleEvent.Action.DISABLE, this));
     }
 
