@@ -33,14 +33,14 @@ public class Waypoints extends Module {
 
     AccessorRenderManager renderManager = ( AccessorRenderManager ) mc.getRenderManager();
 
-    @SubscribeEvent public void onRenderer3D(RenderWorldLastEvent e) {
+    @Override public void onRender3D(float partialTicks) {
         if (WaypointManager.getInstance().isEmpty()) return;
         for (Waypoint waypoint : WaypointManager.getInstance()) {
             String sd = mc.getCurrentServerData() == null ? "singleplayer" : mc.getCurrentServerData().serverIP;
             if (waypoint.getDimension() != mc.world.provider.getDimension() || !waypoint.getServer().equalsIgnoreCase(sd))
                 continue;
             //String.format("%s\n%s, %s, %s", waypoint.getName(), waypoint.getPos().getX(), waypoint.getPos().getY(), waypoint.getPos().getZ())
-            if(text) renderWaypointText(waypoint.getName(), waypoint.getPos(), e.getPartialTicks());
+            if(text) renderWaypointText(waypoint.getName(), waypoint.getPos(), partialTicks);
         }
     }
 

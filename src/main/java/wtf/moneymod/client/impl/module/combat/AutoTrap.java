@@ -48,7 +48,7 @@ public class AutoTrap extends Module {
         setToggled(false);
     }
 
-    @SubscribeEvent public void onRender3D ( RenderWorldLastEvent event ) {
+    @Override public void onRender3D(float partialTicks) {
         if ( render && target != null ) {
             for ( BlockPos bp : mode == Mode.FULL ? getFull( target ) : getSimple( target ) ) {
                 Renderer3D.drawBoxESP( bp, Color.WHITE, 1f, true, true, 60, 255, 1 );

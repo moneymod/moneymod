@@ -138,9 +138,7 @@ public class AutoCrystal extends Module {
             mc.player.setActiveHand(hand);
     }
 
-
-    @SubscribeEvent
-    public void onRender(RenderWorldLastEvent event) {
+    @Override public void onRender3D(float partialTicks) {
         if (renderPos != null) {
              Renderer3D.INSTANCE.drawBoxESP(renderPos,color.getColor(),lineWidht,outlines,boxes,color.getColor().getAlpha(), color.getColor().getAlpha(),1);
         }

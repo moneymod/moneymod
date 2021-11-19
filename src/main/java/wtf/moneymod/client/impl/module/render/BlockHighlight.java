@@ -18,8 +18,7 @@ public class BlockHighlight extends Module {
     @Value(value = "Widht") @Bounds(max = 3) public double widht = 0.3d;
     @Value(value = "Color" ) public JColor color = new JColor(255, 0, 0,180, false);
 
-    @SubscribeEvent
-    public void onRenderWorld(RenderWorldLastEvent event ) {
+    @Override public void onRender3D(float partialTicks) {
         RayTraceResult ray = mc.objectMouseOver;
         if (ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK) {
             BlockPos positionRender = ray.getBlockPos();

@@ -31,8 +31,7 @@ public class Hud extends Module {
     @Value(value = "Offset") @Bounds(max = 5) public int offset = 1;
     @Value(value = "Color") public JColor color = new JColor(255, 255, 255, false);
 
-    @SubscribeEvent
-    public void onRenderer2D(RenderGameOverlayEvent.Text event) {
+    @Override public void onRender2D() {
         int ofs = 1; int offsets = 1;
 
         ScaledResolution sr = new ScaledResolution(mc);

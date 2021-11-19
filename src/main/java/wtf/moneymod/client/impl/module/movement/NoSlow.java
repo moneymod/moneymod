@@ -22,6 +22,7 @@ public class NoSlow extends Module {
     @Value("Items") public boolean items = true;
     @Value("Bypass") public boolean megaBypass = false;
 
+    //TODO replaced with custom bus
     @SubscribeEvent public void onInputUpdate(InputUpdateEvent event) {
         if(nullCheck()) return;
         if(items) {

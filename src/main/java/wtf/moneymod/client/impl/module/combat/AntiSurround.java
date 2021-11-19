@@ -55,8 +55,7 @@ public class AntiSurround extends Module {
         setToggled(false);
     }
 
-    @SubscribeEvent
-    public void onRender(RenderWorldLastEvent event) {
+    public void onRender3D(float partialTicks) {
         if (targetBlock != null)
             Renderer3D.drawBoxESP(targetBlock, color.getColor(), 1f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
     }

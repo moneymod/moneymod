@@ -23,7 +23,7 @@ public class HoleEsp extends Module {
     @Value(value = "O-Color" ) public JColor obsidianColor = new JColor(255, 0, 0, false);
 
 
-    @SubscribeEvent public void onRender3D(RenderWorldLastEvent e) {
+    @Override public void onRender3D(float partialTicks) {
         Main.getMain().getHoleManagement().forEach(hole -> {
             if(hole.getType().equals(HoleManagement.HoleType.BEDROCK)) {
                 Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), (float) widht, (widht > 0.1 ? true : false), box, bedrockColor.getColor().getAlpha(), bedrockColor.getColor().getAlpha(), (float) height);

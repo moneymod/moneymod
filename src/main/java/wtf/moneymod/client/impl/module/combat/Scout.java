@@ -78,8 +78,7 @@ public class Scout extends Module {
         }
     });
 
-    @SubscribeEvent
-    public void onRender2D (RenderGameOverlayEvent.Text event) {
+    @Override public void onRender2D() {
         GlStateManager.pushMatrix();
         ScaledResolution sr = new ScaledResolution(mc);
         if (render) {
