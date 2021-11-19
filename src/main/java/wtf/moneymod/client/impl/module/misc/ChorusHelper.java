@@ -67,17 +67,17 @@ public class ChorusHelper extends Module {
         checkChorus = false;
     }
 
-    //TODO: replace with custom handler
-    @SubscribeEvent
-    public void finishEating(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() == mc.player) {
-            if (event.getResultStack().getItem().equals(Items.CHORUS_FRUIT)) {
-                pos = new BlockPos(mc.player.posX,mc.player.posY,mc.player.posZ);
-                posTp = false;
-                checkChorus = true;
-            }
-        }
-    }
+//    //TODO: replace with custom handler
+//    @SubscribeEvent
+//    public void finishEating(LivingEntityUseItemEvent.Finish event) {
+//        if (event.getEntity() == mc.player) {
+//            if (event.getResultStack().getItem().equals(Items.CHORUS_FRUIT)) {
+//                pos = new BlockPos(mc.player.posX,mc.player.posY,mc.player.posZ);
+//                posTp = false;
+//                checkChorus = true;
+//            }
+//        }
+//    }
 
     @Handler public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (e.getPacket() instanceof CPacketConfirmTeleport && checkChorus) {
