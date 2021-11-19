@@ -41,7 +41,7 @@ public class EventHandler implements Globals {
         Main.EVENT_BUS.dispatch(new DisconnectEvent());
     }
     @SubscribeEvent public void onFinishEat(LivingEntityUseItemEvent.Finish event) {
-        Main.EVENT_BUS.dispatch(new FinishEatEvent());
+        Main.EVENT_BUS.dispatch(new FinishEatEvent(event.getEntity(), event.getResultStack()));
     }
 
     @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
