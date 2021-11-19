@@ -37,9 +37,8 @@ public class AutoTotem extends Module {
                     break;
             }
         } else {
-            if (ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING) != -1) {
-                swap(Items.TOTEM_OF_UNDYING);
-            } else swap(Items.GOLDEN_APPLE);
+            swap(Items.TOTEM_OF_UNDYING);
+            return;
         }
     }
 
