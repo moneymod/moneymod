@@ -18,6 +18,7 @@ import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorKeyBinding;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -34,6 +35,7 @@ public class Phase extends Module {
     @Value(value = "Motion") public boolean motion = false;
     @Value(value = "No Clip") public boolean noclip = false;
     @Value(value = "Teleport Id") public boolean teleportId = false;
+    @Value(value = "Only Moving") public boolean onlyMoving = false;
 
     //VSE DRYGOE
     @Value(value = "Debug Panel") public boolean info = false;
@@ -41,11 +43,13 @@ public class Phase extends Module {
     Timer timer = new Timer();
     int teleportID = 0;
     int delay;
+    int wTapDelay;
 
     @Override
     public void onToggle(){
         timer.reset();
         delay = 0;
+        wTapDelay = 0;
     }
 
     String collided = "none";
@@ -77,6 +81,7 @@ public class Phase extends Module {
     public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (nullCheck()) return;
         if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
+
             teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
             mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
         }
@@ -103,8 +108,9 @@ public class Phase extends Module {
                 }
             } else {
                 collided = ChatFormatting.RED + "false";
-               if (noclip) mc.player.noClip = false;
+                if (noclip) mc.player.noClip = false;
                 if (delay >= syncDelay) {
+                    if (!EntityUtil.INSTANCE.isMoving(mc.player) && onlyMoving) return;
                     syncs = ChatFormatting.GREEN + "true"; bypass = ChatFormatting.GREEN + "true";
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.onGround));
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - updater, mc.player.posZ, mc.player.onGround));
@@ -121,7 +127,7 @@ public class Phase extends Module {
             mc.player.motionY = 0.0;
             mc.player.motionZ = 0.0;
             if (mc.player.collidedHorizontally) {
-                if (timer.isPassed()) {
+                if (timer.passed(50)) {
                     double[] move = EntityUtil.forward(get(Type.SPEED));
                     for (int i = 0; i < attempts; ++i) {
                         sendPackets(mc.player.posX + move[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[1]);
