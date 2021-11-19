@@ -47,13 +47,13 @@ public class BurrowBypass extends Module {
     public void onTick() {
         if (stage == 1){
             delay++;
-            Main.TICK_TIMER = 5.5F;
+            Main.TICK_TIMER = 8.5F;
             jump(true);
             if (delay >= 80){
                 jump(false);
                 Main.TICK_TIMER = 1;
                 delay = 0;
-                mc.player.motionY -= 0.4F;
+                mc.player.motionY -= 0.15F;
                 stage = 2;
                 jumping = true;
             }

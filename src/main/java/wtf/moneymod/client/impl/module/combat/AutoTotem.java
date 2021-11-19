@@ -23,14 +23,12 @@ public class AutoTotem extends Module {
     public void onTick() {
         if (nullCheck() || mc.currentScreen instanceof GuiInventory) return;
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
-        if (hp > health && mc.player.fallDistance <= 5f){
-            if (rightClickGapple && mc.player.getHeldItemMainhand().getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isKeyDown()){
-                ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
-            } else {
+
+        if (rightClickGapple && mc.player.getHeldItemMainhand().getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isKeyDown()) {
+            ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
+        } else {
+            if (hp > health && mc.player.fallDistance <= 5f && mode != Mode.TOTEM) {
                 switch (mode) {
-                    case TOTEM:
-                        ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING));
-                        break;
                     case GAPPLE:
                         ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
                         break;
@@ -38,10 +36,10 @@ public class AutoTotem extends Module {
                         ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.END_CRYSTAL));
                         break;
                 }
+            } else {
+                ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING));
+                return;
             }
-        } else {
-            ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING));
-            return;
         }
     }
     public enum Mode { TOTEM, GAPPLE, CRYSTAL }
