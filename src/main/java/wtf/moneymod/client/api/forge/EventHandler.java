@@ -7,6 +7,7 @@ import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -22,6 +23,8 @@ import wtf.moneymod.client.api.events.*;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.global.Global;
+import wtf.moneymod.client.impl.module.render.CustomFog;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -134,4 +137,16 @@ public class EventHandler implements Globals {
         }
     }
 
+    @SubscribeEvent
+    public void sky(EntityViewRenderEvent.FogColors event){
+        CustomFog cfog = (CustomFog) Main.getMain().getModuleManager().get(CustomFog.class);
+        float red = cfog.color.getColor().getRed() / 255;
+        float green = cfog.color.getColor().getGreen() / 255;
+        float blue = cfog.color.getColor().getBlue() / 255;
+        if (cfog.isToggled()){
+            event.setRed(red);
+            event.setGreen(green);
+            event.setBlue(blue);
+        }
+    }
 }

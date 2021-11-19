@@ -26,7 +26,7 @@ public class VClip extends Module {
                 mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                 for (double jumpOffset : packets)
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + jumpOffset, mc.player.posZ, true));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, -(mc.player.posY + offset), mc.player.posZ, true));
+                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - offset, mc.player.posZ, true));
                 mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
                 if (disable) setToggled(false);
             }

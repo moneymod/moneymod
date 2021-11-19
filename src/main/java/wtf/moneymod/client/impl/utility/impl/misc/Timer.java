@@ -4,11 +4,6 @@ public class Timer {
     private long time;
     long startTime = System.currentTimeMillis();
     long delay = 0L;
-    boolean paused = false;
-    public boolean isPassed() {
-        return !this.paused && System.currentTimeMillis() - this.startTime >= this.delay;
-    }
-    public long getTimePassed() { return System.currentTimeMillis() - this.time; }
     public Timer( ) {
         this.time = -1L;
     }
