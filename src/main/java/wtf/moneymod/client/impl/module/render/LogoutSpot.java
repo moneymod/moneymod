@@ -50,11 +50,12 @@ public class LogoutSpot extends Module {
         spots.clear();
     }
 
+    //TODO replace with custom bus
     @SubscribeEvent public void onEvent(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         spots.clear();
     }
 
-    @SubscribeEvent public void onRender(RenderWorldLastEvent e) {
+    @Override public void onRender3D(float partialTicks) {
         if (!spots.isEmpty()) {
             spots.forEach(person -> {
 
@@ -103,10 +104,10 @@ public class LogoutSpot extends Module {
                 }
 
                 if (text) {
-                    double x = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosX, person.entity.posX, e.getPartialTicks()) - renderManager.getRenderPosX();
-                    double y = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosY, person.entity.posY, e.getPartialTicks()) - renderManager.getRenderPosY();
-                    double z = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosZ, person.entity.posZ, e.getPartialTicks()) - renderManager.getRenderPosZ();
-                    this.renderNameTag(person.name, x, y, z, e.getPartialTicks(), person.vec3d.x, person.vec3d.y, person.vec3d.z);
+                    double x = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosX, person.entity.posX, partialTicks) - renderManager.getRenderPosX();
+                    double y = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosY, person.entity.posY, partialTicks) - renderManager.getRenderPosY();
+                    double z = MathUtil.INSTANCE.interpolate(person.entity.lastTickPosZ, person.entity.posZ, partialTicks) - renderManager.getRenderPosZ();
+                    this.renderNameTag(person.name, x, y, z, partialTicks, person.vec3d.x, person.vec3d.y, person.vec3d.z);
                 }
             });
         }

@@ -63,7 +63,7 @@ public class ESP extends Module {
         }
     });
 
-    @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
+    @Override public void onRender3D(float partialTicks) {
         if (predictChorus != null) {
             if (timer.passed(delay * 1000)) {
                 predictChorus = null;
@@ -74,35 +74,35 @@ public class ESP extends Module {
         }
     }
 
-    @SubscribeEvent public void onRender2d(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
-            if (shaders) {
-                switch (shader) {
-                    case OUTLINE:
-                        framebuffer = OutlineShader.INSTANCE;
-                        break;
-                    case GLOW:
-                        framebuffer = GlowShader.INSTANCE;
-                        break;
-                    case SPACE:
-                        framebuffer = SpaceShader.INSTANCE;
-                        break;
-                    case SPACESMOKE:
-                        framebuffer = SpaceSmokeShader.INSTANCE;
-                        break;
-                }
-                framebuffer.startDraw(event.getPartialTicks());
-                nameTags = true;
-                mc.world.loadedEntityList.forEach(e -> {
-                    if (e != mc.player && ((e instanceof EntityPlayer && players) || (e instanceof EntityEnderCrystal && crystals))) {
-                        mc.getRenderManager().renderEntityStatic(e, event.getPartialTicks(), true);
-                    }
-                });
-                nameTags = false;
-                framebuffer.stopDraw(color.getColor(), 1f, 1f, 0.8f, 1, 0.5f, 0.5f);
-            }
-        }
-    }
+//    @Override public void onRender3D(float partialTicks) {
+//        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
+//            if (shaders) {
+//                switch (shader) {
+//                    case OUTLINE:
+//                        framebuffer = OutlineShader.INSTANCE;
+//                        break;
+//                    case GLOW:
+//                        framebuffer = GlowShader.INSTANCE;
+//                        break;
+//                    case SPACE:
+//                        framebuffer = SpaceShader.INSTANCE;
+//                        break;
+//                    case SPACESMOKE:
+//                        framebuffer = SpaceSmokeShader.INSTANCE;
+//                        break;
+//                }
+//                framebuffer.startDraw(event.getPartialTicks());
+//                nameTags = true;
+//                mc.world.loadedEntityList.forEach(e -> {
+//                    if (e != mc.player && ((e instanceof EntityPlayer && players) || (e instanceof EntityEnderCrystal && crystals))) {
+//                        mc.getRenderManager().renderEntityStatic(e, event.getPartialTicks(), true);
+//                    }
+//                });
+//                nameTags = false;
+//                framebuffer.stopDraw(color.getColor(), 1f, 1f, 0.8f, 1, 0.5f, 0.5f);
+//            }
+//        }
+//    }
 
     @Handler public Listener<RenderNameTagEvent> eventListener = new Listener<>(RenderNameTagEvent.class, e -> {
         if (nameTags) e.cancel();

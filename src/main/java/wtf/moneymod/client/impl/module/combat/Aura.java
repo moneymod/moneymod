@@ -60,7 +60,7 @@ public class Aura extends Module {
         }
     }
 
-    @SubscribeEvent public void Render3D(RenderWorldLastEvent event) {
+    @Override public void onRender3D(float partialTicks) {
         if (target != null && render) {
             if (mode == Mode.ONLY) {
                 if (!(mc.player.getHeldItemMainhand().getItem() instanceof ItemSword)) return;

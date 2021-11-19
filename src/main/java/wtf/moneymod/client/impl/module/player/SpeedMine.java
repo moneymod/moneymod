@@ -133,7 +133,7 @@ public class SpeedMine extends Module {
         e.setCancelled(true);
     });
 
-    @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
+    @Override public void onRender3D(float partialTicks) {
         if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid)
             return;
         AxisAlignedBB bb = mc.world.getBlockState(currentPos).getSelectedBoundingBox(mc.world, currentPos);

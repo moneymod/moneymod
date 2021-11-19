@@ -69,6 +69,10 @@ public class Module implements Globals {
 
     public void onTick() {}
 
+    public void onRender3D(float partialTicks) {}
+
+    public void onRender2D() {}
+
     public void enable() {
         toggled = true;
         onToggle();

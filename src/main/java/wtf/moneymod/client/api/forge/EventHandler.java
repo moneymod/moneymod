@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -44,7 +45,7 @@ public class EventHandler implements Globals {
     }
 
     @SubscribeEvent public void onDeath(LivingDeathEvent event) {
-        if(event.getEntity().equals(mc.player)){
+        if (event.getEntity().equals(mc.player)) {
             Main.getMain().getSessionManagement().addDeath();
             System.out.println(event.getEntityLiving());
         }
@@ -104,10 +105,14 @@ public class EventHandler implements Globals {
         }
     });
 
+    @SubscribeEvent public void onRender2D(RenderGameOverlayEvent.Text text) {
+        Main.getMain().getModuleManager().get(Module::isToggled).forEach(Module::onRender2D);
+    }
 
     @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
         Main.getMain().getFpsManagement().update();
         Main.getMain().getPulseManagement().update();
+        Main.getMain().getModuleManager().get(Module::isToggled).forEach(m -> m.onRender3D(event.getPartialTicks()));
         for (Module m : Main.getMain().getModuleManager()) {
             for (Option<?> setting : Option.getContainersForObject(m)) {
                 if (setting.getValue() instanceof JColor) {

@@ -67,6 +67,7 @@ public class ChorusHelper extends Module {
         checkChorus = false;
     }
 
+    //TODO: replace with custom handler
     @SubscribeEvent
     public void finishEating(LivingEntityUseItemEvent.Finish event) {
         if (event.getEntity() == mc.player) {
@@ -95,7 +96,7 @@ public class ChorusHelper extends Module {
         }
     });
 
-    @SubscribeEvent public void onRender(RenderWorldLastEvent event) {
+    @Override public void onRender3D(float partialTicks) {
         if (serverPos != null && checkChorus) {
             Renderer3D.drawBoxESP(new BlockPos(serverPos.getX(), serverPos.getY(), serverPos.getZ()), color.getColor(), 0.2f, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 2);
         }

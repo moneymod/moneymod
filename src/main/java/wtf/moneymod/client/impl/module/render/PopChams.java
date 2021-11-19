@@ -54,8 +54,7 @@ public class PopChams extends Module {
         popList.add( new Person( entity ) );
     });
 
-    @SubscribeEvent
-    public void onRenderWorld (RenderWorldLastEvent event ) {
+    @Override public void onRender3D(float partialTicks) {
         GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
         GlStateManager.tryBlendFuncSeparate( GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO );
         GlStateManager.glLineWidth( 1.5F );

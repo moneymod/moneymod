@@ -18,6 +18,8 @@ public class Player extends Module {
     @Value(value = "Jump") public boolean jump = false;
     private EntityOtherPlayerMP player;
     int aim;
+
+    //TODO replace with custom bus
     @SubscribeEvent public void onEvent(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         setToggled(false);
     }

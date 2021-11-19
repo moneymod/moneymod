@@ -74,8 +74,7 @@ public class NameTags extends Module {
    
      */
 
-    @SubscribeEvent public void onTick( TickEvent.ClientTickEvent event ) {
-        if ( event.phase == TickEvent.Phase.START ) return;
+    @Override public void onTick() {
         if ( nullCheck( ) ) {
             totemPops.clear( );
             return;
@@ -90,8 +89,7 @@ public class NameTags extends Module {
 
     }
 
-    @SubscribeEvent
-    public void onRender3D(RenderWorldLastEvent event ) {
+    @Override public void onRender3D(float partialTicks) {
         for ( Entity player : mc.world.loadedEntityList ) {
             if ( !( player instanceof EntityPlayer ) || player.isDead || !( ( ( EntityPlayer ) player ).getHealth( ) > 0.0f ) || mc.player.getDistance( player ) > range )
                 continue;
