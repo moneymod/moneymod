@@ -56,8 +56,8 @@ public class Phase extends Module {
     String bypass = "none";
     String syncs = "none";
 
-    @SubscribeEvent
-    public void onRenderer2D(RenderGameOverlayEvent.Text event) {
+
+    @Override public void onRender2D() {
         int offset = 0;
 
         double[] t = EntityUtil.forward(get(Type.SPEED));
