@@ -27,16 +27,17 @@ public class Phase extends Module {
     @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
     @Value(value = "Attempts") @Bounds(min = 1, max = 5) public int attempts = 1;
     @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
-    @Value(value = "CheckGround") public boolean checkGround = true;
 
-    @Value(value = "B-Updater") @Bounds(min = 0, max = 3) public float updater = 3;
-    @Value(value = "B-SyncDelay") @Bounds(min = 1, max = 10) public int syncDelay = 10;
-    @Value(value = "B-Motion") public boolean motion = false;
-    @Value(value = "B-NoClip") public boolean noclip = false;
-    @Value(value = "B-Double") public boolean doublesend = false;
-    @Value(value = "TeleportId") public boolean teleportId = false;
+    //BLOCK PHASE
+    @Value(value = "Updater") @Bounds(min = 0, max = 3) public float updater = 3;
+    @Value(value = "Sync Delay") @Bounds(min = 1, max = 10) public int syncDelay = 10;
+    @Value(value = "Motion") public boolean motion = false;
+    @Value(value = "No Clip") public boolean noclip = false;
+    @Value(value = "Teleport Id") public boolean teleportId = false;
+
+    //VSE DRYGOE
     @Value(value = "Debug Panel") public boolean info = false;
-    @Value(value = "PositionY") @Bounds(min = 1, max = 100) public int posY = 40;
+    @Value(value = "Position Y") @Bounds(min = 1, max = 100) public int posY = 40;
     Timer timer = new Timer();
     int teleportID = 0;
     int delay;
@@ -47,9 +48,9 @@ public class Phase extends Module {
         delay = 0;
     }
 
-    String collided = "";
-    String bypass = "";
-    String syncs = "";
+    String collided = "none";
+    String bypass = "none";
+    String syncs = "none";
 
     @SubscribeEvent
     public void onRenderer2D(RenderGameOverlayEvent.Text event) {
@@ -104,14 +105,9 @@ public class Phase extends Module {
                 collided = ChatFormatting.RED + "false";
                if (noclip) mc.player.noClip = false;
                 if (delay >= syncDelay) {
-                    syncs = ChatFormatting.GREEN + "true";
-                    bypass = ChatFormatting.GREEN + "true";
-
+                    syncs = ChatFormatting.GREEN + "true"; bypass = ChatFormatting.GREEN + "true";
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.onGround));
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - updater, mc.player.posZ, mc.player.onGround));
-                    ChatUtil.INSTANCE.sendMessage("Hello");
-                    if (doublesend)
-                        mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.onGround));
                 } else syncs = ChatFormatting.RED + "false";
                 if (delay >= syncDelay){
                     delay = 0;
@@ -155,8 +151,8 @@ public class Phase extends Module {
     });
 
     public void sendPackets(double q, double w, double r) {
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(q, w, r, checkGround));
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(0,767, 0, checkGround));
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(q, w, r, mc.player.onGround));
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(0,767, 0, mc.player.onGround));
 
     }
 
