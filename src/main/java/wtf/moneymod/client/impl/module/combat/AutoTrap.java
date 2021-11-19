@@ -2,12 +2,9 @@ package wtf.moneymod.client.impl.module.combat;
 
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import wtf.moneymod.client.api.events.DisconnectEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -16,6 +13,8 @@ import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,9 +43,10 @@ public class AutoTrap extends Module {
     int placed;
     Entity target;
 
-    @SubscribeEvent public void onConnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+    @Handler
+    public Listener<DisconnectEvent> disconnectEventListener = new Listener<>(DisconnectEvent.class, e -> {
         setToggled(false);
-    }
+    });
 
     @Override public void onRender3D(float partialTicks) {
         if ( render && target != null ) {

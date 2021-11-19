@@ -63,6 +63,7 @@ public class NameTags extends Module {
     HashMap<String, Integer> totemPops = new HashMap<>( );
 
     /*
+    //TODO: POFIXIT ETO GOVNO
     @SubscribeEvent public void onTotemPop( TotemPopEvent event ) {
         String name = event.getEntityPlayerSP( ).getName( );
         if ( totemPops.get( name ) == null ) {
