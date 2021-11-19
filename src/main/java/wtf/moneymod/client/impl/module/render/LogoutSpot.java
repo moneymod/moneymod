@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.api.events.ConnectionEvent;
+import wtf.moneymod.client.api.events.DisconnectEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -50,10 +51,10 @@ public class LogoutSpot extends Module {
         spots.clear();
     }
 
-    //TODO replace with custom bus
-    @SubscribeEvent public void onEvent(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+    @Handler
+    public Listener<DisconnectEvent> disconnectEventListener = new Listener<>(DisconnectEvent.class, e -> {
         spots.clear();
-    }
+    });
 
     @Override public void onRender3D(float partialTicks) {
         if (!spots.isEmpty()) {

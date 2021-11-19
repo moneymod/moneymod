@@ -5,8 +5,12 @@ import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import wtf.moneymod.client.api.events.DisconnectEvent;
+import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.UUID;
 
@@ -19,10 +23,10 @@ public class Player extends Module {
     private EntityOtherPlayerMP player;
     int aim;
 
-    //TODO replace with custom bus
-    @SubscribeEvent public void onEvent(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+    @Handler
+    public Listener<DisconnectEvent> disconnectEventListener = new Listener<>(DisconnectEvent.class, e -> {
         setToggled(false);
-    }
+    });
 
     @Override public void onEnable() {
         aim = 0;

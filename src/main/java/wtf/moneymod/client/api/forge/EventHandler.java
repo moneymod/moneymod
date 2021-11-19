@@ -5,6 +5,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
+import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -13,12 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
-import wtf.moneymod.client.api.events.ConnectionEvent;
-import wtf.moneymod.client.api.events.PacketEvent;
-import wtf.moneymod.client.api.events.TotemPopEvent;
+import wtf.moneymod.client.api.events.*;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
@@ -33,6 +33,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class EventHandler implements Globals {
+
+    @SubscribeEvent public void onMovementInput(net.minecraftforge.client.event.InputUpdateEvent input) {
+        Main.EVENT_BUS.dispatch(new InputUpdateEvent(input.getMovementInput()));
+    }
+
+    @SubscribeEvent public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        Main.EVENT_BUS.dispatch(new DisconnectEvent());
+    }
 
     @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
         Main.getMain().getModuleManager().get(module -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == module.getKey()).forEach(Module::toggle);
