@@ -5,9 +5,7 @@ import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import wtf.moneymod.client.api.events.FinishEatEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -67,17 +65,17 @@ public class ChorusHelper extends Module {
         checkChorus = false;
     }
 
-//    //TODO: replace with custom handler
-//    @SubscribeEvent
-//    public void finishEating(LivingEntityUseItemEvent.Finish event) {
-//        if (event.getEntity() == mc.player) {
-//            if (event.getResultStack().getItem().equals(Items.CHORUS_FRUIT)) {
-//                pos = new BlockPos(mc.player.posX,mc.player.posY,mc.player.posZ);
-//                posTp = false;
-//                checkChorus = true;
-//            }
-//        }
-//    }
+
+    @Handler
+    public Listener<FinishEatEvent> onFinishEatEvent = new Listener<>(FinishEatEvent.class, e -> {
+        if (e.getEntity() == mc.player) {
+            if (e.getItemStack().getItem().equals(Items.CHORUS_FRUIT)) {
+                pos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+                posTp = false;
+                checkChorus = true;
+            }
+        }
+    });
 
     @Handler public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (e.getPacket() instanceof CPacketConfirmTeleport && checkChorus) {

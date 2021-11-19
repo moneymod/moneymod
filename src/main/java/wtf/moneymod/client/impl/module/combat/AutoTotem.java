@@ -19,28 +19,34 @@ public class AutoTotem extends Module {
     @Value(value = "Item") public Mode mode = Mode.CRYSTAL;
     @Value(value = "Right Click Gapple") public boolean rightClickGapple = true;
 
+    boolean doStrict;
+
     @Override
     public void onTick() {
         if (nullCheck() || mc.currentScreen instanceof GuiInventory) return;
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
-
-        if (rightClickGapple && mc.player.getHeldItemMainhand().getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isKeyDown()) {
-            ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
-        } else {
-            if (hp > health && mc.player.fallDistance <= 5f && mode != Mode.TOTEM) {
-                switch (mode) {
-                    case GAPPLE:
-                        ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.GOLDEN_APPLE));
-                        break;
-                    case CRYSTAL:
-                        ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.END_CRYSTAL));
-                        break;
-                }
-            } else {
-                ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING));
-                return;
+        if (rightClickGapple && mc.player.getHeldItemMainhand().getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isKeyDown() && hp >= health)
+            swap(Items.GOLDEN_APPLE);
+        if (hp >= health && mode != Mode.TOTEM) {
+            switch (mode) {
+                case GAPPLE:
+                    swap(Items.GOLDEN_APPLE);
+                    break;
+                case CRYSTAL:
+                    swap(Items.END_CRYSTAL);
+                    break;
             }
+        } else {
+            if (ItemUtil.getItemSlot(Items.TOTEM_OF_UNDYING) != -1) {
+                swap(Items.TOTEM_OF_UNDYING);
+            } else swap(Items.GOLDEN_APPLE);
         }
     }
+
+
+    public void swap(Item items){
+        ItemUtil.swapToOffhandSlot(ItemUtil.getItemSlot(items));
+    }
+
     public enum Mode { TOTEM, GAPPLE, CRYSTAL }
 }

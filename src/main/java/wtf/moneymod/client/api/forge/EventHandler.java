@@ -1,29 +1,25 @@
 package wtf.moneymod.client.api.forge;
 
 import com.google.common.base.Strings;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
-import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.*;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.module.render.CustomFog;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
@@ -43,6 +39,9 @@ public class EventHandler implements Globals {
 
     @SubscribeEvent public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Main.EVENT_BUS.dispatch(new DisconnectEvent());
+    }
+    @SubscribeEvent public void onFinishEat(LivingEntityUseItemEvent.Finish event) {
+        Main.EVENT_BUS.dispatch(new FinishEatEvent());
     }
 
     @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
