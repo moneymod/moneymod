@@ -57,6 +57,10 @@ public class Main {
         }
 
         capeThread = new CapeThread();
+        Thread thread = new Thread(capeThread);
+        thread.setName( "moneymodplus3-cape-thread" );
+        thread.start( );
+
         ircScreen = new IrcScreen();
 
         sessionManagement = new SessionManagement();

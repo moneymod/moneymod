@@ -56,11 +56,11 @@ public class CapeThread implements Runnable, Globals {
             out = null;
 
             try {
-                socket = new Socket("185.240.103.107", 3744);
+                socket = new Socket("185.240.103.107", 1631);
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
 
-                out.writeUTF("mm+3/capes/hello");
+                out.writeUTF("hdgdfgtdfcvhbdfgdmm+3/capes/hello/dsifjisohjrsdhf9hd");
                 out.flush();
 
                 hsthread = new Thread(() -> requestDataThread(out));
