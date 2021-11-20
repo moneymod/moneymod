@@ -77,11 +77,20 @@ public class Phase extends Module {
         }
     }
 
-        @Handler
+    @Handler
     public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (nullCheck()) return;
         if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
-
+            System.out.println("2");
+            teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
+            mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
+        }
+    });
+    @Handler
+    public Listener<PacketEvent.Receive> packeEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
+        if (nullCheck()) return;
+        if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
+            System.out.println("1");
             teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
             mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
         }
@@ -97,12 +106,15 @@ public class Phase extends Module {
             delay++;
             if (mc.player.collidedHorizontally) {
                 collided = ChatFormatting.GREEN + "true";
-                double[] forward = EntityUtil.forward(get(Type.SPEED));
                 if (noclip) mc.player.noClip = true;
-                for (int i = 0; i < this.attempts; ++i) {
-                    bypass = ChatFormatting.RED + "false";
-                    this.sendPackets(mc.player.posX + forward[0], mc.player.posY, mc.player.posZ + forward[1]);
+                if (timer.passed(50)) {
+                    double[] forward = EntityUtil.forward(get(Type.SPEED));
+                    for (int i = 0; i < this.attempts; ++i) {
+                        bypass = ChatFormatting.RED + "false";
+                        this.sendPackets(mc.player.posX + forward[0], mc.player.posY, mc.player.posZ + forward[1]);
+                    }
                 }
+                timer.reset();
                 if (motion) {
                     mc.player.motionX = 0.0; mc.player.motionZ = 0.0; mc.player.motionY = 0.0;
                 }

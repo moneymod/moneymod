@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.combat;
 
+import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -31,7 +32,7 @@ public class SelfPlace extends Module {
     @Value(value = "Delay") @Bounds(min = 1, max = 250) public int delay = 0;
     @Value(value = "Disable") public boolean disable = true;
     @Value(value = "Rotate") public boolean rotate = false;
-
+    @Value(value = "Anvil") public boolean anvil = false;
     final Timer timer = new Timer();
     boolean didPlace, rotating;
     int placed;
@@ -87,7 +88,7 @@ public class SelfPlace extends Module {
         for (BlockPos bp : blockPos) {
             if (placed >= bps) return;
             int old = mc.player.inventory.currentItem;
-            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false) == -1)
+            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(!anvil ? BlockObsidian.class : BlockAnvil.class), false) == -1)
                 return;
             switch (BlockUtil.INSTANCE.isPlaceable(bp)) {
                 case 0: {
