@@ -36,7 +36,7 @@ public class Phase extends Module {
     @Value(value = "No Clip") public boolean noclip = false;
     @Value(value = "Teleport Id") public boolean teleportId = false;
     @Value(value = "Only Moving") public boolean onlyMoving = false;
-
+    @Value(value = "Auto") public boolean auto = false;
     //VSE DRYGOE
     @Value(value = "Debug Panel") public boolean info = false;
     @Value(value = "Position Y") @Bounds(min = 1, max = 100) public int posY = 40;
@@ -44,12 +44,15 @@ public class Phase extends Module {
     int teleportID = 0;
     int delay;
     int wTapDelay;
-
+    boolean wtap;
+    boolean pressed;
     @Override
     public void onToggle(){
         timer.reset();
         delay = 0;
         wTapDelay = 0;
+        wtap = false;
+        pressed = false;
     }
 
     String collided = "none";
@@ -76,21 +79,14 @@ public class Phase extends Module {
             }
         }
     }
-
-    @Handler
-    public Listener<PacketEvent.Send> packeEventSend = new Listener<>(PacketEvent.Send.class, e -> {
-        if (nullCheck()) return;
-        if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
-            System.out.println("2");
-            teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
-            mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
-        }
-    });
     @Handler
     public Listener<PacketEvent.Receive> packeEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if (nullCheck()) return;
         if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
             System.out.println("1");
+            if (auto){
+                wtap = true;
+            }
             teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
             mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
         }
@@ -100,6 +96,16 @@ public class Phase extends Module {
     public void onTick() {
         if (nullCheck()) return;
 
+        if (wtap){
+            ((AccessorKeyBinding)mc.gameSettings.keyBindForward).setPressed(false);
+            wTapDelay++;
+            if (wTapDelay >= 1){
+                ((AccessorKeyBinding)mc.gameSettings.keyBindForward).setPressed(true);
+                wTapDelay = 0;
+                wtap = false;
+            }
+        }
+        
         //best bypass
 
         if (mode == Mode.PHASEBLOCK){

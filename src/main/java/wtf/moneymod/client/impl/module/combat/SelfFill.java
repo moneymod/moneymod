@@ -19,7 +19,7 @@ public class SelfFill extends Module {
     //pig pig pig
 
     @Value(value = "Height") @Bounds(min = -8, max = 8) public int height = 4;
-
+    @Value(value = "Rotate") public boolean rotate = false;
     private final List<Double> offsets = Arrays.asList( 0.4199999, 0.7531999, 1.0013359, 1.1661092 );
     private BlockPos startPos;
     int tick = 0;
@@ -36,7 +36,8 @@ public class SelfFill extends Module {
 
     @Override
     public void onTick() {
-
+        float yaw = mc.player.rotationYaw;
+        float pitch = mc.player.rotationPitch;
         int startSlot = mc.player.inventory.currentItem;
         startPos = new BlockPos(mc.player.getPositionVector());
         if (ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST) == -1) {
@@ -47,15 +48,19 @@ public class SelfFill extends Module {
         if (!check()) return;
         tick++;
         if (fill) {
+
+
             ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST), false);
             offsets.forEach(offset -> mc.getConnection().sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, true)));
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+            mc.getConnection().sendPacket(new CPacketPlayer.Rotation(-90,pitch,mc.player.onGround));
             BlockUtil.INSTANCE.placeBlock(startPos);
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + height, mc.player.posZ, false));
             ItemUtil.swapToHotbarSlot(startSlot, false);
             fill = false;
         }
+        if (tick == 4)  mc.getConnection().sendPacket(new CPacketPlayer.Rotation(yaw,pitch,mc.player.onGround));
         if (tick >= 8) {
             tick = 0;
             setToggled(false);
