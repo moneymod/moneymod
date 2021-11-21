@@ -12,13 +12,14 @@ import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Module.Register( label = "Keybinds", cat = Module.Category.GLOBAL )
 public class KeybindList extends Module {
 
     @Value( "Color" ) public JColor color = new JColor(255, 255, 255, false);
+    @Value( "Offset" ) @Bounds( max = 6 ) public int offset = 2;
+    @Value( "Blur" ) public boolean blur = true;
     @Value( "X" ) @Bounds( max = 1080 ) int x = 2;
     @Value( "Y" ) @Bounds( max = 720 ) int y = 3;
 
@@ -27,7 +28,7 @@ public class KeybindList extends Module {
         if (binds.isEmpty()) return;
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
-        Renderer2D.drawRect(x, y, x + 100, y + 2 + FontRender.getFontHeight() + (binds.size() * FontRender.getFontHeight() * 0.75f), new Color(0, 0, 0, 15).getRGB());
+        Renderer2D.drawRect(x, y, x + 100, y + 2 + FontRender.getFontHeight() + (binds.size() * (FontRender.getFontHeight() + offset) * 0.75f), new Color(0, 0, 0, 15).getRGB());
         Renderer2D.drawRect(x, y, x + 100, y + 1.5f, color.getColor().getRGB());
 
         GlStateManager.pushMatrix();
@@ -39,7 +40,7 @@ public class KeybindList extends Module {
             drawScaled(bind.getLabel(), x, ( int ) (y), 0.75f, -1);
             String key = "[" + Keyboard.getKeyName(bind.getKey()) + "]";
             drawScaled(key, ( int ) ((x + 100 - (FontRender.getStringWidth(key) * 0.75))), ( int ) (y), 0.75f, -1);
-            y += FontRender.getFontHeight() * 0.75;
+            y += FontRender.getFontHeight() * 0.75 + offset;
         }
 
         GlStateManager.enableBlend();

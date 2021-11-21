@@ -11,6 +11,7 @@
     "ducks.AccessorCPacketUseEntity",
     "ducks.AccessorCPacketPlayer",
     "ducks.AccessorKeyBinding",
+    "ducks.AccessorShaderGroup",
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinGuiMainMenu",
