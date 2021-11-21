@@ -2,6 +2,7 @@ package wtf.moneymod.client.mixin.mixins;
 
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.MoverType;
@@ -14,7 +15,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.MotionUpdateEvent;
 import wtf.moneymod.client.api.events.MoveEvent;
+import wtf.moneymod.client.api.events.UpdatePlayerMoveStateEvent;
 import wtf.moneymod.client.api.events.UpdateWalkingPlayerEvent;
 import wtf.moneymod.client.impl.module.movement.ElytraFly;
 
@@ -35,6 +38,31 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer {
     @Inject( method = "onUpdateWalkingPlayer", at = @At( "HEAD" ) )
     public void pre( CallbackInfo info ) {
         UpdateWalkingPlayerEvent event = new UpdateWalkingPlayerEvent( 0 );
+        Main.EVENT_BUS.dispatch( event );
+    }
+
+    @Inject( method = "onUpdate",
+            at = @At( value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V", shift = At.Shift.BEFORE ) )
+    public void onPreMotionUpdate( CallbackInfo info )
+    {
+        MotionUpdateEvent event = new MotionUpdateEvent( Minecraft.getMinecraft( ).player.rotationYaw, Minecraft.getMinecraft( ).player.rotationPitch, Minecraft.getMinecraft( ).player.posX, Minecraft.getMinecraft( ).player.posY, Minecraft.getMinecraft( ).player.posZ, Minecraft.getMinecraft( ).player.onGround, Minecraft.getMinecraft( ).player.noClip, 0 );
+        Main.EVENT_BUS.dispatch( event );
+    }
+
+    @Redirect( method = "onLivingUpdate", at = @At( value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;updatePlayerMoveState()V" ) )
+    public void updatePlayerMoveState( MovementInput input )
+    {
+        input.updatePlayerMoveState( );
+        UpdatePlayerMoveStateEvent event = new UpdatePlayerMoveStateEvent( input );
+        Main.EVENT_BUS.dispatch( event );
+    }
+
+    @Inject( method = "onUpdate",
+            at = @At( value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V", shift = At.Shift.AFTER ) )
+    public void onPostMotionUpdate( CallbackInfo info )
+    {
+        MotionUpdateEvent event = new MotionUpdateEvent( Minecraft.getMinecraft( ).player.rotationYaw, Minecraft.getMinecraft( ).player.rotationPitch,
+                Minecraft.getMinecraft( ).player.posX, Minecraft.getMinecraft( ).player.posY, Minecraft.getMinecraft( ).player.posZ, Minecraft.getMinecraft( ).player.onGround, Minecraft.getMinecraft( ).player.noClip, 1 );
         Main.EVENT_BUS.dispatch( event );
     }
 
