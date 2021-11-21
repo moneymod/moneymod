@@ -1,20 +1,20 @@
 package wtf.moneymod.client.mixin.mixins;
 
+import com.sun.java.swing.plaf.windows.WindowsTreeUI;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.module.misc.ChatTweaks;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 
+import java.awt.*;
 import java.util.List;
 
 @Mixin( value = GuiNewChat.class, priority = 9999)
@@ -38,9 +38,17 @@ public abstract class MixinGuiNewChat implements Globals {
         this.percentComplete = ( float ) MathUtil.INSTANCE.clamp( this.percentComplete, 0.0f, 1.0f );
     }
 
+    @Redirect(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V"))
+    public void drawChatHook1(int left, int top, int right, int bottom, int color) {
+        if (ChatTweaks.getInstance( ).isToggled() && ChatTweaks.getInstance( ).customRect){
+            Gui.drawRect(left, top, right, bottom, ChatTweaks.getInstance().rectColor.getColor().getRGB());
+        } else Gui.drawRect(left, top, right, bottom, color);
+
+    }
+
     @Inject( method = { "drawChat" }, at = { @At( value = "HEAD" ) }, cancellable = true )
     private void modifyChatRendering( CallbackInfo ci ) {
-        if ( ChatTweaks.getInstance( ).chatAnim ) {
+        if ( ChatTweaks.getInstance( ).chatAnim && ChatTweaks.getInstance( ).isToggled()) {
             if ( this.configuring ) {
                 ci.cancel( );
                 return;
@@ -56,7 +64,7 @@ public abstract class MixinGuiNewChat implements Globals {
 
     @Inject( method = { "drawChat" }, at = { @At( value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V", ordinal = 0, shift = At.Shift.AFTER ) } )
     private void translate( CallbackInfo ci ) {
-        if ( ChatTweaks.getInstance( ).chatAnim ) {
+        if ( ChatTweaks.getInstance( ).chatAnim && ChatTweaks.getInstance( ).isToggled() ) {
             float y = 1.0f;
             if ( !this.isScrolled ) {
                 y += ( 9.0f - 9.0f * this.animationPercent ) * this.getChatScale( );

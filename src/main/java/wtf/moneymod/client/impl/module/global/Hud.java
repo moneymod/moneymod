@@ -7,6 +7,7 @@ import wtf.moneymod.client.GitInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
+import wtf.moneymod.client.impl.command.impl.WatermarkCommand;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -75,7 +76,7 @@ public class Hud extends Module {
 
         if (watermark) {
             //FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
-            FontRender.drawStringWithShadow("moneymod b-" + GitInfo.GIT_SHA.substring( 0, 7 ), 1, 1,  getColor(1));
+            FontRender.drawStringWithShadow(WatermarkCommand.watermark + " b-" + GitInfo.GIT_SHA.substring( 0, 7 ), 1, 1,  getColor(1));
         }
         if (fps){
             String fps = "Fps " + Main.getMain().getFpsManagement().getFPS();
@@ -88,7 +89,7 @@ public class Hud extends Module {
             offsets -= FontRender.getFontHeight() + offset;
         }
         if (welcomer){
-            String text = "Welcome to Moneymod!";
+            String text = "Welcome to " + WatermarkCommand.watermark + "!";
             FontRender.drawStringWithShadow(text, (int)(sr.getScaledWidth() / 2f - FontRender.getStringWidth(text) / 2f),1, getColor(1));
         }
 

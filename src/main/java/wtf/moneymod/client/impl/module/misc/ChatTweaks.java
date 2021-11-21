@@ -8,6 +8,7 @@ import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.module.global.Global;
+import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorSPacketChat;
 import wtf.moneymod.client.mixin.mixins.ducks.ICPacketChatMessage;
 import wtf.moneymod.eventhandler.listener.Handler;
@@ -32,6 +33,8 @@ public class ChatTweaks extends Module {
     @Value(value = "Mode") public Mode mode = Mode.NORMAL;
     @Value(value = "Chat Animation") public boolean chatAnim = true;
     @Value(value = "Time") public boolean time = false;
+    @Value(value = "CustomRect") public boolean customRect = false;
+    @Value(value = "Rect Color" ) public JColor rectColor = new JColor(0, 0, 0, 50, false);
     @Handler
     public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if ( this.time && e.getPacket( ) instanceof SPacketChat) {
