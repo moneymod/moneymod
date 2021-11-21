@@ -48,20 +48,8 @@ public class KeybindList extends Module {
         GlStateManager.popMatrix();
     }
 
-    void drawStringFactor(String string, float x, float y, float factor, boolean shadow) {
-        if (shadow) {
-
-        } else {
-
-        }
-    }
-
 
     void drawScaled(String string, float x, float y, float factor, int color) {
-        //        FontRender.drawString(string, x - 1, y - 1, new Color(0, 0, 0, 255).getRGB());
-        //        FontRender.drawString(string, x - 1, y + 1, new Color(0, 0, 0, 255).getRGB());
-        //        FontRender.drawString(string, x + 1, y - 1, new Color(0, 0, 0, 255).getRGB());
-        //        FontRender.drawString(string, x + 1, y + 1, new Color(0, 0, 0, 255).getRGB());
         GL11.glPushMatrix();
         GL11.glScaled(factor, factor, factor);
         FontRender.drawStringWithShadow(string, x / factor, y / factor, color);
