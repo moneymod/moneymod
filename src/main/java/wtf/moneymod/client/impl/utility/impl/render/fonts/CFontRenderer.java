@@ -98,6 +98,8 @@ public class CFontRenderer extends CFont {
                 GlStateManager.color((float) (color >> 16 & 255) / 255.0F, (float) (color >> 8 & 255) / 255.0F, (float) (color & 255) / 255.0F, alpha);
                 int size = text.length();
                 GlStateManager.enableTexture2D();
+                GL11.glEnable(GL11.GL_LINE_SMOOTH);
+
                 GlStateManager.bindTexture(this.tex.getGlTextureId());
                 GL11.glBindTexture(3553, this.tex.getGlTextureId());
 
@@ -192,6 +194,7 @@ public class CFontRenderer extends CFont {
                     }
                 }
 
+                GL11.glDisable(GL11.GL_LINE_SMOOTH);
                 GL11.glHint(3155, 4352);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glPopMatrix();
