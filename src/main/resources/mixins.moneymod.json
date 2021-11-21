@@ -21,6 +21,7 @@
     "MixinGuiNewChat",
     "MixinEntityRenderer",
     "MixinRenderEnderCrystal",
-    "MixinEntityOtherPlayerMP"
+    "MixinEntityOtherPlayerMP",
+    "MixinNetHandlerPlayClient"
   ]
 }

@@ -55,6 +55,7 @@ public class EventHandler implements Globals {
     }
 
     @SubscribeEvent public void onDeath(LivingDeathEvent event) {
+        Main.EVENT_BUS.dispatch(new EntityDeathEvent(event.getSource(), event.getEntity()));
         if (event.getEntity().equals(mc.player)) {
             Main.getMain().getSessionManagement().addDeath();
             System.out.println(event.getEntityLiving());
@@ -120,9 +121,9 @@ public class EventHandler implements Globals {
     }
 
     @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
+        Main.getMain().getModuleManager().get(Module::isToggled).forEach(m -> m.onRender3D(event.getPartialTicks()));
         Main.getMain().getFpsManagement().update();
         Main.getMain().getPulseManagement().update();
-        Main.getMain().getModuleManager().get(Module::isToggled).forEach(m -> m.onRender3D(event.getPartialTicks()));
         for (Module m : Main.getMain().getModuleManager()) {
             for (Option<?> setting : Option.getContainersForObject(m)) {
                 if (setting.getValue() instanceof JColor) {

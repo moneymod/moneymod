@@ -113,7 +113,7 @@ public class AutoCrystal extends Module {
             int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1) ItemUtil.swapToHotbarSlot(crystal, false);
         }
-        offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
+//        offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
         if (currentTarget == null){
             renderPos = null;
