@@ -210,7 +210,7 @@ public class AutoCrystal extends Module {
                 return;
             }
         } else if (swap == Swap.NONE || swap == Swap.AUTO) {
-            if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
+            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL || mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) return;
         }
 
         if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
