@@ -99,9 +99,9 @@ public class AutoMine extends Module
             } ).collect( Collectors.toList( ) ) )
             {
                 BlockPos pos = new BlockPos( obj.getPositionVector( ) );
-                if( !rhn( pos ) ) continue;
+                if( !checkBlockPos( pos ) ) continue;
 
-                for( BlockPos pos2 : rhf( pos ) )
+                for( BlockPos pos2 : blockPosList( pos ) )
                 {
                     if( !( mc.world.getBlockState( pos2 ).getBlock( ) instanceof BlockObsidian ) ) continue;
                     if( !mc.world.getBlockState( pos2.add( 0, 1, 0 ) ).getMaterial( ).equals( Material.AIR ) ) continue;
@@ -120,7 +120,7 @@ public class AutoMine extends Module
                 if( switchbool && ItemUtil.findItem( Items.DIAMOND_PICKAXE.getClass( ) ) != -1 )
                     mc.player.inventory.currentItem = ItemUtil.findItem( Items.DIAMOND_PICKAXE.getClass( ) );
 
-                float[ ] rotation = rhm( blockpos2 );
+                float[ ] rotation = shitMethod2( blockpos2 );
                 event.rotationYaw = rotation[ 0 ];
                 event.rotationPitch = rotation[ 1 ];
 
@@ -135,7 +135,7 @@ public class AutoMine extends Module
                         }
                     }
 
-                    mc.playerController.onPlayerDamageBlock( blockpos2, rhb( blockpos2 ) );
+                    mc.playerController.onPlayerDamageBlock( blockpos2, getFacing( blockpos2 ) );
                     mc.player.swingArm( EnumHand.MAIN_HAND );
                     this.blockpos = blockpos2;
                 }
@@ -153,12 +153,14 @@ public class AutoMine extends Module
     }
 
     // AUTISM BELOW
-    public boolean rhd( Block block )
+    //rhd
+    public boolean checkValidBlock( Block block )
     {
         return block.equals( Blocks.OBSIDIAN ) || block.equals( Blocks.BEDROCK );
     }
 
-    public boolean rhn( BlockPos blockPos ) {
+    //rhn
+    public boolean checkBlockPos( BlockPos blockPos ) {
         Block block = mc.world.getBlockState(blockPos.add(0, -1, 0)).getBlock();
         Block block2 = mc.world.getBlockState(blockPos.add(0, 0, -1)).getBlock();
         Block block3 = mc.world.getBlockState(blockPos.add(1, 0, 0)).getBlock();
@@ -167,11 +169,11 @@ public class AutoMine extends Module
         if (mc.world.isAirBlock(blockPos)) {
             if (mc.world.isAirBlock(blockPos.add(0, 1, 0))) {
                 if (mc.world.isAirBlock(blockPos.add(0, 2, 0))) {
-                    if (rhd(block)) {
-                        if (rhd(block2)) {
-                            if (rhd(block3)) {
-                                if (rhd(block4)) {
-                                    if (rhd(block5)) {
+                    if (checkValidBlock(block)) {
+                        if (checkValidBlock(block2)) {
+                            if (checkValidBlock(block3)) {
+                                if (checkValidBlock(block4)) {
+                                    if (checkValidBlock(block5)) {
                                         return true;
                                     }
                                 }
@@ -184,7 +186,8 @@ public class AutoMine extends Module
         return false;
     }
 
-    public static List<BlockPos> rhf(BlockPos blockPos) {
+    //rhf
+    public static List<BlockPos> blockPosList(BlockPos blockPos) {
         ArrayList<BlockPos> arrayList = new ArrayList<BlockPos>();
         arrayList.add(blockPos.add(1, 0, 0));
         arrayList.add(blockPos.add(-1, 0, 0));
@@ -193,12 +196,14 @@ public class AutoMine extends Module
         return arrayList;
     }
 
-    public static Vec3d rhC() {
+    //rhC
+    public static Vec3d vec3dPosition() {
         return new Vec3d(mc.player.posX, mc.player.posY + (double)mc.player.getEyeHeight(), mc.player.posZ);
     }
 
-    public static float[] rhX(Vec3d vec3d) {
-        Vec3d vec3d2 = rhC();
+    //rhX
+    public static float[] shitMethod(Vec3d vec3d) {
+        Vec3d vec3d2 = vec3dPosition();
         Vec3d vec3d3 = vec3d;
         double d = vec3d3.x - vec3d2.x;
         double d2 = vec3d3.y - vec3d2.y;
@@ -214,8 +219,10 @@ public class AutoMine extends Module
         return fArray;
     }
 
-    public static float[] rhm(BlockPos blockPos) {
-        Vec3d vec3d = rhC();
+
+    //rhm
+    public static float[] shitMethod2(BlockPos blockPos) {
+        Vec3d vec3d = vec3dPosition();
         Vec3d vec3d2 = new Vec3d((Vec3i)blockPos).add(0.5, 0.5, 0.5);
         double d = vec3d.squareDistanceTo(vec3d2);
         EnumFacing[] enumFacingArray = EnumFacing.values();
@@ -224,13 +231,14 @@ public class AutoMine extends Module
         if (0 < n) {
             EnumFacing enumFacing = enumFacingArray[n2];
             Vec3d vec3d3 = vec3d2.add(new Vec3d(enumFacing.getDirectionVec()).scale(0.5));
-            return rhX(vec3d3);
+            return shitMethod(vec3d3);
         }
-        return rhX(vec3d2);
+        return shitMethod(vec3d2);
     }
 
-    public static EnumFacing rhb(BlockPos blockPos) {
-        Vec3d vec3d = rhC();
+    //rhb
+    public static EnumFacing getFacing(BlockPos blockPos) {
+        Vec3d vec3d = vec3dPosition();
         Vec3d vec3d2 = new Vec3d((Vec3i)blockPos).add(0.5, 0.5, 0.5);
         double d = vec3d.squareDistanceTo(vec3d2);
         EnumFacing[] enumFacingArray = EnumFacing.values();
