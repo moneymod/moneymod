@@ -39,7 +39,7 @@ public abstract class MixinGuiNewChat implements Globals {
     }
 
     @Redirect(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V"))
-    public void drawChatHook1(int left, int top, int right, int bottom, int color) {
+    public void drawRect(int left, int top, int right, int bottom, int color) {
         if (ChatTweaks.getInstance( ).isToggled() && ChatTweaks.getInstance( ).customRect){
             Gui.drawRect(left, top, right, bottom, ChatTweaks.getInstance().rectColor.getColor().getRGB());
         } else Gui.drawRect(left, top, right, bottom, color);
