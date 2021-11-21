@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.RenderNameTagEvent;
 import wtf.moneymod.client.impl.module.render.NameTags;
+import wtf.moneymod.client.impl.module.render.NoRender;
 import wtf.moneymod.client.mixin.accessors.IEntityRenderer;
 
 @Mixin( EntityRenderer.class )
@@ -24,6 +25,12 @@ public class MixinEntityRenderer implements IEntityRenderer {
         if (Main.getMain().getModuleManager().get(NameTags.class).isToggled() || event.isCancelled()) {
             callbackInfo.cancel();
         }
+    }
+
+    @Inject(method={"hurtCameraEffect"}, at={@At(value="HEAD")}, cancellable=true)
+    public void hurtCameraEffectHook(float ticks, CallbackInfo info) {
+        NoRender nr = (NoRender) Main.getMain().getModuleManager().get(NoRender.class);
+        if (nr.isToggled() && nr.noHurtcam) info.cancel();
     }
 
     @Override public void setupCamera(float partialTicks, int pass) {
