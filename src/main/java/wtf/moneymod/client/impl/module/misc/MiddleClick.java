@@ -18,31 +18,33 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 @Module.Register( label = "MiddleClick", cat = Module.Category.MISC)
 public class MiddleClick extends Module {
 
-    @Value(value = "Mode") public Mode mode = Mode.FRIEND;
+    @Value(value = "Friend") public boolean friend = false;
+    @Value(value = "SilentXp") public boolean silentXp = false;
+    @Value(value = "Pearl") public boolean pearl = false;
     @Value(value = "Silent") public boolean silent = true;
     boolean check = false;
 
     @Override public void onTick(){
         if (Mouse.isButtonDown(2)){
             if (!check) {
-                if (mode == Mode.FRIEND) {
+                if (friend) {
 
                     if (mc.objectMouseOver.entityHit instanceof EntityPlayer) {
                         String name = mc.objectMouseOver.entityHit.getName();
                         if (FriendManagement.getInstance().is(name)) {
-                            ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + name + " " + ChatFormatting.GREEN + "added");
+                            ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + name + " " + ChatFormatting.RED + "deleted");
                             FriendManagement.getInstance().remove(name);
                             check = true;
                             return;
                         } else {
                             FriendManagement.getInstance().add(name);
-                            ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + name + " " + ChatFormatting.RED + "deleted");
+                            ChatUtil.INSTANCE.sendMessage(ChatFormatting.GRAY + "friend " + ChatFormatting.WHITE + "> " + name + " " + ChatFormatting.GREEN + "added");
                             check = true;
                             return;
                         }
                     }
                 }
-                if (mode == Mode.PEARL){
+                if (pearl){
                     int old = mc.player.inventory.currentItem;
                     int pearl = ItemUtil.findItem(ItemEnderPearl.class);
                     if (pearl != -1){
@@ -52,7 +54,7 @@ public class MiddleClick extends Module {
                         check = true;
                     }
                 }
-                if (mode == Mode.XP){
+                if (silentXp){
                     int old = mc.player.inventory.currentItem;
                     int xp = ItemUtil.findItem(ItemExpBottle.class);
                     if (xp != -1){
