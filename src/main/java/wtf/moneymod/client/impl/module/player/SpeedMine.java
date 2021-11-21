@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.player;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.init.Blocks;
@@ -36,6 +37,7 @@ public class SpeedMine extends Module {
     @Value( value = "Render" ) public boolean render = true;
     @Value( value = "Silent" ) public boolean silent = true;
     @Value( value = "Instant Rebreak" ) public boolean instant = true;
+    @Value( "Strict Rebreak" ) public boolean strict = true;
     @Value( value = "Range" ) @Bounds( min = 4, max = 30 ) public int range = 16;
     @Value( value = "Packet Spam" ) @Bounds( min = 1, max = 10 ) public int spam = 1;
     public Color color = new Color(255, 0, 0, 75);
@@ -45,7 +47,7 @@ public class SpeedMine extends Module {
     private final Timer timer = new Timer();
     private long start;
     private int old, delay;
-    public boolean swap = false, checked;
+    public boolean swap = false, checked, strictCheck;
 
     @Override protected void onToggle() {
         old = -1;
@@ -57,7 +59,7 @@ public class SpeedMine extends Module {
         //this swap code is sooo trash
         if (swap) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
-            if (delay >= 2) {
+            if (delay >= 1) {
                 if (old != -1) {
                     ItemUtil.swapToHotbarSlot(old, false);
                 }
@@ -77,13 +79,26 @@ public class SpeedMine extends Module {
                         checked = true;
                         start = System.currentTimeMillis();
                         timer.reset();
+                        strictCheck = false;
                     }
                 } else {
+                    if(strict && !strictCheck) {
+                        Block block = mc.world.getBlockState(currentPos).getBlock();
+                        if(!(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL) || block.equals(Blocks.AIR))) {
+                            currentPos = null;
+                            timer.reset();
+                            strictCheck = true;
+                            return;
+                        }
+                    }
                     checked = false;
                 }
+
             }
 
             if (instant && mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && ( !swap || delay > 2 ) ) {
+                Block block = mc.world.getBlockState(currentPos).getBlock();
+                if(strict && !(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL))) return;
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -129,6 +144,7 @@ public class SpeedMine extends Module {
         mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, e.getBlockPos(), EnumFacing.DOWN));
         currentPos = e.getBlockPos();
         start = System.currentTimeMillis();
+        strictCheck = true;
         timer.reset();
         e.setCancelled(true);
     });
