@@ -2,8 +2,11 @@ package wtf.moneymod.client.api.management.impl;
 
 import net.minecraft.util.math.MathHelper;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.impl.module.global.Global;
 
 public class PulseManagement {
+
+    private Global mod = ( Global ) Main.getMain().getModuleManager().get(Global.class);
 
     public static int min = 110;
     public static int max = 255;
@@ -58,10 +61,12 @@ public class PulseManagement {
     }
 
     public int step(int from) {
+        double fps = Main.getMain().getFpsManagement().getFrametime();
+        if(fps < 0.006) fps = 0.006;
         int ret = ( int ) (
                 up
-                        ? (from + (max / 1.5D * Main.getMain().getFpsManagement().getFrametime()))
-                        : (from - (min / 1.5D * Main.getMain().getFpsManagement().getFrametime()))
+                        ? (from + (max / (double) mod.pulseSpeed * fps))
+                        : (from - (min / (double) mod.pulseSpeed * fps))
         );
 
         ret = clamp(ret);

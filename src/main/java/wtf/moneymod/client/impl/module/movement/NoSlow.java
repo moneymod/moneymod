@@ -22,6 +22,7 @@ import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @Module.Register( label = "NoSlow", desc = "Removes movement slow down", cat = Module.Category.MOVEMENT )
 public class NoSlow extends Module {
@@ -137,6 +138,18 @@ public class NoSlow extends Module {
             mc.player.movementInput.moveStrafe /= 0.2f;
         }
     } );
+
+
+    @Handler Listener<InputUpdateEvent> eventListener = new Listener<>(InputUpdateEvent.class, event -> {
+        if(nullCheck())return;
+        if(items && mc.player.isHandActive()) {
+            if(strict) {
+                PacketManagement.getInstance().add(new CPacketHeldItemChange(mc.player.inventory.currentItem));
+            }
+            event.getMovementInput().moveForward *= 5;
+            event.getMovementInput().moveStrafe *= 5;
+        }
+    });
 
     @Handler
     public Listener< PacketEvent.Send > onSendPacket = new Listener< >( PacketEvent.Send.class, event ->
