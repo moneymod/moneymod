@@ -35,7 +35,7 @@ public class MixinItemRenderer implements Globals {
 
     @Inject(method={"renderSuffocationOverlay"}, at={@At(value="HEAD")}, cancellable=true)
     public void renderSuffocationOverlay(CallbackInfo ci) {
-        NoRender nr = (NoRender) Main.getMain().getModuleManager().get(CustomModel.class);
+        NoRender nr = (NoRender) Main.getMain().getModuleManager().get(NoRender.class);
 
         if (nr.isToggled() && nr.noBlocks) {
             ci.cancel();
