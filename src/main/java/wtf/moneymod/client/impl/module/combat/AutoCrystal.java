@@ -55,6 +55,7 @@ public class AutoCrystal extends Module {
     @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
     @Value( value = "TickExisted" ) @Bounds( max = 20 ) public int tickexisted = 3;
     @Value( value = "Predict" ) public boolean boost = true;
+    @Value( value = "Test" ) public boolean test = true;
     @Value( value = "Rotate" ) public boolean rotateons = true;
     @Value( value = "Second" ) public boolean secondCheck = true;
     @Value( value = "AutoObbyPlace" ) public boolean autoPlace = true;
@@ -113,7 +114,7 @@ public class AutoCrystal extends Module {
             int crystal = ItemUtil.findItem(ItemEndCrystal.class);
             if (crystal != -1) ItemUtil.swapToHotbarSlot(crystal, false);
         }
-//        offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
+        offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
         if (currentTarget == null){
             renderPos = null;
@@ -209,8 +210,12 @@ public class AutoCrystal extends Module {
             if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
                 return;
             }
-        } else if (swap == Swap.NONE || swap == Swap.AUTO) {
-            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL || mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) return;
+        }
+        if (swap == Swap.NONE) {
+            if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
+        }
+        if (swap == Swap.AUTO){
+            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
         if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
@@ -272,12 +277,15 @@ public class AutoCrystal extends Module {
         SPacketSoundEffect packet;
         if (e.getPacket() instanceof SPacketSpawnObject && boost) {
             final SPacketSpawnObject packet2 = e.getPacket();
+            EnumHand hand = null;
             if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed(20)) {
+                if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
                 AccessorCPacketUseEntity hitPacket = ( AccessorCPacketUseEntity ) new CPacketUseEntity();
                 int entityId = packet2.getEntityID();
                 hitPacket.setEntityId(entityId);
                 hitPacket.setAction(CPacketUseEntity.Action.ATTACK);
                 mc.getConnection().sendPacket(( CPacketUseEntity ) hitPacket);
+                doHandActive(hand);
                 setSwing();
                 predictTimer.reset();
             }

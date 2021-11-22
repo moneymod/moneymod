@@ -45,23 +45,17 @@ public class BurrowBypass extends Module {
         if (nullCheck()) return;
 
         delay++;
-        BlockUtil.INSTANCE.placeBlock(startPos);
         Main.TICK_TIMER = timer;
+        if (delay >= ticks / 2){
+            BlockUtil.INSTANCE.placeBlock(startPos);
+        }
         if (delay >= ticks){
             Main.TICK_TIMER = 1;
             delay = 0;
             setToggled(false);
         }
         if (mc.player.onGround){
-            switch (jumpMode){
-                case NORMAL:
-                    mc.player.motionY = 0.4;
-                    break;
-                case MODIFY:
-                    mc.player.motionY = 0.46;
-                    mc.player.motionY = -0.05;
-                    break;
-            }
+            mc.player.jump();
         }
     }
 }

@@ -23,4 +23,22 @@ public class MixinItemRenderer implements Globals {
             GlStateManager.scale(view.scaleX,view.scaleX,view.scaleX);
         }
     }
+
+    @Inject(method={"renderFireInFirstPerson"}, at={@At(value="HEAD")}, cancellable=true)
+    public void renderFireInFirstPersonHook(CallbackInfo info) {
+        NoRender nr = (NoRender) Main.getMain().getModuleManager().get(NoRender.class);
+
+        if (nr.isToggled() && nr.noFire) {
+            info.cancel();
+        }
+    }
+
+    @Inject(method={"renderSuffocationOverlay"}, at={@At(value="HEAD")}, cancellable=true)
+    public void renderSuffocationOverlay(CallbackInfo ci) {
+        NoRender nr = (NoRender) Main.getMain().getModuleManager().get(CustomModel.class);
+
+        if (nr.isToggled() && nr.noBlocks) {
+            ci.cancel();
+        }
+    }
 }

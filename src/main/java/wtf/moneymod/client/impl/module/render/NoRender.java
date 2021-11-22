@@ -14,5 +14,9 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 public class NoRender extends Module {
 
     @Value("NoHurtCam") public boolean noHurtcam = false;
+    @Value("NoFire") public boolean noFire = false;
+    @Value("NoBlocks") public boolean noBlocks = false;
+    @Value("NoTotemPops") public boolean noTotemPops = false;
+
 
 }

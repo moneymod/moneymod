@@ -11,8 +11,8 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-@Module.Register( label = "GlideFly", cat = Module.Category.MOVEMENT)
-public class Fly extends Module {
+@Module.Register( label = "GlideWalk", cat = Module.Category.MOVEMENT)
+public class GlideWalk extends Module {
 
     @Value(value = "Speed") @Bounds(max = 8) public float speed = 1;
 
