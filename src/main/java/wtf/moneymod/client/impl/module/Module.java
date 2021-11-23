@@ -22,7 +22,7 @@ public class Module implements Globals {
 
     private final String label, desc;
     private final Category category;
-    private boolean toggled;
+    private boolean toggled, hold = false;
     private final boolean configException;
     private int key;
     public boolean drawn;
@@ -59,6 +59,14 @@ public class Module implements Globals {
 
     public boolean isToggled() {
         return toggled;
+    }
+
+    public boolean isHold() {
+        return hold;
+    }
+
+    public void setHold(boolean hold) {
+        this.hold = hold;
     }
 
     protected void onEnable() {}

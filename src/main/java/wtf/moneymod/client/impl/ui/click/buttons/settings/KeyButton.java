@@ -37,8 +37,12 @@ public class KeyButton extends Component {
     }
 
     @Override public void mouseClicked( final double mouseX, final double mouseY, final int button ) {
-        if ( isHovered( mouseX, mouseY ) && button == 0 && this.button.open ) {
-            binding = !binding;
+        if ( isHovered( mouseX, mouseY ) && this.button.open ) {
+            if(button == 0) {
+                binding = !binding;
+            } if(button == 1) {
+                this.button.module.setHold(!this.button.module.isHold());
+            }
         }
     }
 

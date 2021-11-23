@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ConfigManager extends Thread implements Globals {
+public final class ConfigManager extends Thread implements Globals {
 
     private static final ConfigManager CONFIG_MANAGER;
 
@@ -54,6 +54,9 @@ public class ConfigManager extends Thread implements Globals {
             }
             if (jsonObject.get("Drawn") != null) {
                 m.drawn = jsonObject.get("Drawn").getAsBoolean();
+            }
+            if(jsonObject.get("Hold") != null) {
+                m.setHold(jsonObject.get("Hold").getAsBoolean());
             }
             Option.getContainersForObject(m).forEach(s -> {
                 JsonElement settingObject = jsonObject.get(s.getName());
@@ -181,6 +184,7 @@ public class ConfigManager extends Thread implements Globals {
             jsonObject.add("Enabled", new JsonPrimitive(m.isToggled()));
             jsonObject.add("KeyBind", new JsonPrimitive(m.getKey()));
             jsonObject.add("Drawn", new JsonPrimitive(m.drawn));
+            jsonObject.add("Hold", new JsonPrimitive(m.isHold()));
             Option.getContainersForObject(m).forEach(s -> {
                 if (s.getValue().getClass().isEnum()) {
                     jsonObject.add(s.getName(), new JsonPrimitive(SettingUtils.INSTANCE.getProperName(( Enum ) s.getValue())));

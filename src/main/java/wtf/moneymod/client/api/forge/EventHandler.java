@@ -45,7 +45,7 @@ public class EventHandler implements Globals {
     }
 
     @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
-        Main.getMain().getModuleManager().get(module -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == module.getKey()).forEach(Module::toggle);
+        Main.getMain().getModuleManager().get(module -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == module.getKey() && !module.isHold()).forEach(Module::toggle);
     }
 
     @SubscribeEvent public void onTick(TickEvent.ClientTickEvent event) {
@@ -124,6 +124,15 @@ public class EventHandler implements Globals {
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(m -> m.onRender3D(event.getPartialTicks()));
         Main.getMain().getFpsManagement().update();
         Main.getMain().getPulseManagement().update();
+        Main.getMain().getModuleManager().forEach(m -> {
+            if(m.isHold()) {
+                if(Keyboard.isKeyDown(m.getKey()) && !m.isToggled()) {
+                    m.setToggled(true);
+                } else if(!Keyboard.isKeyDown(m.getKey()) && m.isToggled()) {
+                    m.setToggled(false);
+                }
+            }
+        });
         for (Module m : Main.getMain().getModuleManager()) {
             for (Option<?> setting : Option.getContainersForObject(m)) {
                 if (setting.getValue() instanceof JColor) {

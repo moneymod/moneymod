@@ -69,7 +69,11 @@ public class WurstTheme extends AbstractTheme {
 
     @Override public void drawKeyButton(KeyButton button, int x, int y, int w, int h, boolean hovered) {
         drawRect(x, y, x + w, y + h, new Color(255, 111, 0, 199).getRGB());
-        FontRender.drawStringWithShadow("Key", x + 5, y + 2, -1);
+        if(hovered) {
+            FontRender.drawStringWithShadow(button.button.module.isHold() ? "Hold" : "Toggle", x + 5, y + 2, -1);
+        } else {
+            FontRender.drawStringWithShadow("Key", x + 5, y + 2, -1);
+        }
         if (button.isBinding()) {
             FontRender.drawStringWithShadow("...", x + w - 5 - mc.fontRenderer.getStringWidth("..."), y + ((( ClickGui ) Main.getMain().getModuleManager().get(ClickGui.class)).bounding ? (hovered ? 1 : 2) : 2), -1);
         } else {
