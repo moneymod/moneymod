@@ -59,7 +59,7 @@ public class SpeedMine extends Module {
         //this swap code is sooo trash
         if (swap) {
             mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
-            if (delay >= 1) {
+            if (delay >= 2) {
                 if (old != -1) {
                     ItemUtil.swapToHotbarSlot(old, false);
                 }
@@ -82,9 +82,9 @@ public class SpeedMine extends Module {
                         strictCheck = false;
                     }
                 } else {
-                    if(strict && !strictCheck) {
+                    if (strict && !strictCheck) {
                         Block block = mc.world.getBlockState(currentPos).getBlock();
-                        if(!(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL) || block.equals(Blocks.AIR))) {
+                        if (!(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL) || block.equals(Blocks.AIR))) {
                             currentPos = null;
                             timer.reset();
                             strictCheck = true;
@@ -96,9 +96,9 @@ public class SpeedMine extends Module {
 
             }
 
-            if (instant && mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && ( !swap || delay > 2 ) ) {
+            if (instant && mc.player.inventory.currentItem == ToolUtil.INSTANCE.bestSlot(currentPos) && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR && (!swap || delay > 2)) {
                 Block block = mc.world.getBlockState(currentPos).getBlock();
-                if(strict && !(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL))) return;
+                if (strict && !(block.equals(Blocks.ENDER_CHEST) || block.equals(Blocks.ANVIL))) return;
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -124,14 +124,22 @@ public class SpeedMine extends Module {
 
         if (currentPos != null) {
 
-            if (e.getBlockPos().toLong() == currentPos.toLong() && !swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
-                ItemUtil.swapToHotbarSlot(ToolUtil.INSTANCE.bestSlot(currentPos), silent);
-                swap = true;
+            if (e.getBlockPos().toLong() == currentPos.toLong() && !swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.bestSlot(currentPos)), start) <= 0.1 && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
+                ItemUtil.swapToHotbarSlot(ToolUtil.bestSlot(currentPos), false);
+                if (silent) {
+                    mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
+                    if (!instant) currentPos = null;
+                    ItemUtil.swapToHotbarSlot(old, false);
+                } else {
+                    swap = true;
+                }
                 e.cancel();
                 return;
             }
 
-            if(e.getBlockPos().toLong() != currentPos.toLong()) {
+            if (e.getBlockPos().toLong() != currentPos.toLong()) {
+                System.out.println("L");
+                mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
                 mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
             }
 
@@ -150,10 +158,10 @@ public class SpeedMine extends Module {
     });
 
     @Override public void onRender3D(float partialTicks) {
-        if (currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid)
+        if (nullCheck() || currentPos == null || !render || mc.world.getBlockState(currentPos).getBlock() == Blocks.AIR || mc.world.getBlockState(currentPos).getBlock() instanceof BlockLiquid)
             return;
         AxisAlignedBB bb = mc.world.getBlockState(currentPos).getSelectedBoundingBox(mc.world, currentPos);
-        float progress = getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.INSTANCE.bestSlot(currentPos)), start);
+        float progress = getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.bestSlot(currentPos)), start);
         if (progress <= 0.1) {
             Renderer3D.drawBoxESP(bb, readyColor, 1f, true, true, readyColor.getAlpha(), 255);
         } else {

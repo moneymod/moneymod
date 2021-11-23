@@ -6,6 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -39,27 +40,24 @@ public enum ToolUtil implements Globals {
         return toolLevel >= block.getHarvestLevel(state);
     }
 
-    public int bestSlot(BlockPos pos) {
-        int best = 0;
-        double max = 0;
-
-        for (int i = 0; i < 9; ++i) {
+    public static int bestSlot(BlockPos pos) {
+        IBlockState state = mc.world.getBlockState(pos);
+        int bestSlot = 0;
+        double bestSpeed = 0;
+        for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
-            if (!stack.isEmpty()) {
-                float speed = stack.getDestroySpeed(mc.world.getBlockState(pos));
-                if (speed > 1.0f) {
-                    int eff;
-                    speed += ( float ) (((eff = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack)) > 0) ? (Math.pow(eff, 2.0) + 1.0) : 0.0);
-                    if (speed > max) {
-                        max = speed;
-                        best = i;
-                    }
+            if (stack.isEmpty() || stack.getItem() == Items.AIR) continue;
+            float speed = stack.getDestroySpeed(state);
+            int eff;
+            if (speed > 0) {
+                speed += ((eff = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack)) > 0 ? (Math.pow(eff, 2) + 1) : 0);
+                if (speed > bestSpeed) {
+                    bestSpeed = speed;
+                    bestSlot = i;
                 }
             }
         }
-
-        return best;
-
+        return bestSlot;
     }
 
     public long time(BlockPos pos) {
@@ -76,11 +74,11 @@ public enum ToolUtil implements Globals {
 
         float toolMultiplier = stack.getDestroySpeed(state);
 
-        if (!canHarvestBlock(block, pos, stack) && block != Blocks.ENDER_CHEST)
-            toolMultiplier = 1.0f;
-        else if (EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack) != 0) {
+//        if (!canHarvestBlock(block, pos, stack) && block != Blocks.ENDER_CHEST)
+//            toolMultiplier = 1.0f;
+//        else if (EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack) != 0) {
             toolMultiplier += Math.pow(EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack), 2) + 1;
-        }
+//        }
 
         if (mc.player.isPotionActive(MobEffects.HASTE)) {
             toolMultiplier *= 1.0F + ( float ) (mc.player.getActivePotionEffect(MobEffects.HASTE).getAmplifier() + 1) * 0.2F;
@@ -116,9 +114,6 @@ public enum ToolUtil implements Globals {
             dmg /= 30;
         else
             dmg /= 100;
-
-        if (dmg > 1)
-            dmg = 0;
 
         float ticks = ( float ) (Math.floor(1.0f / dmg) + 1.0f);
 
