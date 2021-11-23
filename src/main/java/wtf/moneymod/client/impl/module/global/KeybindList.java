@@ -27,7 +27,6 @@ public class KeybindList extends Module {
         List<Module> binds = Main.getMain().getModuleManager().get(m -> m.isToggled() && m.getKey() != 0 && m.drawn);
         if (binds.isEmpty()) return;
         GlStateManager.pushMatrix();
-        GlStateManager.disableDepth();
         Renderer2D.drawRect(x, y, x + 100, y + 2 + FontRender.getFontHeight() + (binds.size() * (FontRender.getFontHeight() + offset) * 0.75f), new Color(0, 0, 0, 15).getRGB());
         Renderer2D.drawRect(x, y, x + 100, y + 1.5f, color.getColor().getRGB());
 
@@ -42,6 +41,7 @@ public class KeybindList extends Module {
             drawScaled(key, ( int ) ((x + 100 - (FontRender.getStringWidth(key) * 0.75))), ( int ) (y), 0.75f, -1);
             y += FontRender.getFontHeight() * 0.75 + offset;
         }
+        GL11.glDepthRange(0, 1);
 
         GlStateManager.enableBlend();
         GlStateManager.popMatrix();
