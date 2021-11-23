@@ -25,7 +25,6 @@ public abstract class MixinGuiNewChat implements Globals {
     private float percentComplete;
     private int newLines;
     private long prevMillis = System.currentTimeMillis( );
-    private boolean configuring;
     private float animationPercent;
     private int lineBeingDrawn;
 
@@ -49,10 +48,6 @@ public abstract class MixinGuiNewChat implements Globals {
     @Inject( method = { "drawChat" }, at = { @At( value = "HEAD" ) }, cancellable = true )
     private void modifyChatRendering( CallbackInfo ci ) {
         if ( ChatTweaks.getInstance( ).chatAnim && ChatTweaks.getInstance( ).isToggled()) {
-            if ( this.configuring ) {
-                ci.cancel( );
-                return;
-            }
             long current = System.currentTimeMillis( );
             long diff = current - this.prevMillis;
             this.prevMillis = current;
