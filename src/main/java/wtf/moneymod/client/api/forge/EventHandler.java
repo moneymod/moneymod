@@ -149,9 +149,9 @@ public class EventHandler implements Globals {
     @SubscribeEvent
     public void sky(EntityViewRenderEvent.FogColors event){
         CustomFog cfog = (CustomFog) Main.getMain().getModuleManager().get(CustomFog.class);
-        float red = cfog.color.getColor().getRed() / 255;
-        float green = cfog.color.getColor().getGreen() / 255;
-        float blue = cfog.color.getColor().getBlue() / 255;
+        float red = cfog.color.getColor().getRed() / 255f;
+        float green = cfog.color.getColor().getGreen() / 255f;
+        float blue = cfog.color.getColor().getBlue() / 255f;
         if (cfog.isToggled()){
             event.setRed(red);
             event.setGreen(green);
