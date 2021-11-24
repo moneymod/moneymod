@@ -6,6 +6,7 @@ import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.*;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.irc.IrcScreen;
+import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.CFontRenderer;
 import wtf.moneymod.client.impl.utility.impl.cape.CapeThread;
 import wtf.moneymod.eventhandler.EventBus;
@@ -81,6 +82,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
         Display.setTitle(String.format("moneymod build-%s", GitInfo.GIT_SHA.substring(0,7)));
     }
+
 
     public static Main getMain() {
         if (main == null) main = new Main();
