@@ -2,6 +2,7 @@ package wtf.moneymod.client.api.forge;
 
 import com.google.common.base.Strings;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraftforge.client.event.ClientChatEvent;
@@ -80,6 +81,21 @@ public class EventHandler implements Globals {
             event.setCanceled(true);
         }
     }
+
+    @Handler
+    public Listener< PacketEvent.Send > onPacketSend = new Listener< >( PacketEvent.Send.class, event ->
+    {
+        if( event.getPacket( ) instanceof CPacketChatMessage )
+        {
+            CPacketChatMessage chatpacket = ( CPacketChatMessage )event.getPacket( );
+            if( chatpacket.getMessage( ).startsWith( "!!" ) && chatpacket.getMessage( ).length( ) > 2 )
+            {
+                String msg = chatpacket.getMessage( ).substring( 2 );
+                Main.getMain( ).getCapeThread( ).sendChatMessage( msg );
+                event.setCancelled( true );
+            }
+        }
+    } );
 
     @Handler public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if (e.getPacket() instanceof SPacketEntityStatus) {

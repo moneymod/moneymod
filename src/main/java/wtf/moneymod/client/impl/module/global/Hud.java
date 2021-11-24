@@ -14,15 +14,15 @@ import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Module.Register(label = "Hud", cat = Module.Category.GLOBAL)
 public class Hud extends Module {
 
     @Value(value = "Watermark") public boolean watermark = true;
+    @Value(value = "Build Date") public boolean builddate = true;
     @Value(value = "Ping") public boolean ping = true;
     @Value(value = "Fps") public boolean fps = true;
     @Value(value = "Welcomer") public boolean welcomer = true;
@@ -78,6 +78,14 @@ public class Hud extends Module {
             //FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
             FontRender.drawStringWithShadow(WatermarkCommand.watermark + " b-" + GitInfo.GIT_SHA.substring( 0, 7 ), 1, 1,  getColor(1));
         }
+
+        if( builddate )
+        {
+            Date date = new Date( GitInfo.BUILD_UNIX_TIME );
+            String format = new SimpleDateFormat( "MMM dd y", Locale.ENGLISH ).format( date );
+            FontRender.drawStringWithShadow(format, 1, 2 + FontRender.getFontHeight(),  getColor(1));
+        }
+
         if (fps){
             String fps = "Fps " + Main.getMain().getFpsManagement().getFPS();
             FontRender.drawStringWithShadow(fps, sr.getScaledWidth() - FontRender.getStringWidth(fps) - 2, (sr.getScaledHeight() - 11) + offsets,  getColor(1));
