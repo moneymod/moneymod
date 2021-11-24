@@ -13,9 +13,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.CameraClipEvent;
 import wtf.moneymod.client.api.events.RenderNameTagEvent;
 import wtf.moneymod.client.impl.module.render.NameTags;
 import wtf.moneymod.client.impl.module.render.NoRender;
@@ -45,4 +47,19 @@ public class MixinEntityRenderer implements IEntityRenderer, Globals {
         setupCameraTransform(partialTicks, pass);
     }
 
+    @ModifyVariable( method = "orientCamera", at = @At( "STORE" ), ordinal = 3 )
+    private double orientCameraX( double distance )
+    {
+        CameraClipEvent event = new CameraClipEvent( distance );
+        Main.EVENT_BUS.dispatch( event );
+        return event.distance;
+    }
+
+    @ModifyVariable( method = "orientCamera", at = @At( "STORE" ), ordinal = 7 )
+    private double orientCameraZ( double distance )
+    {
+        CameraClipEvent event = new CameraClipEvent( distance );
+        Main.EVENT_BUS.dispatch( event );
+        return event.distance;
+    }
 }
