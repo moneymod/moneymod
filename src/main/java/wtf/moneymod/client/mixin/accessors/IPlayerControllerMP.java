@@ -4,4 +4,6 @@ public interface IPlayerControllerMP {
 
     void setBlockHitDelay(int delay);
 
+    void setIsHittingBlock(boolean isHittingBlock);
+
 }

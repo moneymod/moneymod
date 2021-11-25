@@ -25,6 +25,7 @@ import wtf.moneymod.client.mixin.accessors.IPlayerControllerMP;
 public class MixinPlayerControllerMP implements IPlayerControllerMP, Globals {
 
     @Shadow private int blockHitDelay;
+    @Shadow private boolean isHittingBlock;
 
     @Inject(method = "clickBlock", at = @At("HEAD"), cancellable = true)
     private void clickBlock(BlockPos posBlock, EnumFacing directionFacing, CallbackInfoReturnable<Boolean> cir) {
@@ -38,6 +39,10 @@ public class MixinPlayerControllerMP implements IPlayerControllerMP, Globals {
 
     @Override public void setBlockHitDelay(int delay) {
         this.blockHitDelay = delay;
+    }
+
+    @Override public void setIsHittingBlock(boolean isHittingBlock) {
+        this.isHittingBlock = isHittingBlock;
     }
 
 }

@@ -10,7 +10,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorKeyBinding;
 
-@Module.Register( label = "BurrowBypass", cat = Module.Category.COMBAT )
+@Module.Register( label = "SelfFillBypass", cat = Module.Category.COMBAT )
 public class BurrowBypass extends Module {
 
     /**

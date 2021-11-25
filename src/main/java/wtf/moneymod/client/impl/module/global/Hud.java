@@ -40,14 +40,14 @@ public class Hud extends Module {
         if (coords){
             //SHIT CODE
             String position = "null";
-            int x = (int) mc.player.posX; int y = (int) mc.player.posY; int z = (int) mc.player.posZ;
+            double x = mc.player.posX, y = mc.player.posY, z = mc.player.posZ;
             /** Which dimension the player is in (-1 = the Nether, 0 = normal world) */
             if (mc.player.dimension == -1) {
-                position = String.format("%s, %s, %s : [%s,%s]", x, y, z, x * 8, z * 8);
+                position = String.format("%.2f, %.2f, %.2f [%.2f, %.2f]", x, y, z, x * 8, z * 8);
             } else if (mc.player.dimension == 0) {
-                position = String.format("%s, %s, %s : [%s,%s]", x, y, z, x / 8, z / 8);
+                position = String.format("%.2f, %.2f, %.2f [%.2f, %.2f]", x, y, z, x / 8, z / 8);
             } else {
-                position = String.format("%s, %s, %s", x, y, z);
+                position = String.format("%.2f, %.2f, %.2f", x, y, z);
             }
 
             FontRender.drawStringWithShadow(position,1,  (mc.ingameGUI.getChatGUI().getChatOpen() ? sr.getScaledHeight() - 23 : sr.getScaledHeight() - 11) + ofs,  getColor(1));

@@ -55,7 +55,7 @@ public class KeybindList extends Module {
             } else {
                 nigger = ( float ) MathUtil.INSTANCE.clamp( 1.0 - ( t -= 1.0f ) * t * t * t, 0.0f, 1.0f );
             }
-            drawScaled(bind.module.getLabel(), x - (5 - 5 * nigger), ( int ) (y), 0.75f, -1);
+            drawScaled(bind.module.getLabel(), x - (5 - 5 * nigger) + 1, ( int ) (y), 0.75f, -1);
             String key = "[" + Keyboard.getKeyName(bind.module.getKey()) + "]";
 
             drawScaled(key, ( int ) ((x + 100 - (FontRender.getStringWidth(key) * 0.75)) - (5 - 5 * nigger)), ( int ) (y), 0.75f, -1);
@@ -79,13 +79,11 @@ public class KeybindList extends Module {
     private class Bind {
 
         Module module;
-        int state; //-1 up, 1 down
         float percent;
 
         public Bind(Module module) {
             this.module = module;
             this.percent = 0;
-            this.state = 0;
         }
 
         void update() {

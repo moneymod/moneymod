@@ -142,9 +142,9 @@ public class EventHandler implements Globals {
         Main.getMain().getPulseManagement().update();
         Main.getMain().getModuleManager().forEach(m -> {
             if(m.isHold()) {
-                if(Keyboard.isKeyDown(m.getKey()) && !m.isToggled()) {
+                if(Keyboard.isKeyDown(m.getKey()) && !m.isToggled() && mc.currentScreen == null) {
                     m.setToggled(true);
-                } else if(!Keyboard.isKeyDown(m.getKey()) && m.isToggled()) {
+                } else if(!Keyboard.isKeyDown(m.getKey()) && m.isToggled() && mc.currentScreen == null) {
                     m.setToggled(false);
                 }
             }
@@ -162,8 +162,7 @@ public class EventHandler implements Globals {
         }
     }
 
-    @SubscribeEvent
-    public void sky(EntityViewRenderEvent.FogColors event){
+    @SubscribeEvent public void sky(EntityViewRenderEvent.FogColors event){
         CustomFog cfog = (CustomFog) Main.getMain().getModuleManager().get(CustomFog.class);
         float red = cfog.color.getColor().getRed() / 255f;
         float green = cfog.color.getColor().getGreen() / 255f;
