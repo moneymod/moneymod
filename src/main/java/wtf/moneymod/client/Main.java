@@ -4,7 +4,9 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.*;
+import wtf.moneymod.client.impl.module.global.Hud;
 import wtf.moneymod.client.impl.ui.click.Screen;
+import wtf.moneymod.client.impl.ui.hud.HudEditorScreen;
 import wtf.moneymod.client.impl.ui.irc.IrcScreen;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.CFontRenderer;
@@ -32,6 +34,7 @@ public class Main {
 
     //objects
     private Screen screen;
+    private HudEditorScreen hudEditorScreen;
 
     //management
     private PulseManagement pulseManagement;
@@ -73,6 +76,7 @@ public class Main {
         ConfigManager.getInstance().load();
         sessionManagement.reset();
         screen = new Screen();
+        hudEditorScreen = new HudEditorScreen( );
         pulseManagement = new PulseManagement();
         EventHandler handler = new EventHandler();
         if( !isLoaderPresent( ) ) // loader handles events
@@ -134,4 +138,6 @@ public class Main {
     public HoleManagement getHoleManagement() {
         return holeManagement;
     }
+
+    public HudEditorScreen getHudEditorScreen( ) { return hudEditorScreen; }
 }
