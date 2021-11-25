@@ -23,6 +23,7 @@ import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -78,6 +79,16 @@ public class AutoCrystal extends Module {
     private final Timer breakTimer = new Timer();
     private final Timer placeTimer = new Timer();
     private final Timer predictTimer = new Timer();
+
+    private static AutoCrystal INSTANCE;
+
+    public AutoCrystal() {
+        INSTANCE = this;
+    }
+
+    public static AutoCrystal getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public void onToggle() {

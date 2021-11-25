@@ -21,9 +21,8 @@ public class AntiVoid extends Module {
         if (mc.player.posY <= 0){
             if (mode == Mode.GLIDE){
                 mc.player.motionY = -0.001;
-            } else {
-                mc.player.jump();
-            }
+            } else mc.player.jump();
+
         }
     }
 }
