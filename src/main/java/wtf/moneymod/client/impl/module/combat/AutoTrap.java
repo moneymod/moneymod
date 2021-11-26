@@ -2,6 +2,7 @@ package wtf.moneymod.client.impl.module.combat;
 
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import wtf.moneymod.client.api.events.DisconnectEvent;
@@ -37,7 +38,7 @@ public class AutoTrap extends Module {
     @Value( value = "Disable" ) public boolean disable = false;
     @Value( value = "Anti Step" ) public boolean antiStep = true;
     @Value( value = "Render" ) public boolean render = true;
-
+    @Value( value = "Move Check" ) public boolean moveCheck = true;
     final Timer timer = new Timer( );
     boolean didPlace, rotating;
     int placed;
@@ -67,7 +68,7 @@ public class AutoTrap extends Module {
     @Override public void onTick ( ) {
         if ( nullCheck( ) ) return;
         target = EntityUtil.getTarget( range );
-
+        if (EntityUtil.INSTANCE.isMoving((EntityLivingBase)target) && moveCheck) return;
         /* CODED BY PIGHAX  23.10.21-22:30*/
 
         if (disableRange >= 1 && target != null && !disable) {

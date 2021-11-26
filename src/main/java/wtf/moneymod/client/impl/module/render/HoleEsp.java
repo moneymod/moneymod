@@ -16,6 +16,7 @@ import java.awt.*;
 public class HoleEsp extends Module {
 
     @Value(value = "Box") public boolean box = true;
+    @Value(value = "Outline") public boolean outline = true;
     @Value(value = "Height") @Bounds(max = 1) public double height = 1;
     @Value(value = "Line Widht") @Bounds(max = 1) public double widht = 1;
 
@@ -26,9 +27,9 @@ public class HoleEsp extends Module {
     @Override public void onRender3D(float partialTicks) {
         Main.getMain().getHoleManagement().forEach(hole -> {
             if(hole.getType().equals(HoleManagement.HoleType.BEDROCK)) {
-                Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), (float) widht, (widht > 0.1 ? true : false), box, bedrockColor.getColor().getAlpha(), bedrockColor.getColor().getAlpha(), (float) height);
+                Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), (float) widht, outline, box, bedrockColor.getColor().getAlpha(), bedrockColor.getColor().getAlpha(), (float) height);
             } else {
-                Renderer3D.drawBoxESP(hole.getBlockPos(), obsidianColor.getColor(), (float) widht, (widht > 0.1 ? true : false), box, obsidianColor.getColor().getAlpha(), obsidianColor.getColor().getAlpha(), (float) height);
+                Renderer3D.drawBoxESP(hole.getBlockPos(), obsidianColor.getColor(), (float) widht, outline, box, obsidianColor.getColor().getAlpha(), obsidianColor.getColor().getAlpha(), (float) height);
             }
         });
     }

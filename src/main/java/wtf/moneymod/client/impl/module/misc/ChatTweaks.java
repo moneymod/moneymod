@@ -16,7 +16,7 @@ import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.Date;
 
-@Module.Register( label = "ChatTweaks", cat = Module.Category.MISC, exception = true )
+@Module.Register( label = "ChatTweaks", cat = Module.Category.MISC)
 public class ChatTweaks extends Module {
 
     private static ChatTweaks INSTANCE;
@@ -35,6 +35,7 @@ public class ChatTweaks extends Module {
     @Value(value = "Time") public boolean time = false;
     @Value(value = "CustomRect") public boolean customRect = false;
     @Value(value = "Rect Color" ) public JColor rectColor = new JColor(0, 0, 0, 50, false);
+
     @Handler
     public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if ( this.time && e.getPacket( ) instanceof SPacketChat) {

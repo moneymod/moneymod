@@ -34,7 +34,7 @@ public class AnvilBreaker extends Module {
     public void onToggle(){
         breakPos = null;
     }
-    boolean switchItem;
+    boolean hit = true;
     @Override public void onTick() {
         if (nullCheck()) return;
         //TODO: nado silent switch
@@ -44,8 +44,10 @@ public class AnvilBreaker extends Module {
                     if (mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.ANVIL || mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.OBSIDIAN || mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.ENDER_CHEST) {
                         breakPos = new BlockPos(e.posX, e.posY, e.posZ);
                         //Shit method btw
+
                         mc.playerController.onPlayerDamageBlock(breakPos, AutoMine.getFacing(breakPos));
                         mc.player.swingArm(EnumHand.MAIN_HAND);
+
                     }
                 }
             });

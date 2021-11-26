@@ -16,29 +16,11 @@ public class Changer extends Module {
     @Value( value = "Fov" ) public boolean fov = true;
     @Value( value = "Fov Value" ) @Bounds( min = 5, max = 169 ) public int fovValue = 110;
     @Value( value = "Gamma" ) public boolean gamma = true;
-    @Value( value = "Gamma Value" ) @Bounds( min = 5, max = 250 ) public int gammaValue = 250;
-    @Value( value = "Time" ) public boolean time = true;
-    @Value( value = "Time Value" ) @Bounds( min = 5, max = 24 ) public int timeValue = 24;
-    //shit setting name
-    @Value( value = "Infinity Cycle" ) public boolean infinity = true;
-    @Value( value = "Speed" ) @Bounds( min = 10, max = 1000 ) public int speed = 100;
     int cycle = 0;
     @Override public void onTick() {
         if (fps) mc.gameSettings.limitFramerate = fpsValue;
         if (fov) mc.gameSettings.fovSetting = fovValue;
-        if (gamma) mc.gameSettings.gammaSetting = gammaValue;
+        if (gamma) mc.gameSettings.gammaSetting = 400;
 
-        cycle+=speed;
-        if (time) mc.world.setWorldTime(infinity ? cycle : timeValue * 1000);
-        if (cycle >= 24000) cycle = 0;
     }
-
-    @Handler
-    public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
-        if (nullCheck()) return;
-        if (e.getPacket() instanceof SPacketTimeUpdate) {
-            if (time) e.setCancelled(true);
-        }
-    });
-
 }

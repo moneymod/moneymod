@@ -43,7 +43,7 @@ public class BurrowBypass extends Module {
         if (nullCheck()) return;
         if (ItemUtil.findItem(BlockObsidian.class) == -1) setToggled(false);
         delay++;
-        if (mc.player.onGround) mc.player.motionY = 0.4f;
+        if (mc.player.onGround) mc.player.motionY = 0.48f;
         Main.TICK_TIMER = timer;
         if (delay >= (ticks / 2)){
             int old = mc.player.inventory.currentItem;
