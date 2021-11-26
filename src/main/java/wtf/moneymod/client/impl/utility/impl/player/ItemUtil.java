@@ -40,6 +40,7 @@ public class ItemUtil implements Globals {
         return -1;
     }
 
+
     public static int getItemSlot(Item input) {
         if (input == mc.player.getHeldItemOffhand().getItem()) return -1;
         for (int i = 36; i >= 0; i--) {
