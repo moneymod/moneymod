@@ -193,6 +193,10 @@ public class SpeedMine extends Module {
         return true;
     }
 
+    public BlockPos getCurrentPos() {
+        return currentPos;
+    }
+
     public enum RenderMode {
         FADE,
         EXPAND
