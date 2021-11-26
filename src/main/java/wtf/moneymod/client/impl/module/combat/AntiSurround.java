@@ -21,6 +21,8 @@ import wtf.moneymod.client.api.events.DisconnectEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.movement.Speed;
+import wtf.moneymod.client.impl.module.player.SpeedMine;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
@@ -121,17 +123,22 @@ public class AntiSurround extends Module {
             int old = mc.player.inventory.currentItem;
             if (step == 0) {
                 if (BlockUtil.canPlaceCrystal(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), true) && ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) != -1) {
-                    BlockUtil.INSTANCE.placeCrystalOnBlock(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), EnumHand.MAIN_HAND, true);
-                    crystal = mc.world.loadedEntityList.stream().filter(entity -> entity instanceof EntityEnderCrystal).min(Comparator.comparing(c -> mc.player.getDistance(c))).orElse(null);
+                    BlockUtil.placeCrystalOnBlock(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), EnumHand.MAIN_HAND, true);
+                    crystal = mc.world.loadedEntityList.stream().filter(EntityEnderCrystal.class::isInstance).min(Comparator.comparing(c -> mc.player.getDistance(c))).orElse(null);
                     ItemUtil.swapToHotbarSlot(old, false);
                 }
                 if (!(state.getBlock() instanceof BlockAir)) {
                     if (mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE) || ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemPickaxe.class), false) != -1) {
                         if (!digging) {
                             digging = true;
-                            mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-                            mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, targetBlock, EnumFacing.DOWN));
-                            mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, targetBlock, EnumFacing.DOWN));
+                            SpeedMine speedMine = (SpeedMine) Main.getMain().getModuleManager().get(SpeedMine.class);
+                            if(Main.getMain().getModuleManager().get(SpeedMine.class).isToggled() && (speedMine.getCurrentPos() == null || speedMine.getCurrentPos().toLong() != targetBlock.toLong())) {
+                                mc.playerController.clickBlock(targetBlock, EnumFacing.DOWN);
+                            } else {
+                                mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
+                                mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, targetBlock, EnumFacing.DOWN));
+                                mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, targetBlock, EnumFacing.DOWN));
+                            }
                         }
                     }
                 } else {

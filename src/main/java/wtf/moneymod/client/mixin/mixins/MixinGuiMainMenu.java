@@ -21,7 +21,7 @@ public class MixinGuiMainMenu extends GuiScreen {
         FontRender.drawStringWithShadow( String.format("moneymod b-%s", GitInfo.GIT_SHA.substring(0,7)), 1,1,-1);
 
         Date date = new Date( GitInfo.BUILD_UNIX_TIME );
-        String format = new SimpleDateFormat( "MMM dd y", Locale.ENGLISH ).format( date );
+        String format = new SimpleDateFormat( "MMM dd y HH:mm:ss", Locale.ENGLISH ).format( date );
         FontRender.drawStringWithShadow(format, 1, 2 + FontRender.getFontHeight(), -1);
     }
 }

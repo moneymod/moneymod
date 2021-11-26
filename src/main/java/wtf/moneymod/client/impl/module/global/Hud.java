@@ -82,7 +82,7 @@ public class Hud extends Module {
         if( builddate )
         {
             Date date = new Date( GitInfo.BUILD_UNIX_TIME );
-            String format = new SimpleDateFormat( "MMM dd y", Locale.ENGLISH ).format( date );
+            String format = new SimpleDateFormat( "MMM dd y HH:mm:ss", Locale.ENGLISH ).format( date );
             FontRender.drawStringWithShadow(format, 1, 2 + FontRender.getFontHeight(),  getColor(1));
         }
 

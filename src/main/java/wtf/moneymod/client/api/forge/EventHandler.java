@@ -5,12 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -18,6 +16,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.*;
+import wtf.moneymod.client.api.events.InputUpdateEvent;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
@@ -41,6 +40,7 @@ public class EventHandler implements Globals {
     @SubscribeEvent public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Main.EVENT_BUS.dispatch(new DisconnectEvent());
     }
+
     @SubscribeEvent public void onFinishEat(LivingEntityUseItemEvent.Finish event) {
         Main.EVENT_BUS.dispatch(new FinishEatEvent(event.getEntity(), event.getResultStack()));
     }
@@ -83,19 +83,17 @@ public class EventHandler implements Globals {
     }
 
     @Handler
-    public Listener< PacketEvent.Send > onPacketSend = new Listener< >( PacketEvent.Send.class, event ->
+    public Listener<PacketEvent.Send> onPacketSend = new Listener<>(PacketEvent.Send.class, event ->
     {
-        if( event.getPacket( ) instanceof CPacketChatMessage )
-        {
-            CPacketChatMessage chatpacket = ( CPacketChatMessage )event.getPacket( );
-            if( chatpacket.getMessage( ).startsWith( "!!" ) && chatpacket.getMessage( ).length( ) > 2 )
-            {
-                String msg = chatpacket.getMessage( ).substring( 2 );
-                Main.getMain( ).getCapeThread( ).sendChatMessage( msg );
-                event.setCancelled( true );
+        if (event.getPacket() instanceof CPacketChatMessage) {
+            CPacketChatMessage chatpacket = ( CPacketChatMessage ) event.getPacket();
+            if (chatpacket.getMessage().startsWith("!!") && chatpacket.getMessage().length() > 2) {
+                String msg = chatpacket.getMessage().substring(2);
+                Main.getMain().getCapeThread().sendChatMessage(msg);
+                event.setCancelled(true);
             }
         }
-    } );
+    });
 
     @Handler public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if (e.getPacket() instanceof SPacketEntityStatus) {
@@ -141,10 +139,10 @@ public class EventHandler implements Globals {
         Main.getMain().getFpsManagement().update();
         Main.getMain().getPulseManagement().update();
         Main.getMain().getModuleManager().forEach(m -> {
-            if(m.isHold()) {
-                if(Keyboard.isKeyDown(m.getKey()) && !m.isToggled() && mc.currentScreen == null) {
+            if (m.isHold()) {
+                if (Keyboard.isKeyDown(m.getKey()) && !m.isToggled() && mc.currentScreen == null) {
                     m.setToggled(true);
-                } else if(!Keyboard.isKeyDown(m.getKey()) && m.isToggled() && mc.currentScreen == null) {
+                } else if (!Keyboard.isKeyDown(m.getKey()) && m.isToggled() && mc.currentScreen == null) {
                     m.setToggled(false);
                 }
             }
@@ -162,15 +160,16 @@ public class EventHandler implements Globals {
         }
     }
 
-    @SubscribeEvent public void sky(EntityViewRenderEvent.FogColors event){
-        CustomFog cfog = (CustomFog) Main.getMain().getModuleManager().get(CustomFog.class);
+    @SubscribeEvent public void sky(EntityViewRenderEvent.FogColors event) {
+        CustomFog cfog = ( CustomFog ) Main.getMain().getModuleManager().get(CustomFog.class);
         float red = cfog.color.getColor().getRed() / 255f;
         float green = cfog.color.getColor().getGreen() / 255f;
         float blue = cfog.color.getColor().getBlue() / 255f;
-        if (cfog.isToggled()){
+        if (cfog.isToggled()) {
             event.setRed(red);
             event.setGreen(green);
             event.setBlue(blue);
         }
     }
+
 }
