@@ -81,8 +81,7 @@ public class FeetPlace extends Module {
                 case -1: {
                     if (retry) {
                         retriesCount.putIfAbsent(bp, 0);
-                        if (retriesCount.get(bp) > retries) return;
-                        System.out.println(retriesCount.get(bp));
+                        if (retriesCount.get(bp) > retries) break;
                         if (cleaner) {
                             for (Entity e : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(bp))) {
                                 if (e instanceof EntityEnderCrystal)
