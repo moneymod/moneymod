@@ -20,12 +20,16 @@ public class Blink extends Module {
 
     int ticks;
     Queue<Packet<?>> packets = new ConcurrentLinkedQueue<>();
+    boolean sending = false;
 
     @Override public void onToggle(){
         ticks = 0;
+        sending = false;
         while (!this.packets.isEmpty()) {
+            sending = true;
             mc.getConnection().sendPacket(this.packets.poll());
         }
+        sending = false;
     }
 
     @Override public void onTick() {
@@ -38,7 +42,7 @@ public class Blink extends Module {
 
     @Handler
     public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
-        if (e.getPacket() instanceof CPacketPlayer) {
+        if (!sending && e.getPacket() instanceof CPacketPlayer) {
             packets.add(e.getPacket());
             e.setCancelled(true);
         }
