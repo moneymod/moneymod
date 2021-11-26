@@ -17,6 +17,7 @@ import net.minecraft.util.math.Vec3i;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.MotionUpdateEvent;
 import wtf.moneymod.client.api.events.PreUpdateEvent;
+import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -95,7 +96,7 @@ public class AutoMine extends Module
             BlockPos blockpos2 = null;
             for( Entity obj : mc.world.playerEntities.stream( ).filter( player ->
             {
-                return player != mc.player && Float.compare( mc.player.getDistance( player ), 7.0f ) < 0;
+                return player != mc.player && !FriendManagement.getInstance( ).is( player.getName( ) ) && Float.compare( mc.player.getDistance( player ), 7.0f ) < 0;
             } ).collect( Collectors.toList( ) ) )
             {
                 BlockPos pos = new BlockPos( obj.getPositionVector( ) );
