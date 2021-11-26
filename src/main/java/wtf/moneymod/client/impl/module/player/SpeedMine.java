@@ -109,7 +109,7 @@ public class SpeedMine extends Module {
 
             if (!swap) old = mc.player.inventory.currentItem;
 
-            if (mc.player.getDistanceSq(currentPos) >= MathUtil.INSTANCE.square(range)) {
+            if (currentPos != null && mc.player.getDistanceSq(currentPos) >= MathUtil.INSTANCE.square(range)) {
                 currentPos = null;
             }
         }
