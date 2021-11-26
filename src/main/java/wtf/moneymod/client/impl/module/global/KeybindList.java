@@ -8,6 +8,7 @@ import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
+import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
@@ -24,22 +25,33 @@ public class KeybindList extends Module {
     @Value( "BackGround" ) public JColor background = new JColor(0, 0, 0, 15, false);
     @Value( "Animation" ) public boolean anim = true;
     @Value( "Offset" ) @Bounds( max = 6 ) public int offset = 2;
-    @Value( "Blur" ) public boolean blur = true;
+    @Value( "Header Animation" ) public boolean headerAnim = true;
     @Value( "X" ) @Bounds( max = 1080 ) int x = 2;
     @Value( "Y" ) @Bounds( max = 720 ) int y = 3;
 
+    float percent;
     List<Bind> binds;
 
     @Override protected void onEnable() {
         binds = Main.getMain().getModuleManager().stream().map(Bind::new).collect(Collectors.toList());
+        percent = 0;
     }
 
     @Override public void onRender2D() {
-        if (binds.isEmpty()) return;
         List<Bind> local = binds.stream().filter(b -> b.module.drawn && b.module.getKey() != 0 && (b.percent != 0 || b.module.isToggled())).collect(Collectors.toList());
+        if (local.isEmpty()) {
+            percent -= 0.02f;
+        } else {
+            percent += 0.02f;
+        }
+        percent = headerAnim ? ( float ) MathUtil.INSTANCE.clamp(percent, 0, 1) : 1;
+        float b = percent;
+        b = ( float ) MathUtil.INSTANCE.clamp(1.0f - (b -= 1.0f) * b * b * b, 0.0f, 1.0f);
+
+        if (local.isEmpty() && b <= 0) return;
         GlStateManager.pushMatrix();
-        Renderer2D.drawRect(x, y, x + 100, y + 2 + FontRender.getFontHeight() + (local.size() * (FontRender.getFontHeight() + offset) * 0.75f), background.getColor().getRGB());
-        Renderer2D.drawRect(x, y, x + 100, y + 1.5f, color.getColor().getRGB());
+        Renderer2D.drawRect(x, y, x + 100, y + 2 + FontRender.getFontHeight() + (local.size() * (FontRender.getFontHeight() + offset) * 0.75f), ColorUtil.injectAlpha(background.getColor(), ( int ) (background.getColor().getAlpha() * b)).getRGB());
+        Renderer2D.drawRect(x, y, x + 100, y + 1.5f, ColorUtil.injectAlpha(color.getColor(), ( int ) (color.getColor().getAlpha() * b)).getRGB());
 
         GlStateManager.pushMatrix();
         GlStateManager.disableBlend();
@@ -50,10 +62,10 @@ public class KeybindList extends Module {
             bind.update();
             float t = anim ? bind.percent : 1f;
             float nigger;
-            if(bind.module.isToggled()) {
-                nigger =  ( float ) MathUtil.INSTANCE.clamp( 1.0f - ( t -= 1.0f ) * t * t * t, 0.0f, 1.0f );
+            if (bind.module.isToggled()) {
+                nigger = ( float ) MathUtil.INSTANCE.clamp(1.0f - (t -= 1.0f) * t * t * t, 0.0f, 1.0f);
             } else {
-                nigger = ( float ) MathUtil.INSTANCE.clamp( 1.0 - ( t -= 1.0f ) * t * t * t, 0.0f, 1.0f );
+                nigger = ( float ) MathUtil.INSTANCE.clamp(1.0f - (t -= 1.0f) * t * t * t, 0.0f, 1.0f);
             }
             drawScaled(bind.module.getLabel(), x - (5 - 5 * nigger) + 1, ( int ) (y), 0.75f, -1);
             String key = "[" + Keyboard.getKeyName(bind.module.getKey()) + "]";
