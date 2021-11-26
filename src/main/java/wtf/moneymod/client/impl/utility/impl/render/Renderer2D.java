@@ -318,5 +318,4 @@ public class Renderer2D extends GlStateManager{
         GL11.glEnd();
         GL11.glPopMatrix();
     }
-
 }

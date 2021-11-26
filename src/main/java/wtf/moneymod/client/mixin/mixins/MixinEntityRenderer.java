@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.CameraClipEvent;
+import wtf.moneymod.client.api.events.Render3DEvent;
 import wtf.moneymod.client.api.events.RenderNameTagEvent;
 import wtf.moneymod.client.impl.module.render.NameTags;
 import wtf.moneymod.client.impl.module.render.NoRender;
@@ -61,5 +62,13 @@ public class MixinEntityRenderer implements IEntityRenderer, Globals {
         CameraClipEvent event = new CameraClipEvent( distance );
         Main.EVENT_BUS.dispatch( event );
         return event.distance;
+    }
+
+    @Inject( method = "renderWorldPass",
+            at = @At( value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.clear(I)V", ordinal = 1, shift = At.Shift.AFTER ) )
+    private void renderWorldPass_Pre( int pass, float partialTicks, long finishTimeNano, CallbackInfo info )
+    {
+        Render3DEvent event = new Render3DEvent( partialTicks );
+        Main.EVENT_BUS.dispatch( event );
     }
 }

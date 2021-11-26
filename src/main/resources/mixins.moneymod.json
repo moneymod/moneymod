@@ -27,6 +27,7 @@
     "MixinRenderEnderCrystal",
     "MixinEntityOtherPlayerMP",
     "MixinNetHandlerPlayClient",
-    "MixinBlockSoulSand"
+    "MixinBlockSoulSand",
+    "MixinRenderPlayer"
   ]
 }

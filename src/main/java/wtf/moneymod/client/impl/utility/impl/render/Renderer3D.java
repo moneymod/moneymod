@@ -13,6 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 
 import java.awt.*;
 import java.util.Objects;
@@ -21,6 +22,7 @@ public enum  Renderer3D implements Globals {
     INSTANCE;
 
     private static ICamera camera = new Frustum();
+    public static final AccessorRenderManager rendermgr = ( AccessorRenderManager )mc.getRenderManager( );
 
     public static void prepare() {
         GlStateManager.pushMatrix();
@@ -259,4 +261,217 @@ public enum  Renderer3D implements Globals {
         GlStateManager.popMatrix();
     }
 
+    // насрал блядь
+
+    // THIS IS MY CODE
+    public static void doRandomShitWithGL( boolean state )
+    {
+        if( state )
+        {
+            GlStateManager.pushMatrix( );
+            GlStateManager.disableLighting( );
+            GlStateManager.enableBlend( );
+            GL11.glEnable( 2848 );
+            GlStateManager.disableDepth( );
+            GlStateManager.disableTexture2D( );
+            GlStateManager.enableAlpha( );
+            GlStateManager.tryBlendFuncSeparate( 770, 771, 1, 0 );
+            GL11.glHint( 3154, 4354 );
+        }
+        else
+        {
+            GlStateManager.enableLighting( );
+            GlStateManager.disableBlend( );
+            GlStateManager.enableTexture2D( );
+            GL11.glDisable( 2848 );
+            GlStateManager.enableDepth( );
+            GlStateManager.popMatrix( );
+            GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
+        }
+
+        // good code 10/10
+        GlStateManager.depthMask( ( !state ? 1 : 0 ) != 0 );
+    }
+
+    // THIS IS MY CODE
+    public static float[ ] getColor( Object[ ] var0 )
+    {
+        int var1 = ( Integer )var0[ 0 ];
+        boolean var10003 = true;
+        int var10000 = var1 >> 16;
+        var10003 = true;
+        float var2 = ( var10000 & 255 ) / 255.0F;
+        var10003 = true;
+        var10000 = var1 >> 8;
+        var10003 = true;
+        float var3 = ( var10000 & 255 ) / 255.0F;
+        var10003 = true;
+        float var4 = ( var1 & 255 ) / 255.0F;
+        var10003 = true;
+        var10000 = var1 >> 24;
+        var10003 = true;
+        float var5 = ( var10000 & 255 ) / 255.0F;
+        boolean var10002 = true;
+        float[] var6 = new float[ 4 ];
+        var10002 = true;
+        boolean var10004 = true;
+        var6[0] = var2;
+        var10004 = true;
+        var6[1] = var3;
+        var10004 = true;
+        var6[2] = var4;
+        var10004 = true;
+        var6[3] = var5;
+        return var6;
+    }
+
+    // THIS IS MY CODE
+    public static void thisIsMyCode1(Object[] objectArray)
+    {
+        AxisAlignedBB axisAlignedBB = (AxisAlignedBB)objectArray[0];
+        int n = (Integer)objectArray[1];
+        float[] fArray = getColor(new Object[]{n});
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        BufferBuilder bufferBuilder2 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB2 = axisAlignedBB;
+        BufferBuilder bufferBuilder3 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB3 = axisAlignedBB;
+        BufferBuilder bufferBuilder4 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB4 = axisAlignedBB;
+        BufferBuilder bufferBuilder5 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB5 = axisAlignedBB;
+        BufferBuilder bufferBuilder6 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB6 = axisAlignedBB;
+        BufferBuilder bufferBuilder7 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB7 = axisAlignedBB;
+        BufferBuilder bufferBuilder8 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB8 = axisAlignedBB;
+        BufferBuilder bufferBuilder9 = bufferBuilder;
+        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        bufferBuilder9.pos(axisAlignedBB.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder9.pos(axisAlignedBB.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB8.maxX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder8.pos(axisAlignedBB8.minX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder8.pos(axisAlignedBB.minX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB7.minX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder7.pos(axisAlignedBB7.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder7.pos(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB6.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder6.pos(axisAlignedBB6.minX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder6.pos(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB5.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder5.pos(axisAlignedBB5.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder5.pos(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB4.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder4.pos(axisAlignedBB4.maxX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder4.pos(axisAlignedBB.minX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB3.maxX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder3.pos(axisAlignedBB3.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder3.pos(axisAlignedBB.minX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB2.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder2.pos(axisAlignedBB2.minX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder2.pos(axisAlignedBB.minX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        bufferBuilder.pos(axisAlignedBB.minX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], fArray[3]).endVertex();
+        tessellator.draw();
+    }
+
+    // THIS IS MY CODE
+    public static void thisIsMyCode2(Object[] objectArray) {
+        AxisAlignedBB axisAlignedBB = (AxisAlignedBB)objectArray[0];
+        float f = ((Float)objectArray[1]).floatValue();
+        int n = (Integer)objectArray[2];
+        float[] fArray = getColor(new Object[]{n});
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        if (f < 1.0f) {
+            f = 1.0f;
+        }
+        GL11.glLineWidth((float)f);
+        BufferBuilder bufferBuilder2 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB2 = axisAlignedBB;
+        BufferBuilder bufferBuilder3 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB3 = axisAlignedBB;
+        BufferBuilder bufferBuilder4 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB4 = axisAlignedBB;
+        BufferBuilder bufferBuilder5 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB5 = axisAlignedBB;
+        BufferBuilder bufferBuilder6 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB6 = axisAlignedBB;
+        BufferBuilder bufferBuilder7 = bufferBuilder;
+        AxisAlignedBB axisAlignedBB7 = axisAlignedBB;
+        bufferBuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
+        bufferBuilder.pos(axisAlignedBB7.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 0.0f).endVertex();
+        bufferBuilder7.pos(axisAlignedBB7.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder7.pos(axisAlignedBB.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder.pos(axisAlignedBB6.maxX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder6.pos(axisAlignedBB6.minX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder6.pos(axisAlignedBB.minX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder.pos(axisAlignedBB5.minX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder5.pos(axisAlignedBB5.maxX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder5.pos(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder.pos(axisAlignedBB4.minX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder4.pos(axisAlignedBB4.minX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder4.pos(axisAlignedBB.minX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 0.0f).endVertex();
+        bufferBuilder.pos(axisAlignedBB3.minX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder3.pos(axisAlignedBB3.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 0.0f).endVertex();
+        bufferBuilder3.pos(axisAlignedBB.maxX, axisAlignedBB.minY, axisAlignedBB.maxZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder.pos(axisAlignedBB2.maxX, axisAlignedBB.maxY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 0.0f).endVertex();
+        bufferBuilder2.pos(axisAlignedBB2.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 1.0f).endVertex();
+        bufferBuilder2.pos(axisAlignedBB.maxX, axisAlignedBB.minY, axisAlignedBB.minZ).color(fArray[0], fArray[1], fArray[2], 0.0f).endVertex();
+        tessellator.draw();
+    }
+
+    public static void rhm(Object[] objectArray) {
+        double d = (Double)objectArray[0];
+        double d2 = (Double)objectArray[1];
+        double d3 = (Double)objectArray[2];
+        double d4 = (Double)objectArray[3];
+        double d5 = (Double)objectArray[4];
+        double d6 = (Double)objectArray[5];
+        boolean bl = (Boolean)objectArray[6];
+        boolean bl2 = (Boolean)objectArray[7];
+        float f = ((Float)objectArray[8]).floatValue();
+        Color color = (Color)objectArray[9];
+        d -= rendermgr.getRenderPosX();
+        d2 -= rendermgr.getRenderPosY();
+        d3 -= rendermgr.getRenderPosZ();
+        d4 -= rendermgr.getRenderPosX();
+        d5 -= rendermgr.getRenderPosY();
+        d6 -= rendermgr.getRenderPosZ();
+        doRandomShitWithGL( true );
+        if (bl) {
+            Object[] objectArray2 = new Object[2];
+            objectArray2[1] = color.getRGB();
+            objectArray2[0] = new AxisAlignedBB(d, d2, d3, d4, d5, d6);
+            thisIsMyCode1(objectArray2);
+        }
+        if (bl2) {
+            Object[] objectArray3 = new Object[3];
+            objectArray3[2] = color.getRGB();
+            objectArray3[1] = Float.valueOf(f);
+            objectArray3[0] = new AxisAlignedBB(d, d2, d3, d4, d5, d6);
+            thisIsMyCode2(objectArray3);
+        }
+        doRandomShitWithGL( false );
+    }
+
+    public static void rhK(BlockPos blockPos, boolean bl, boolean bl2, Color color) {
+        BlockPos blockPos2 = blockPos;
+        double d = blockPos2.getX();
+        double d2 = blockPos2.getY();
+        double d3 = blockPos2.getZ();
+        Object[] objectArray2 = new Object[10];
+        objectArray2[9] = color;
+        objectArray2[8] = Float.valueOf(2.0f);
+        objectArray2[7] = bl2;
+        objectArray2[6] = bl;
+        objectArray2[5] = d3 + 1.0;
+        objectArray2[4] = d2 + 1.0;
+        objectArray2[3] = d + 1.0;
+        objectArray2[2] = d3;
+        objectArray2[1] = d2;
+        objectArray2[0] = d;
+        rhm(objectArray2);
+    }
 }
