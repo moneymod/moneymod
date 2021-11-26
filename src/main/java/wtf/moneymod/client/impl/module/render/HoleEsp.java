@@ -18,7 +18,7 @@ public class HoleEsp extends Module {
     @Value(value = "Box") public boolean box = true;
     @Value(value = "Outline") public boolean outline = true;
     @Value(value = "Height") @Bounds(max = 1) public double height = 1;
-    @Value(value = "Line Widht") @Bounds(max = 1) public double widht = 1;
+    @Value(value = "Line Width") @Bounds(max = 1) public double widht = 1;
 
     @Value(value = "B-Color" ) public JColor bedrockColor = new JColor(0, 255, 0, false);
     @Value(value = "O-Color" ) public JColor obsidianColor = new JColor(255, 0, 0, false);
