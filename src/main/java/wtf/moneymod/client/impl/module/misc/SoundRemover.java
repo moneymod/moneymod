@@ -11,18 +11,15 @@ import wtf.moneymod.eventhandler.listener.Listener;
 @Module.Register( label = "SoundRemover", desc = "Mutes various sounds", cat = Module.Category.MISC )
 public class SoundRemover extends Module
 {
-    @Value( "ChorusTeleport" ) public boolean chorusteleport = true;
-    @Value( "TotemPop" ) public boolean totempop = true;
-    @Value( "Explosions" ) public boolean explosions = true;
+    @Value( "ChorusTeleport" ) public boolean chorusteleport = false;
+    @Value( "TotemPop" ) public boolean totempop = false;
+    @Value( "Explosions" ) public boolean explosions = false;
 
     @Handler
     public Listener< PacketEvent.Receive > onReceivePacket = new Listener< >( PacketEvent.Receive.class, event ->
     {
         final SPacketSoundEffect packet = event.getPacket( );
         if ( chorusteleport && packet.getSound( ) == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT ) {
-            event.cancel( );
-        }
-        if ( totempop && packet.getSound( ) == SoundEvents.ITEM_TOTEM_USE ) {
             event.cancel( );
         }
         if ( explosions && packet.getSound( ) == SoundEvents.ENTITY_GENERIC_EXPLODE ) {

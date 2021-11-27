@@ -36,6 +36,7 @@ public class Phase extends Module {
     @Value(value = "No Clip") public boolean noclip = false;
     @Value(value = "Teleport Id") public boolean teleportId = false;
     @Value(value = "Only Moving") public boolean onlyMoving = false;
+    @Value(value = "Reduction") public boolean reduction = false;
     @Value(value = "Auto") public boolean auto = false;
     //VSE DRYGOE
     @Value(value = "Debug Panel") public boolean info = false;
@@ -96,16 +97,24 @@ public class Phase extends Module {
     public void onTick() {
         if (nullCheck()) return;
 
-        if (wtap){
-            ((AccessorKeyBinding)mc.gameSettings.keyBindForward).setPressed(false);
-            wTapDelay++;
-            if (wTapDelay >= 1){
-                ((AccessorKeyBinding)mc.gameSettings.keyBindForward).setPressed(true);
-                wTapDelay = 0;
-                wtap = false;
+
+        if (mode == Mode.BYPASS){
+            double[] t = EntityUtil.forward(get(Type.SPEED));
+            if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+                mc.player.setPosition(mc.player.posX, mc.player.posY, mc.player.posZ);
+                mc.player.setPosition(mc.player.posX + t[0], mc.player.posY, mc.player.posZ + t[1]);
+                if (reduction) {
+                    mc.player.motionX = mc.player.motionX * 0.001 / 10.0;
+                    mc.player.motionZ = mc.player.motionZ * 0.001 / 10.0;
+                    mc.player.motionY = mc.player.motionY * 0.001 / 10.0;
+                }
+                if (motion){
+                    mc.player.motionX = 0.0; mc.player.motionZ = 0.0; mc.player.motionY = 0.0;
+                }
             }
         }
-        
+
+
         //best bypass
 
         if (mode == Mode.PHASEBLOCK){
@@ -189,7 +198,7 @@ public class Phase extends Module {
         return 0;
     }
 
-    public enum Mode{DEFAULT, TELEPORT, PHASEBLOCK}
+    public enum Mode{DEFAULT, TELEPORT, PHASEBLOCK, BYPASS, TESTMETHOD}
     public enum Type{SPEED,UPPOS}
 
 }
