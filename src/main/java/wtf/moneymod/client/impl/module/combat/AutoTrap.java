@@ -68,11 +68,11 @@ public class AutoTrap extends Module {
     @Override public void onTick ( ) {
         if ( nullCheck( ) ) return;
         target = EntityUtil.getTarget( range );
-        if (EntityUtil.INSTANCE.isMoving((EntityLivingBase)target) && moveCheck) return;
         /* CODED BY PIGHAX  23.10.21-22:30*/
 
-        if (disableRange >= 1 && target != null && !disable) {
-            if (mc.player.getDistanceSq(target) >= disableRange * disableRange) {
+        if (disableRange >= 1 && !disable) {
+            if (target == null) setToggled(false);
+            if (mc.player.getDistanceSq(target) >= disableRange * disableRange && target != null) {
                 setToggled(false);
                 return;
             }
@@ -80,7 +80,9 @@ public class AutoTrap extends Module {
 
         /* CODED BY PIGHAX  23.10.21-22:30*/
 
-
+        if (target != null){
+            if (EntityUtil.INSTANCE.isMoving((EntityLivingBase) target)) return;
+        }
         if ( !timer.passed( delay ) && didPlace || target == null ) return;
         if ( mode == Mode.SIMPLE ) {
             if ( getSimple( target ).size( ) == 0 ) {

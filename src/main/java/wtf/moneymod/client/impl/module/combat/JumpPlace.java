@@ -25,7 +25,7 @@ public class JumpPlace extends Module {
     @Override
     public void onTick(){
         if (nullCheck()) return;
-        int slot = ItemUtil.findItem(Blocks.ANVIL, Blocks.OBSIDIAN, Blocks.ENDER_CHEST);
+        int slot = ItemUtil.findItem(Blocks.OBSIDIAN, Blocks.ENDER_CHEST);
         if (slot == -1) setToggled(false);
         if (mc.player.onGround) mc.player.jump();
         ItemUtil.swapToHotbarSlot(slot, false);

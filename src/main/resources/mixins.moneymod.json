@@ -23,6 +23,7 @@
     "MixinEntityPlayerSP",
     "MixinItemRenderer",
     "MixinTimer",
+    "MixinEntityPlayer",
     "MixinPlayerControllerMP",
     "MixinGuiNewChat",
     "MixinEntityRenderer",
