@@ -303,9 +303,7 @@ public class AutoCrystal extends Module {
         }
     });
 
-    @Handler
-    public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
-
+    @Handler public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (e.getPacket() instanceof CPacketPlayer && rotating && rotateons) {
             (( AccessorCPacketPlayer ) e.getPacket()).setYaw(yaw);
             (( AccessorCPacketPlayer ) e.getPacket()).setPitch(pitch);

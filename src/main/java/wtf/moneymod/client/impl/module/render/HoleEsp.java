@@ -15,22 +15,26 @@ import java.awt.*;
 @Module.Register( label = "HoleESP", cat = Module.Category.RENDER )
 public class HoleEsp extends Module {
 
-    @Value(value = "Box") public boolean box = true;
-    @Value(value = "Outline") public boolean outline = true;
-    @Value(value = "Height") @Bounds(max = 1) public double height = 1;
-    @Value(value = "Line Width") @Bounds(max = 1) public double widht = 1;
+    @Value( value = "Box" ) public boolean box = true;
+    @Value( value = "Outline" ) public boolean outline = true;
+    @Value( value = "Height" ) @Bounds( max = 1 ) public double height = 1;
+    @Value( value = "Line Width" ) @Bounds( max = 1 ) public double widht = 1;
 
-    @Value(value = "B-Color" ) public JColor bedrockColor = new JColor(0, 255, 0, false);
-    @Value(value = "O-Color" ) public JColor obsidianColor = new JColor(255, 0, 0, false);
+    @Value( value = "B-Color" ) public JColor bedrockColor = new JColor(0, 255, 0, false);
+    @Value( value = "B-Line" ) public JColor bedrockLine = new JColor(0, 255, 0, false);
+
+    @Value( value = "O-Line" ) public JColor obsidianLine = new JColor(255, 0, 0, false);
+    @Value( value = "O-Color" ) public JColor obsidianColor = new JColor(255, 0, 0, false);
 
 
     @Override public void onRender3D(float partialTicks) {
         Main.getMain().getHoleManagement().forEach(hole -> {
-            if(hole.getType().equals(HoleManagement.HoleType.BEDROCK)) {
-                Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), (float) widht, outline, box, bedrockColor.getColor().getAlpha(), bedrockColor.getColor().getAlpha(), (float) height);
+            if (hole.getType().equals(HoleManagement.HoleType.BEDROCK)) {
+                Renderer3D.drawBoxESP(hole.getBlockPos(), bedrockColor.getColor(), bedrockLine.getColor(), ( float ) widht, outline, box, bedrockColor.getColor().getAlpha(), bedrockLine.getColor().getAlpha(), ( float ) height);
             } else {
-                Renderer3D.drawBoxESP(hole.getBlockPos(), obsidianColor.getColor(), (float) widht, outline, box, obsidianColor.getColor().getAlpha(), obsidianColor.getColor().getAlpha(), (float) height);
+                Renderer3D.drawBoxESP(hole.getBlockPos(), obsidianColor.getColor(), obsidianLine.getColor(), ( float ) widht, outline, box, obsidianColor.getColor().getAlpha(), obsidianLine.getColor().getAlpha(), ( float ) height);
             }
         });
     }
+
 }
