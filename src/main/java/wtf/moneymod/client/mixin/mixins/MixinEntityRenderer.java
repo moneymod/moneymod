@@ -81,7 +81,8 @@ public class MixinEntityRenderer implements IEntityRenderer {
     @Inject( method = "getMouseOver", at = @At( value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getPositionEyes(F)Lnet/minecraft/util/math/Vec3d;", shift = At.Shift.BEFORE ), cancellable = true )
     public void nt_getMouseOver( float partialTicks, CallbackInfo info )
     {
-        if( Main.getMain( ).getModuleManager( ).get( NoEntityTrace.class ).isToggled( ) )
+        NoEntityTrace net = ( NoEntityTrace )Main.getMain( ).getModuleManager( ).get( NoEntityTrace.class );
+        if( net.isToggled( ) && net.check( ) )
         {
             info.cancel( );
             mc.profiler.endSection( );
