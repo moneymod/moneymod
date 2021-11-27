@@ -20,6 +20,7 @@ import wtf.moneymod.client.api.events.InputUpdateEvent;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.player.Velocity;
 import wtf.moneymod.client.impl.module.render.CustomFog;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.ColorUtil;
@@ -47,6 +48,11 @@ public class EventHandler implements Globals {
 
     @SubscribeEvent public void onInput(InputEvent.KeyInputEvent event) {
         Main.getMain().getModuleManager().get(module -> Keyboard.getEventKey() != 0 && Keyboard.getEventKeyState() && Keyboard.getEventKey() == module.getKey() && !module.isHold()).forEach(Module::toggle);
+    }
+
+    @SubscribeEvent
+    public void onPush(PlayerSPPushOutOfBlocksEvent event) {
+        event.setCanceled(Velocity.getInstance().isToggled() && Velocity.getInstance().noPush);
     }
 
     @SubscribeEvent public void onTick(TickEvent.ClientTickEvent event) {
