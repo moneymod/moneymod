@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.render.CustomModel;
+import wtf.moneymod.client.impl.module.render.NoBob;
 import wtf.moneymod.client.impl.module.render.NoRender;
 import wtf.moneymod.client.impl.utility.Globals;
 
@@ -40,5 +41,13 @@ public class MixinItemRenderer implements Globals {
         if (nr.isToggled() && nr.noBlocks) {
             ci.cancel();
         }
+    }
+
+    @Inject( method = "rotateArm", at = @At( "HEAD" ), cancellable = true )
+    private void rotateArm( float f, CallbackInfo info )
+    {
+        NoBob nobob = ( NoBob )Main.getMain( ).getModuleManager( ).get( NoBob.class );
+        if( nobob.isToggled( ) && nobob.nosway )
+            info.cancel( );
     }
 }
