@@ -28,7 +28,9 @@ public class MixinItemRenderer implements Globals {
         CustomModel view = ( CustomModel ) Main.getMain().getModuleManager().get(CustomModel.class);
         if (view.isToggled() && entityLivingBase == mc.player) {
             GlStateManager.scale(view.scaleX, view.scaleY, view.scaleZ);
-            GlStateManager.translate(view.translateX * 0.1f, view.translateY * 0.1f, view.translateZ * 0.1f);
+            if (!mc.player.isHandActive()) {
+                GlStateManager.translate(view.translateX * 0.1f, view.translateY * 0.1f, view.translateZ * 0.1f);
+            }
         }
     }
 

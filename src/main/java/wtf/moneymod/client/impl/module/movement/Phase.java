@@ -30,7 +30,7 @@ public class Phase extends Module {
     @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
 
     //BLOCK PHASE
-    @Value(value = "Updater") @Bounds(min = 0, max = 3) public float updater = 3;
+    @Value(value = "Updater") @Bounds(min = 0, max = 3) public float updater = 8;
     @Value(value = "Sync Delay") @Bounds(min = 1, max = 10) public int syncDelay = 10;
     @Value(value = "Motion") public boolean motion = false;
     @Value(value = "No Clip") public boolean noclip = false;
@@ -47,10 +47,12 @@ public class Phase extends Module {
     int wTapDelay;
     boolean wtap;
     boolean pressed;
+    int jumpdelay;
     @Override
     public void onToggle(){
         timer.reset();
         delay = 0;
+        jumpdelay = 0;
         wTapDelay = 0;
         wtap = false;
         pressed = false;
@@ -93,30 +95,12 @@ public class Phase extends Module {
         }
     });
 
+    int syncupdater = 0;
+
     @Override
     public void onTick() {
         if (nullCheck()) return;
-
-
-        if (mode == Mode.BYPASS){
-            double[] t = EntityUtil.forward(get(Type.SPEED));
-            if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-                mc.player.setPosition(mc.player.posX, mc.player.posY, mc.player.posZ);
-                mc.player.setPosition(mc.player.posX + t[0], mc.player.posY, mc.player.posZ + t[1]);
-                if (reduction) {
-                    mc.player.motionX = mc.player.motionX * 0.001 / 10.0;
-                    mc.player.motionZ = mc.player.motionZ * 0.001 / 10.0;
-                    mc.player.motionY = mc.player.motionY * 0.001 / 10.0;
-                }
-                if (motion){
-                    mc.player.motionX = 0.0; mc.player.motionZ = 0.0; mc.player.motionY = 0.0;
-                }
-            }
-        }
-
-
         //best bypass
-
         if (mode == Mode.PHASEBLOCK){
             delay++;
             if (mc.player.collidedHorizontally) {
@@ -169,6 +153,15 @@ public class Phase extends Module {
     public Listener<MoveEvent> onMove = new Listener<>(MoveEvent.class, e -> {
         if (nullCheck()) return;
         //eto only bypass and default
+        if (mode == Mode.BYPASS){
+            if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+                if (reduction) {
+                    e.motionX = e.motionX * 0.01 / 10.0; e.motionZ = e.motionZ * 0.01 / 10.0; e.motionY = e.motionY * 0.01 / 10.0;
+                }
+
+            }
+        }
+
         if (mode == Mode.TELEPORT) {
             double[] forward = EntityUtil.forward(get(Type.SPEED));
             for (int i = 0; i < this.attempts; ++i) {
