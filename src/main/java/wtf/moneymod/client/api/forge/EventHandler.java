@@ -59,7 +59,6 @@ public class EventHandler implements Globals {
         Main.EVENT_BUS.dispatch(new EntityDeathEvent(event.getSource(), event.getEntity()));
         if (event.getEntity().equals(mc.player)) {
             Main.getMain().getSessionManagement().addDeath();
-            System.out.println(event.getEntityLiving());
         }
     }
 

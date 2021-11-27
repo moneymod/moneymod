@@ -13,6 +13,8 @@
     "ducks.AccessorKeyBinding",
     "ducks.AccessorShaderGroup",
     "ducks.AccessorTileEntity",
+    "ducks.AccessorEntityPlayerSP",
+    "ducks.AccessorPlayerControllerMP",
     "MixinGuiScreen",
     "MixinNetworkManager",
     "MixinMinecraft",

@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.BlockReachEvent;
 import wtf.moneymod.client.api.events.DamageBlockEvent;
 import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.module.player.SpeedMine;
@@ -35,6 +36,14 @@ public class MixinPlayerControllerMP implements IPlayerControllerMP, Globals {
             cir.setReturnValue(false);
             cir.cancel();
         }
+    }
+
+    @Inject( method = "getBlockReachDistance", at = @At( "RETURN" ), cancellable = true )
+    private void getBlockReachDistance( CallbackInfoReturnable< Float > info )
+    {
+        BlockReachEvent event = new BlockReachEvent( info.getReturnValue( ) );
+        Main.EVENT_BUS.dispatch( event );
+        info.setReturnValue( info.getReturnValue( ) + event.getDistance( ) );
     }
 
     @Override public void setBlockHitDelay(int delay) {

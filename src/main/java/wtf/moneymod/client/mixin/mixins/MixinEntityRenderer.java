@@ -1,6 +1,7 @@
 package wtf.moneymod.client.mixin.mixins;
 
 import com.google.common.base.Predicate;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -20,13 +21,17 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.CameraClipEvent;
 import wtf.moneymod.client.api.events.Render3DEvent;
 import wtf.moneymod.client.api.events.RenderNameTagEvent;
+import wtf.moneymod.client.impl.module.player.NoEntityTrace;
 import wtf.moneymod.client.impl.module.render.NameTags;
 import wtf.moneymod.client.impl.module.render.NoRender;
 import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.mixin.accessors.IEntityRenderer;
 
 @Mixin( EntityRenderer.class )
-public class MixinEntityRenderer implements IEntityRenderer, Globals {
+public class MixinEntityRenderer implements IEntityRenderer {
+
+    @Shadow
+    private Minecraft mc;
 
     @Shadow private void setupCameraTransform(float partialTicks, int pass) {}
     @Inject( method = "drawNameplate", at = @At( "HEAD" ), cancellable = true )
@@ -70,5 +75,16 @@ public class MixinEntityRenderer implements IEntityRenderer, Globals {
     {
         Render3DEvent event = new Render3DEvent( partialTicks );
         Main.EVENT_BUS.dispatch( event );
+    }
+
+    // pasted from lambda who cares
+    @Inject( method = "getMouseOver", at = @At( value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getPositionEyes(F)Lnet/minecraft/util/math/Vec3d;", shift = At.Shift.BEFORE ), cancellable = true )
+    public void nt_getMouseOver( float partialTicks, CallbackInfo info )
+    {
+        if( Main.getMain( ).getModuleManager( ).get( NoEntityTrace.class ).isToggled( ) )
+        {
+            info.cancel( );
+            mc.profiler.endSection( );
+        }
     }
 }
