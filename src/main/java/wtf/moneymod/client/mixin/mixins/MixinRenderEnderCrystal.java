@@ -94,7 +94,7 @@ public class MixinRenderEnderCrystal implements Globals {
                 GL11.glPushAttrib(1048575);
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                 GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glDepthRange( 0, 0.1 );
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glColor4f(red, green, blue, alpha);
 
@@ -104,7 +104,7 @@ public class MixinRenderEnderCrystal implements Globals {
                 modelBase.render(entityIn, limbSwing, limb, age, netHeadYaw, headPitch, scale);
 
                 GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glDepthRange( 0, 1 );
                 GL11.glEnable(GL11.GL_LIGHTING);
 
                 GL11.glPopAttrib();

@@ -22,25 +22,25 @@ import wtf.moneymod.client.mixin.mixins.ducks.AccessorKeyBinding;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-@Module.Register( label = "Phase", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "Phase", cat = Module.Category.MOVEMENT )
 public class Phase extends Module {
 
-    @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
-    @Value(value = "Attempts") @Bounds(min = 1, max = 5) public int attempts = 1;
-    @Value(value = "Speed") @Bounds(min = 1, max = 5) public int speed = 1;
+    @Value( value = "Mode" ) public Mode mode = Mode.DEFAULT;
+    @Value( value = "Attempts" ) @Bounds( min = 1, max = 5 ) public int attempts = 1;
+    @Value( value = "Speed" ) @Bounds( min = 1, max = 5 ) public int speed = 1;
 
     //BLOCK PHASE
-    @Value(value = "Updater") @Bounds(min = 0, max = 3) public float updater = 8;
-    @Value(value = "Sync Delay") @Bounds(min = 1, max = 10) public int syncDelay = 10;
-    @Value(value = "Motion") public boolean motion = false;
-    @Value(value = "No Clip") public boolean noclip = false;
-    @Value(value = "Teleport Id") public boolean teleportId = false;
-    @Value(value = "Only Moving") public boolean onlyMoving = false;
-    @Value(value = "Reduction") public boolean reduction = false;
-    @Value(value = "Auto") public boolean auto = false;
+    @Value( value = "Updater" ) @Bounds( min = 0, max = 3 ) public float updater = 8;
+    @Value( value = "Sync Delay" ) @Bounds( min = 1, max = 10 ) public int syncDelay = 10;
+    @Value( value = "Motion" ) public boolean motion = false;
+    @Value( value = "No Clip" ) public boolean noclip = false;
+    @Value( value = "Teleport Id" ) public boolean teleportId = false;
+    @Value( value = "Only Moving" ) public boolean onlyMoving = false;
+    @Value( value = "Reduction" ) public boolean reduction = false;
+    @Value( value = "Auto" ) public boolean auto = false;
     //VSE DRYGOE
-    @Value(value = "Debug Panel") public boolean info = false;
-    @Value(value = "Position Y") @Bounds(min = 1, max = 100) public int posY = 40;
+    @Value( value = "Debug Panel" ) public boolean info = false;
+    @Value( value = "Position Y" ) @Bounds( min = 1, max = 100 ) public int posY = 40;
     Timer timer = new Timer();
     int teleportID = 0;
     int delay;
@@ -48,8 +48,9 @@ public class Phase extends Module {
     boolean wtap;
     boolean pressed;
     int jumpdelay;
+
     @Override
-    public void onToggle(){
+    public void onToggle() {
         timer.reset();
         delay = 0;
         jumpdelay = 0;
@@ -67,30 +68,31 @@ public class Phase extends Module {
         int offset = 0;
 
         double[] t = EntityUtil.forward(get(Type.SPEED));
-        String[] array = new String[]{
+        String[] array = new String[] {
                 "Collided: " + collided,
                 "Bypass: " + bypass,
-                "Speed: " +  String.format("%.3f", t[0]) + " : " + String.format("%.3f", t[1]),
+                "Speed: " + String.format("%.3f", t[ 0 ]) + " : " + String.format("%.3f", t[ 1 ]),
                 "Sync: " + syncs,
                 "Delay: " + delay
         };
         if (info) {
             for (int i = 0; i < array.length; ++i) {
-                String s = array[i];
+                String s = array[ i ];
                 FontRender.drawStringWithShadow(s, 2, posY + offset, -1);
                 offset += 9;
             }
         }
     }
+
     @Handler
     public Listener<PacketEvent.Receive> packeEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
         if (nullCheck()) return;
         if (e.getPacket() instanceof SPacketPlayerPosLook && teleportId) {
             System.out.println("1");
-            if (auto){
+            if (auto) {
                 wtap = true;
             }
-            teleportID = ((SPacketPlayerPosLook) ((Object) e.getPacket())).getTeleportId();
+            teleportID = (( SPacketPlayerPosLook ) (( Object ) e.getPacket())).getTeleportId();
             mc.getConnection().sendPacket(new CPacketConfirmTeleport(teleportID + 1));
         }
     });
@@ -101,7 +103,7 @@ public class Phase extends Module {
     public void onTick() {
         if (nullCheck()) return;
         //best bypass
-        if (mode == Mode.PHASEBLOCK){
+        if (mode == Mode.PHASEBLOCK) {
             delay++;
             if (mc.player.collidedHorizontally) {
                 collided = ChatFormatting.GREEN + "true";
@@ -110,23 +112,26 @@ public class Phase extends Module {
                     double[] forward = EntityUtil.forward(get(Type.SPEED));
                     for (int i = 0; i < this.attempts; ++i) {
                         bypass = ChatFormatting.RED + "false";
-                        this.sendPackets(mc.player.posX + forward[0], mc.player.posY, mc.player.posZ + forward[1]);
+                        this.sendPackets(mc.player.posX + forward[ 0 ], mc.player.posY, mc.player.posZ + forward[ 1 ]);
                     }
                 }
                 timer.reset();
                 if (motion) {
-                    mc.player.motionX = 0.0; mc.player.motionZ = 0.0; mc.player.motionY = 0.0;
+                    mc.player.motionX = 0.0;
+                    mc.player.motionZ = 0.0;
+                    mc.player.motionY = 0.0;
                 }
             } else {
                 collided = ChatFormatting.RED + "false";
                 if (noclip) mc.player.noClip = false;
                 if (delay >= syncDelay) {
                     if (!EntityUtil.INSTANCE.isMoving(mc.player) && onlyMoving) return;
-                    syncs = ChatFormatting.GREEN + "true"; bypass = ChatFormatting.GREEN + "true";
+                    syncs = ChatFormatting.GREEN + "true";
+                    bypass = ChatFormatting.GREEN + "true";
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.onGround));
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - updater, mc.player.posZ, mc.player.onGround));
                 } else syncs = ChatFormatting.RED + "false";
-                if (delay >= syncDelay){
+                if (delay >= syncDelay) {
                     delay = 0;
                 }
             }
@@ -141,22 +146,41 @@ public class Phase extends Module {
                 if (timer.passed(50)) {
                     double[] move = EntityUtil.forward(get(Type.SPEED));
                     for (int i = 0; i < attempts; ++i) {
-                        sendPackets(mc.player.posX + move[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[1]);
+                        sendPackets(mc.player.posX + move[ 0 ], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[ 1 ]);
                     }
                 }
                 timer.reset();
             }
         }
+
+        if (mode == Mode.BYPASS) {
+            if (mc.player.collidedHorizontally && mc.gameSettings.keyBindSneak.isKeyDown() && !EntityUtil.INSTANCE.isMoving(mc.player)) {
+                delay++;
+                Main.TICK_TIMER = 50;
+                if (delay >= 20) {
+                    Main.TICK_TIMER = 1;
+                    delay = 0;
+                }
+                if (mc.player.onGround) {
+                    mc.player.jump();
+                    mc.player.motionY -= 0.25;
+                }
+            }
+        }
+
     }
 
     @Handler
     public Listener<MoveEvent> onMove = new Listener<>(MoveEvent.class, e -> {
         if (nullCheck()) return;
         //eto only bypass and default
-        if (mode == Mode.BYPASS){
+        if (mode == Mode.BYPASS) {
             if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-                if (reduction) {
-                    e.motionX = e.motionX * 0.01 / 10.0; e.motionZ = e.motionZ * 0.01 / 10.0; e.motionY = e.motionY * 0.01 / 10.0;
+
+                if (reduction && EntityUtil.INSTANCE.isMoving(mc.player)) {
+                    e.motionX = e.motionX * 0.01 / 10.0;
+                    e.motionZ = e.motionZ * 0.01 / 10.0;
+                    e.motionY = e.motionY * 0.01 / 10.0;
                 }
 
             }
@@ -165,12 +189,16 @@ public class Phase extends Module {
         if (mode == Mode.TELEPORT) {
             double[] forward = EntityUtil.forward(get(Type.SPEED));
             for (int i = 0; i < this.attempts; ++i) {
-                 this.sendPackets(mc.player.posX + forward[0], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[1]);
+                this.sendPackets(mc.player.posX + forward[ 0 ], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[ 1 ]);
             }
-            e.motionX = e.motionX * 0.0001 / 10.0; e.motionZ = e.motionZ * 0.0001 / 10.0; e.motionY = e.motionY * 0.0001 / 10.0;
+            e.motionX = e.motionX * 0.0001 / 10.0;
+            e.motionZ = e.motionZ * 0.0001 / 10.0;
+            e.motionY = e.motionY * 0.0001 / 10.0;
         } else {
-            if (mc.player.collidedHorizontally && mode == Mode.DEFAULT){
-                e.motionX = 0; e.motionZ = 0; e.motionY = 0;
+            if (mc.player.collidedHorizontally && mode == Mode.DEFAULT) {
+                e.motionX = 0;
+                e.motionZ = 0;
+                e.motionY = 0;
             }
         }
 
@@ -178,20 +206,30 @@ public class Phase extends Module {
 
     public void sendPackets(double q, double w, double r) {
         mc.getConnection().sendPacket(new CPacketPlayer.Position(q, w, r, mc.player.onGround));
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(0,767, 0, mc.player.onGround));
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(0, 767, 0, mc.player.onGround));
 
     }
 
-    double get(Type type){
+    double get(Type type) {
         if (type == Type.SPEED) {
             return this.speed / 150.0;
-        } else if (type == Type.UPPOS){
-            return (double)(mc.gameSettings.keyBindJump.isKeyDown() ? 1 : (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0)) * speed / 100;
+        } else if (type == Type.UPPOS) {
+            return ( double ) (mc.gameSettings.keyBindJump.isKeyDown() ? 1 : (mc.gameSettings.keyBindSneak.isKeyDown() ? -1 : 0)) * speed / 100;
         }
         return 0;
     }
 
-    public enum Mode{DEFAULT, TELEPORT, PHASEBLOCK, BYPASS, TESTMETHOD}
-    public enum Type{SPEED,UPPOS}
+    public enum Mode {
+        DEFAULT,
+        TELEPORT,
+        PHASEBLOCK,
+        BYPASS,
+        TESTMETHOD
+    }
+
+    public enum Type {
+        SPEED,
+        UPPOS
+    }
 
 }
