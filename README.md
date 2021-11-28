@@ -1,28 +1,7 @@
-shit mod shit users 0/10
+<div align="center">
 
-^ stay mad trannymok
-cope nn and its true. pasted mod and shit users
+![image](https://user-images.githubusercontent.com/43454376/143786414-f9aaa68b-1f5e-48d7-aecb-d89d379cc719.png)
+  
+</div>
 
-pasted mod best owners and ok users
-
-you are completely wrong trannymok
-
-cope seethe dilate
-
-ok paster! 
-
-stfu vaimok, retard
-
-im a paster yet i write better code than you and i know more languages than you LoooooooooooooooooooL
-
-leaking this mod rn
-
-EZ MAD
-
-i hate u all!!! 🇫🇮🚫🇷🇺
-
-ok we dont need finnish femboys anyway
-![image](https://user-images.githubusercontent.com/75589614/143782824-7d80d8cc-2a1a-4879-a58e-f4f0d0ef50d2.png)
-kek
-
-hes a noob i removed his access ez
+# change this readme if ur a pedophile, a registered sex offender, british and if you groom children :^)
