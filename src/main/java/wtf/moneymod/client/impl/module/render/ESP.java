@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.render;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -81,11 +82,17 @@ public class ESP extends Module {
             }
             Renderer3D.drawBoxESP(predictChorus, color.getColor(), 1, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
         }
+    }
 
+    @Override
+    public void onRenderGameOverlay( float partialTicks )
+    {
         if( shaders )
         {
             if( shader == Shader.OUTLINE )
             {
+                GlStateManager.pushMatrix( );
+
                 framebuffer = OutlineShader.INSTANCE;
                 OutlineShader.INSTANCE.setCustomValues( rainbowspeed, rainbowstrength, saturation );
                 OutlineShader.INSTANCE.startDraw(partialTicks);
@@ -97,6 +104,8 @@ public class ESP extends Module {
                 });
                 nameTags = false;
                 OutlineShader.INSTANCE.stopDraw(color.getColor(), radius, quality, saturation, 1, 0.5f, 0.5f);
+
+                GlStateManager.popMatrix( );
             }
         }
     }
