@@ -10,3 +10,5 @@ you are completely wrong trannymok
 cope seethe dilate
 
 ok paster! 
+
+stfu vaimok, retard
