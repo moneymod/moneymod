@@ -18,3 +18,5 @@ im a paster yet i write better code than you and i know more languages than you 
 leaking this mod rn
 
 EZ MAD
+
+i hate u all!!! 🇫🇮🚫🇷🇺
