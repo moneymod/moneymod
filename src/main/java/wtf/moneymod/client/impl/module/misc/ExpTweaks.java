@@ -13,13 +13,13 @@ import wtf.moneymod.client.mixin.mixins.ducks.IMinecraft;
 public class ExpTweaks extends Module {
 
     @Value(value = "Mode") public Mode mode = Mode.MIDDLE;
-
     public enum Mode{
         TOGGLE, MIDDLE
     }
 
     @Override
     public void onTick() {
+        if (nullCheck()) return;
 
         int old = mc.player.inventory.currentItem;
         int xp = ItemUtil.findItem(ItemExpBottle.class);
