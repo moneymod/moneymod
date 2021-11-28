@@ -206,7 +206,7 @@ public class Phase extends Module {
 
     public void sendPackets(double q, double w, double r) {
         mc.getConnection().sendPacket(new CPacketPlayer.Position(q, w, r, mc.player.onGround));
-        mc.getConnection().sendPacket(new CPacketPlayer.Position(0, 767, 0, mc.player.onGround));
+        mc.getConnection().sendPacket(new CPacketPlayer.Position(0,767, 0, mc.player.onGround));
 
     }
 

@@ -17,6 +17,7 @@ public class AutoTotem extends Module {
     //pig pig pig
 
     @Value( value = "Health" ) @Bounds( max = 36 ) public int health = 16;
+    @Value( value = "Fall Distance" ) @Bounds( min = 0,max = 20 ) public int faldistance = 16;
     @Value( value = "Item" ) public Mode mode = Mode.CRYSTAL;
     @Value( "Crapple" ) public boolean crapple = false;
     @Value( value = "Right Click Gapple" ) public boolean rightClickGapple = true;
@@ -25,7 +26,7 @@ public class AutoTotem extends Module {
     public void onTick() {
         if (nullCheck() || mc.currentScreen instanceof GuiInventory) return;
         float hp = mc.player.getHealth() + mc.player.getAbsorptionAmount();
-        if (hp > health) {
+        if (hp > health && !(mc.player.fallDistance >= faldistance)) {
             Item heldItem = mc.player.getHeldItemMainhand().getItem();
             if (rightClickGapple && mc.gameSettings.keyBindUseItem.isKeyDown() && (heldItem instanceof ItemSword || heldItem instanceof ItemAxe) && mc.currentScreen == null) {
                 if (mode != Mode.GAPPLE)
