@@ -238,8 +238,7 @@ public class AutoCrystal extends Module {
             blackPeople = false;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
-            if (rotateons) {
-                assert placePos != null;
+            if (rotateons && placePos != null) {
                 rotate(placePos);
             }
             if (placePos == null) return;

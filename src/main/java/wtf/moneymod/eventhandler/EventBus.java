@@ -31,16 +31,17 @@ public class EventBus implements IEventBus {
                         e.printStackTrace();
                     }
 
-                    assert listener != null;
-                    Class<? extends Event> event = listener.getEvent();
+                    if (listener != null) {
+                        Class<? extends Event> event = listener.getEvent();
 
-                    listener.setObject(obj);
-                    listener.setField(field);
+                        listener.setObject(obj);
+                        listener.setField(field);
 
-                    if (!listeners.containsKey(event)) listeners.put(event, new CopyOnWriteArrayList<>());
+                        if (!listeners.containsKey(event)) listeners.put(event, new CopyOnWriteArrayList<>());
 
-                    listeners.get(event).add(listener);
-                    listeners.get(event).sort(Comparator.comparing(e -> -e.getHandler().priority().priority));
+                        listeners.get(event).add(listener);
+                        listeners.get(event).sort(Comparator.comparing(e -> -e.getHandler().priority().priority));
+                    }
                 });
     }
 

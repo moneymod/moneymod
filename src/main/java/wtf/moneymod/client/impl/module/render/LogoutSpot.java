@@ -134,9 +134,9 @@ public class LogoutSpot extends Module {
     });
 
     private void renderNameTag(String name, double x, double yi, double z, float delta, double xPos, double yPos, double zPos) {
+        if (mc.getRenderViewEntity() == null) return;
         double y = yi + 0.7;
         Entity camera = mc.getRenderViewEntity();
-        assert (camera != null);
         double originalPositionX = camera.posX;
         double originalPositionY = camera.posY;
         double originalPositionZ = camera.posZ;
