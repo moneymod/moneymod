@@ -4,7 +4,7 @@
   "package": "wtf.moneymod.client.mixin.mixins",
   "refmap": "mixins.moneymod.refmap.json",
   "priority": 2147483647,
-	"mixinPriority": 2147483647,
+  "mixinPriority": 2147483647,
   "mixins": [
     "ducks.IMinecraft",
     "ducks.ICPacketChatMessage",
