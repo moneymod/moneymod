@@ -81,6 +81,8 @@ public class Module implements Globals {
 
     public void onRender2D() {}
 
+    public void onRenderGameOverlay( float partialTicks ) {}
+
     public void enable() {
         toggled = true;
         onToggle();
