@@ -21,6 +21,7 @@ import wtf.moneymod.client.impl.utility.impl.shader.impl.GlowShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.OutlineShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.SpaceShader;
 import wtf.moneymod.client.impl.utility.impl.shader.impl.SpaceSmokeShader;
+import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -38,6 +39,12 @@ public class ESP extends Module {
     @Value( value = "ChorusPredict" ) public boolean chorusPredict = true;
     @Value( value = "Delay (Sec)" ) @Bounds( min = 1, max = 32 ) public int delay = 5;
 
+    @Value( "RainbowSpeed" ) @Bounds( min = 0.0f, max = 1.0f ) public float rainbowspeed = 0.4f;
+    @Value( "RainbowStrength" ) @Bounds( min = 0.0f, max = 1.0f ) public float rainbowstrength = 0.3f;
+    @Value( "Saturation" ) @Bounds( min = 0.0f, max = 1.0f ) public float saturation = 0.5f;
+    @Value( "Radius" ) @Bounds( min = 0.1f, max = 5.0f ) public float radius = 1f;
+    @Value( "Quality" ) @Bounds( min = 0.1f, max = 5.0f ) public float quality = 1f;
+
     BlockPos predictChorus;
     private final Timer timer = new Timer();
     boolean nameTags;
@@ -52,6 +59,8 @@ public class ESP extends Module {
     @Override
     public void onToggle() {
         predictChorus = null;
+        if( shader != Shader.OUTLINE )
+            ChatUtil.INSTANCE.sendMessage( "Shaders other than outline are not supported right now", true );
     }
 
     @Handler public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {
@@ -71,6 +80,24 @@ public class ESP extends Module {
                 return;
             }
             Renderer3D.drawBoxESP(predictChorus, color.getColor(), 1, true, true, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
+        }
+
+        if( shaders )
+        {
+            if( shader == Shader.OUTLINE )
+            {
+                framebuffer = OutlineShader.INSTANCE;
+                OutlineShader.INSTANCE.setCustomValues( rainbowspeed, rainbowstrength, saturation );
+                OutlineShader.INSTANCE.startDraw(partialTicks);
+                nameTags = true;
+                mc.world.loadedEntityList.forEach(e -> {
+                    if (e != mc.player && ((e instanceof EntityPlayer && players) || (e instanceof EntityEnderCrystal && crystals))) {
+                        mc.getRenderManager().renderEntityStatic(e, partialTicks, true);
+                    }
+                });
+                nameTags = false;
+                OutlineShader.INSTANCE.stopDraw(color.getColor(), radius, quality, saturation, 1, 0.5f, 0.5f);
+            }
         }
     }
 
