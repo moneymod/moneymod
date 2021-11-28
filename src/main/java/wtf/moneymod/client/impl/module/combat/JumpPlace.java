@@ -2,12 +2,17 @@ package wtf.moneymod.client.impl.module.combat;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 
 @Module.Register( label = "JumpPlace", cat = Module.Category.COMBAT)
 public class JumpPlace extends Module {
+
+    @Value(value = "Rotate") public boolean rotate = false;
+    @Value(value = "Packet") public boolean packet = false;
 
     private BlockPos pos;
     int old;
@@ -20,18 +25,23 @@ public class JumpPlace extends Module {
     @Override
     public void onDisable(){
         pos = null;
+        if (rotate) Main.getMain().getRotationManagement().reset();
     }
 
     @Override
     public void onTick(){
         if (nullCheck()) return;
-        int slot = ItemUtil.findItem(Blocks.OBSIDIAN, Blocks.ENDER_CHEST);
-        if (slot == -1) setToggled(false);
-        if (mc.player.onGround) mc.player.jump();
-        ItemUtil.swapToHotbarSlot(slot, false);
-        BlockUtil.INSTANCE.placeBlock(pos);
-        ItemUtil.swapToHotbarSlot(old, false);
-        if (mc.world.getBlockState(pos).getBlock() != Blocks.AIR) setToggled(false);
+        if (ItemUtil.findItem(Blocks.OBSIDIAN) == -1){
+            setToggled(false);
+            return;
+        } else {
+            int slot = ItemUtil.findItem(Blocks.OBSIDIAN);
+            if (mc.player.onGround) mc.player.jump();
+            Main.getMain().getRotationManagement().look(pos,packet);
+            ItemUtil.swapToHotbarSlot(slot, false);
+            BlockUtil.INSTANCE.placeBlock(pos);
+            ItemUtil.swapToHotbarSlot(old, false);
+            if (mc.world.getBlockState(pos).getBlock() != Blocks.AIR) setToggled(false);
+        }
     }
-
 }
