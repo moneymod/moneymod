@@ -8,3 +8,9 @@ pasted mod best owners and ok users
 you are completely wrong trannymok
 
 cope seethe dilate
+
+ok paster! 
+
+stfu vaimok, retard
+
+im a paster yet i write better code than you and i know more languages than you LoooooooooooooooooooL
