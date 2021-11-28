@@ -61,11 +61,11 @@ public class PopNotify extends Module
 
         int popcount = list.get( player.getName( ) );
 
-        String str = ChatFormatting.GOLD + player.getName( ) +
-                ChatFormatting.WHITE + " popped " + ChatFormatting.GOLD + popcount + ChatFormatting.WHITE + " totem(s)";
+        String str = ChatFormatting.DARK_GRAY + player.getName( ) +
+                ChatFormatting.WHITE + " popped " + ChatFormatting.DARK_GRAY + popcount + ChatFormatting.WHITE + " totem(s)";
 
         if( player.getName( ).equals( mc.player.getName( ) ) )
-            str += " (" + ChatFormatting.GOLD + getTotemsLeft( player ) + ChatFormatting.WHITE + " left)";
+            str += " (" + ChatFormatting.DARK_GRAY + getTotemsLeft( player ) + ChatFormatting.WHITE + " left)";
 
         ChatUtil.INSTANCE.sendMessageId( str, true, 9236 );
     }
@@ -76,8 +76,8 @@ public class PopNotify extends Module
 
         list.remove( player.getName( ) );
 
-        ChatUtil.INSTANCE.sendMessageId( ChatFormatting.GOLD + player.getName( ) +
-                ChatFormatting.WHITE + " died after popping " + ChatFormatting.GOLD + count + ChatFormatting.WHITE + " totem(s)", true, 9235 );
+        ChatUtil.INSTANCE.sendMessageId( ChatFormatting.DARK_GRAY + player.getName( ) +
+                ChatFormatting.WHITE + " died after popping " + ChatFormatting.DARK_GRAY + count + ChatFormatting.WHITE + " totem(s)", true, 9235 );
     }
 
     private int getTotemsLeft( EntityPlayer player )

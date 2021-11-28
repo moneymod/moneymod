@@ -18,12 +18,15 @@ public class SoundRemover extends Module
     @Handler
     public Listener< PacketEvent.Receive > onReceivePacket = new Listener< >( PacketEvent.Receive.class, event ->
     {
-        final SPacketSoundEffect packet = event.getPacket( );
-        if ( chorusteleport && packet.getSound( ) == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT ) {
-            event.cancel( );
-        }
-        if ( explosions && packet.getSound( ) == SoundEvents.ENTITY_GENERIC_EXPLODE ) {
-            event.cancel( );
+        if( event.getPacket( ) instanceof SPacketSoundEffect )
+        {
+            final SPacketSoundEffect packet = event.getPacket( );
+            if ( chorusteleport && packet.getSound( ) == SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT ) {
+                event.cancel( );
+            }
+            if ( explosions && packet.getSound( ) == SoundEvents.ENTITY_GENERIC_EXPLODE ) {
+                event.cancel( );
+            }
         }
     } );
 }
