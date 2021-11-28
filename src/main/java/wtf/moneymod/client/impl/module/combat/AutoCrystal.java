@@ -15,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -58,6 +59,8 @@ public class AutoCrystal extends Module {
     @Value( value = "Predict" ) public boolean boost = true;
     @Value( value = "Test" ) public boolean test = true;
     @Value( value = "Rotate" ) public boolean rotateons = true;
+    @Value( "Yaw Step" ) public YawStep yawStep = YawStep.NONE;
+    @Value( "Steps" ) @Bounds( min = 0, max = 1f ) public float steps = 0.3f;
     @Value( value = "Second" ) public boolean secondCheck = true;
     @Value( value = "AutoObbyPlace" ) public boolean autoPlace = true;
     @Value( value = "Swap" ) public Swap swap = Swap.NONE;
@@ -65,16 +68,16 @@ public class AutoCrystal extends Module {
     @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0, 180, true);
     @Value( value = "Outline" ) public boolean outlines = false;
     @Value( value = "Box" ) public boolean boxes = true;
-    @Value( value = "Line Widht ") @Bounds(max = 3f) public float lineWidht = 0.6f;
-    @Value( value = "Expand" ) @Bounds(max = 1f) public float expands = 1;
+    @Value( value = "Line Widht " ) @Bounds( max = 3f ) public float lineWidht = 0.6f;
+    @Value( value = "Expand" ) @Bounds( max = 1f ) public float expands = 1;
     private final Set<BlockPos> placeSet = new HashSet<>();
     private BlockPos renderPos, lastPlaced;
-    private BlockPos currentBlock;
     public EntityPlayer currentTarget;
     private boolean offhand, rotating, lowArmor, blackPeople;
     private double currentDamage;
     private int ticks, old, autoOld;
     private float yaw = 0f, pitch = 0f;
+    Entity lastHitEntity;
 
     private final Timer breakTimer = new Timer();
     private final Timer placeTimer = new Timer();
@@ -104,7 +107,7 @@ public class AutoCrystal extends Module {
 
     @Override()
     public void onEnable() {
-        if(!nullCheck())autoOld = mc.player.inventory.currentItem;
+        if (!nullCheck()) autoOld = mc.player.inventory.currentItem;
     }
 
     @Override
@@ -127,7 +130,7 @@ public class AutoCrystal extends Module {
         }
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
-        if (currentTarget == null){
+        if (currentTarget == null) {
             renderPos = null;
             return;
         }
@@ -152,7 +155,7 @@ public class AutoCrystal extends Module {
 
     @Override public void onRender3D(float partialTicks) {
         if (renderPos != null) {
-             Renderer3D.INSTANCE.drawBoxESP(renderPos,color.getColor(),lineWidht,outlines,boxes,color.getColor().getAlpha(), color.getColor().getAlpha(),1);
+            Renderer3D.INSTANCE.drawBoxESP(renderPos, color.getColor(), lineWidht, outlines, boxes, color.getColor().getAlpha(), color.getColor().getAlpha(), 1);
         }
     }
 
@@ -160,6 +163,7 @@ public class AutoCrystal extends Module {
     private void place() {
         EnumHand hand = null;
         BlockPos placePos = null;
+        lastHitEntity = null;
         double maxDamage = 0.5;
         for (BlockPos pos : BlockUtil.INSTANCE.getSphere(placeRange, true)) {
             double selfDamage, targetDamage;
@@ -225,16 +229,19 @@ public class AutoCrystal extends Module {
         if (swap == Swap.NONE) {
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
-        if (swap == Swap.AUTO){
+        if (swap == Swap.AUTO) {
             if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
         if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
-            if(!blackPeople) old = mc.player.inventory.currentItem;
+            if (!blackPeople) old = mc.player.inventory.currentItem;
             blackPeople = false;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
-            if (rotateons) rotate(placePos);
+            if (rotateons) {
+                assert placePos != null;
+                rotate(placePos);
+            }
             if (placePos == null) return;
             EnumFacing facing = EnumFacing.UP;
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
@@ -243,7 +250,6 @@ public class AutoCrystal extends Module {
             doHandActive(hand);
             placeSet.add(placePos);
             renderPos = new BlockPos(placePos.getX(), placePos.getY(), placePos.getZ());
-            currentBlock = placePos;
             currentDamage = maxDamage;
             placeTimer.reset();
 
@@ -266,8 +272,10 @@ public class AutoCrystal extends Module {
         }
         if (maxCrystal != null && breakTimer.passed(( int ) breakDelay)) {
             if (!(maxCrystal.ticksExisted >= tickexisted)) return;
-            if (rotateons) rotate(maxCrystal);
-            mc.getConnection().sendPacket(new CPacketUseEntity(maxCrystal));
+            if (rotateons) {
+                rotate(maxCrystal);
+            }
+            mc.player.connection.sendPacket(new CPacketUseEntity(maxCrystal));
             setSwing();
             breakTimer.reset();
         } else {
@@ -278,9 +286,9 @@ public class AutoCrystal extends Module {
     public void setSwing() {
         if (swing == Swing.MAINHAND) {
             mc.player.swingArm(EnumHand.MAIN_HAND);
-        } else if (swing == Swing.OFFHAND) {
+        } else {
             mc.player.swingArm(EnumHand.OFF_HAND);
-        } else {}
+        }
     }
 
     @Handler
@@ -305,12 +313,22 @@ public class AutoCrystal extends Module {
 
     @Handler public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
         if (e.getPacket() instanceof CPacketPlayer && rotating && rotateons) {
+
+            if (steps < 1 && yawStep != YawStep.NONE && (lastHitEntity != null || yawStep == YawStep.FULL)) {
+                float packetYaw = (( CPacketPlayer ) e.getPacket()).getYaw(mc.player.rotationYaw);
+                float diff = MathHelper.wrapDegrees(yaw - packetYaw);
+                if (Math.abs(diff) > 180 * steps) {
+                    yaw = packetYaw + (diff * ((180 * steps) / Math.abs(diff)));
+                }
+            }
+
             (( AccessorCPacketPlayer ) e.getPacket()).setYaw(yaw);
             (( AccessorCPacketPlayer ) e.getPacket()).setPitch(pitch);
         }
     });
 
     private void rotate(BlockPos bp) {
+        float oldYaw = yaw;
         float[] angles = RotationManagement.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(bp.getX() + .5f, bp.getY() + .5f, bp.getZ() + .5f));
         yaw = angles[ 0 ];
         pitch = angles[ 1 ];
@@ -318,6 +336,7 @@ public class AutoCrystal extends Module {
     }
 
     private void rotate(Entity e) {
+        float oldYaw = yaw;
         float[] angles = RotationManagement.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), e.getPositionEyes(mc.getRenderPartialTicks()));
         yaw = angles[ 0 ];
         pitch = angles[ 1 ];
@@ -339,6 +358,12 @@ public class AutoCrystal extends Module {
     public enum Logic {
         BREAKPLACE,
         PLACEBREAK;
+    }
+
+    public enum YawStep {
+        NONE,
+        FULL,
+        SEMI
     }
 
 }
