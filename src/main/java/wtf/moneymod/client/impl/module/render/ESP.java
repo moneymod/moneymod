@@ -51,6 +51,8 @@ public class ESP extends Module {
     boolean nameTags;
     public static ESP INSTANCE;
     public FramebufferShader framebuffer = null;
+    
+    private boolean flip = false;
 
     public ESP() {
         INSTANCE = this;
@@ -87,6 +89,9 @@ public class ESP extends Module {
     @Override
     public void onRenderGameOverlay( float partialTicks )
     {
+        flip = !flip;
+        if( !flip ) return;
+        
         if( shaders )
         {
             if( shader == Shader.OUTLINE )
