@@ -25,7 +25,6 @@ public class JumpPlace extends Module {
     @Override
     public void onDisable(){
         pos = null;
-        if (rotate) Main.getMain().getRotationManagement().reset();
     }
 
     @Override
@@ -37,7 +36,7 @@ public class JumpPlace extends Module {
         } else {
             int slot = ItemUtil.findItem(Blocks.OBSIDIAN);
             if (mc.player.onGround) mc.player.jump();
-            Main.getMain().getRotationManagement().look(pos,packet);
+            if (rotate) Main.getMain().getRotationManagement().look(pos,packet);
             ItemUtil.swapToHotbarSlot(slot, false);
             BlockUtil.INSTANCE.placeBlock(pos);
             ItemUtil.swapToHotbarSlot(old, false);
