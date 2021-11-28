@@ -90,7 +90,11 @@ public class NameTags extends Module {
 
     }
 
+	private boolean niggers = false;
+
     @Override public void onRender3D(float partialTicks) {
+	niggers = !niggers;
+	if( !niggers ) return;
         for ( Entity player : mc.world.loadedEntityList ) {
             if ( !( player instanceof EntityPlayer ) || player.isDead || !( ( ( EntityPlayer ) player ).getHealth( ) > 0.0f ) || mc.player.getDistance( player ) > range )
                 continue;
