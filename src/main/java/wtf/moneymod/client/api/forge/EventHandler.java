@@ -139,6 +139,15 @@ public class EventHandler implements Globals {
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(Module::onRender2D);
     }
 
+    @SubscribeEvent
+    public void onRenderGameOverlayPre( RenderGameOverlayEvent.Pre event )
+    {
+        if( nullCheck( ) ) return;
+
+        if( event.getType( ) == RenderGameOverlayEvent.ElementType.HOTBAR )
+            Main.getMain( ).getModuleManager( ).get( Module::isToggled ).forEach( m -> m.onRenderGameOverlay( event.getPartialTicks( ) ) );
+    }
+
     @SubscribeEvent public void onRenderUpdate(RenderWorldLastEvent event) {
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(m -> m.onRender3D(event.getPartialTicks()));
         Main.getMain().getFpsManagement().update();
