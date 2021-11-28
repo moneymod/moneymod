@@ -55,7 +55,7 @@ public class MotionClip extends Module
             if (clip == Clip.SECOND) {
                 if (mc.player.collidedHorizontally) {
                     mc.player.setLocationAndAngles(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.rotationYaw, mc.player.rotationPitch);
-                    mc.player.setLocationAndAngles(mc.player.posX - Math.sin(yaw) * power, mc.player.posY, mc.player.posZ + Math.cos(yaw) * power, mc.player.rotationYaw, mc.player.rotationPitch);
+                    mc.player.setLocationAndAngles(mc.player.posX - Math.sin(yaw) * power, mc.player.posY + (yUpdater ? 0.08 : 0), mc.player.posZ + Math.cos(yaw) * power, mc.player.rotationYaw, mc.player.rotationPitch);
                 } else {
                     if (!EntityUtil.INSTANCE.isMoving(mc.player)) {
                         mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.onGround));

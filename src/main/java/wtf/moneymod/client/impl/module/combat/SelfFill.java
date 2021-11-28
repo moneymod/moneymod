@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.BlockPos;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -48,19 +49,17 @@ public class SelfFill extends Module {
         if (!check()) return;
         tick++;
         if (fill) {
-
-
             ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST), false);
             offsets.forEach(offset -> mc.getConnection().sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, true)));
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-            mc.getConnection().sendPacket(new CPacketPlayer.Rotation(-90,pitch,mc.player.onGround));
+            Main.getMain().getRotationManagement().look(startPos,false);
             BlockUtil.INSTANCE.placeBlock(startPos);
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + height, mc.player.posZ, false));
             ItemUtil.swapToHotbarSlot(startSlot, false);
+            Main.getMain().getRotationManagement().reset();
             fill = false;
         }
-        if (tick == 4)  mc.getConnection().sendPacket(new CPacketPlayer.Rotation(yaw,pitch,mc.player.onGround));
         if (tick >= 8) {
             tick = 0;
             setToggled(false);
