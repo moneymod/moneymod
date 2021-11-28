@@ -20,3 +20,5 @@ leaking this mod rn
 EZ MAD
 
 i hate u all!!! 🇫🇮🚫🇷🇺
+
+ok we dont need finnish femboys anyway
