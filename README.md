@@ -16,3 +16,5 @@ stfu vaimok, retard
 im a paster yet i write better code than you and i know more languages than you LoooooooooooooooooooL
 
 leaking this mod rn
+
+EZ MAD
