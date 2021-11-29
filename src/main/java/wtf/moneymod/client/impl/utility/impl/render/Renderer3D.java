@@ -36,6 +36,9 @@ public enum  Renderer3D implements Globals {
         GL11.glEnable(2848);
         GL11.glBlendFunc(770, 771);
     }
+    public static double interpolate(final double old, final double now, final float partialTicks) {
+        return old + (now - old) * partialTicks;
+    }
 
     public static AxisAlignedBB fixBB(final AxisAlignedBB bb) {
         return new AxisAlignedBB(bb.minX - mc.getRenderManager().viewerPosX, bb.minY - mc.getRenderManager().viewerPosY, bb.minZ - mc.getRenderManager().viewerPosZ, bb.maxX - mc.getRenderManager().viewerPosX, bb.maxY - mc.getRenderManager().viewerPosY, bb.maxZ - mc.getRenderManager().viewerPosZ);
