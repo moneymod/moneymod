@@ -1,9 +1,8 @@
 package wtf.moneymod.client.impl.command.impl;
 
 import net.minecraft.util.math.BlockPos;
-import wtf.moneymod.client.api.management.impl.WaypointManager;
+import wtf.moneymod.client.api.management.impl.WaypointManagement;
 import wtf.moneymod.client.impl.command.Command;
-import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 import wtf.moneymod.client.impl.waypoint.Waypoint;
 
 import java.util.Arrays;
@@ -27,16 +26,16 @@ public class WaypointCommand extends Command {
                 break;
             case "del":
                 if (args.length < 3) return;
-                WaypointManager.getInstance().forEach(w -> {
+                WaypointManagement.getInstance().forEach(w -> {
                     if (w.getName().equalsIgnoreCase(args[ 1 ])) {
-                        WaypointManager.getInstance().remove(w);
+                        WaypointManagement.getInstance().remove(w);
                         print("removed waypoint " + args[ 1 ]);
                     }
                 });
                 break;
             case "list":
-                String waypoints = WaypointManager.getInstance().stream().map(w -> String.format("%s(%s, %s, %s)", w.getName(), w.getPos().getX(), w.getPos().getY(), w.getPos().getZ())).collect(Collectors.joining(", "));
-                print(String.format("Waypoints(%s): %s", WaypointManager.getInstance().size(), waypoints));
+                String waypoints = WaypointManagement.getInstance().stream().map(w -> String.format("%s(%s, %s, %s)", w.getName(), w.getPos().getX(), w.getPos().getY(), w.getPos().getZ())).collect(Collectors.joining(", "));
+                print(String.format("Waypoints(%s): %s", WaypointManagement.getInstance().size(), waypoints));
                 break;
         }
     }
@@ -69,7 +68,7 @@ public class WaypointCommand extends Command {
         }
 
         if (waypoint != null) {
-            WaypointManager.getInstance().add(waypoint);
+            WaypointManagement.getInstance().add(waypoint);
             print("added waypoint " + args[ 0 ]);
         }
     }

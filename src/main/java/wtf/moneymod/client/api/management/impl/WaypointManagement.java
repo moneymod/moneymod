@@ -1,13 +1,12 @@
 package wtf.moneymod.client.api.management.impl;
 
-import wtf.moneymod.client.api.management.IManager;
 import wtf.moneymod.client.impl.waypoint.Waypoint;
 
 import java.util.ArrayList;
 
-public class WaypointManager extends ArrayList<Waypoint> {
+public class WaypointManagement extends ArrayList<Waypoint> {
 
-    private static final WaypointManager INSTANCE = new WaypointManager();
+    private static final WaypointManagement INSTANCE = new WaypointManagement();
 
     @Override public boolean add(Waypoint waypoint) {
         Waypoint toRemove = null;
@@ -18,7 +17,7 @@ public class WaypointManager extends ArrayList<Waypoint> {
         return super.add(waypoint);
     }
 
-    public static WaypointManager getInstance() {
+    public static WaypointManagement getInstance() {
         return INSTANCE;
     }
 

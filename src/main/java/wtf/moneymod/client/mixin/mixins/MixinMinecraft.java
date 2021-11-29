@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
-import wtf.moneymod.client.api.management.impl.ConfigManager;
+import wtf.moneymod.client.api.management.impl.ConfigManagement;
 import wtf.moneymod.client.impl.module.player.MultiTask;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorEntityPlayerSP;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorPlayerControllerMP;
@@ -35,7 +35,7 @@ public abstract class MixinMinecraft
 
     @Inject( method = "shutdown()V", at = @At( "HEAD" ) )
     public void shutdown(CallbackInfo callbackInfo) {
-        ConfigManager.getInstance().start();
+        ConfigManagement.getInstance().start();
     }
 
     // pasted from lambda who cares

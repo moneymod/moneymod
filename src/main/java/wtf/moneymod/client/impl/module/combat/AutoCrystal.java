@@ -34,6 +34,7 @@ import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketUseEntity;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorEntityPlayerSP;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -314,10 +315,11 @@ public class AutoCrystal extends Module {
         if (e.getPacket() instanceof CPacketPlayer && rotating && rotateons) {
 
             if (steps < 1 && yawStep != YawStep.NONE && (lastHitEntity != null || yawStep == YawStep.FULL)) {
-                float packetYaw = (( CPacketPlayer ) e.getPacket()).getYaw(mc.player.rotationYaw);
+                float packetYaw = (( AccessorEntityPlayerSP ) mc.player).getLastReportedYaw();
                 float diff = MathHelper.wrapDegrees(yaw - packetYaw);
                 if (Math.abs(diff) > 180 * steps) {
                     yaw = packetYaw + (diff * ((180 * steps) / Math.abs(diff)));
+                    System.out.println(yaw);
                 }
             }
 
