@@ -21,7 +21,7 @@ import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
-import wtf.moneymod.client.mixin.mixins.ducks.IMinecraft;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorMinecraft;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -64,9 +64,9 @@ public class AutoMine extends Module
         if( mode == Mode.CONTINIOUS )
         {
             if( !focused )
-                ( ( IMinecraft )mc ).mm_setLeftClickCounter( 0 );
+                ( ( AccessorMinecraft )mc ).mm_setLeftClickCounter( 0 );
 
-            ( ( IMinecraft )mc ).mm_invokeSendClickBlockToController( true );
+            ( ( AccessorMinecraft )mc ).mm_invokeSendClickBlockToController( true );
         }
     } );
 

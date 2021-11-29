@@ -1,28 +1,20 @@
 package wtf.moneymod.client.impl.module.movement;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.*;
 import wtf.moneymod.client.api.management.impl.PacketManagement;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.mixin.accessors.AccessorEntity;
+import wtf.moneymod.client.mixin.accessors.IEntity;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
-
-import java.nio.file.Path;
-import java.util.List;
 
 @Module.Register( label = "NoSlow", desc = "Removes movement slow down", cat = Module.Category.MOVEMENT )
 public class NoSlow extends Module {
@@ -111,19 +103,19 @@ public class NoSlow extends Module {
     {
         if( nullCheck( ) ) return;
 
-        if( webs && ( ( AccessorEntity )mc.player ).isInWeb( ) )
+        if( webs && ( ( IEntity )mc.player ).isInWeb( ) )
         {
             fastfallstate = ( !mc.player.onGround && fastfall );
 
             // ээээ блядь я не уверен нахуй
             if( !strict && mc.player.onGround )
             {
-                ( ( AccessorEntity )mc.player ).setInWeb( false );
+                ( ( IEntity )mc.player ).setInWeb( false );
                 mc.player.motionX *= 0.05000000074505806;
                 mc.player.motionZ *= 0.05000000074505806;
 
                 if( mc.player.getRidingEntity( ) != null )
-                    ( ( AccessorEntity )mc.player.getRidingEntity( ) ).setInWeb( false );
+                    ( ( IEntity )mc.player.getRidingEntity( ) ).setInWeb( false );
             }
         }
         else

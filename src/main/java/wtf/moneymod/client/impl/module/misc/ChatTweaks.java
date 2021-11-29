@@ -7,10 +7,9 @@ import net.minecraft.util.text.TextComponentString;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorSPacketChat;
-import wtf.moneymod.client.mixin.mixins.ducks.ICPacketChatMessage;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketChatMessage;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -69,7 +68,7 @@ public class ChatTweaks extends Module {
                     break;
             }
             if ( packet.getMessage().startsWith("/") || packet.getMessage().startsWith("$")) return;
-            ((ICPacketChatMessage) e.getPacket()).setMessage( packet.getMessage() + " | " + prefix);
+            (( AccessorCPacketChatMessage ) e.getPacket()).setMessage( packet.getMessage() + " | " + prefix);
         }
     });
 

@@ -8,7 +8,7 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.mixin.accessors.AccessorEntity;
+import wtf.moneymod.client.mixin.accessors.IEntity;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -26,7 +26,7 @@ public class Criticals extends Module {
                 if (onlyKillaura){
                     if (!Main.getMain().getModuleManager().get(Aura.class).isToggled()) return;
                 }
-                if (!((AccessorEntity) mc.player).isInWeb()) {
+                if (!(( IEntity ) mc.player).isInWeb()) {
                     Entity entity = packet.getEntityFromWorld(mc.world);
                     if (entity instanceof EntityLivingBase) {
                         double x = mc.player.posX;
