@@ -4,15 +4,22 @@ import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import wtf.moneymod.client.Main;
+import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
+import wtf.moneymod.eventhandler.listener.Handler;
+import wtf.moneymod.eventhandler.listener.Listener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,20 +35,26 @@ public class FeetPlace extends Module {
     @Value( value = "Helping Blocks" ) public boolean help = true;
     @Value( value = "Jump Disable" ) public boolean jumpDisable = true;
     @Value( value = "Disable" ) public boolean disable = false;
+    @Value( value = "Rotate" ) public boolean rotate = false;
     @Value( value = "AutoCenter" ) public boolean center = false;
 
     private final Timer timer = new Timer();
     private int placed;
     public boolean didPlace;
     private double y;
+    private BlockPos s;
     private HashMap<BlockPos, Integer> retriesCount = new HashMap<>();
-
     @Override protected void onEnable() {
         placed = 0;
         y = mc.player.posY;
+        rotate = false;
         didPlace = false;
         timer.reset();
         retriesCount.clear();
+        s = new BlockPos(mc.player.getPositionVector());
+        if (center){
+            mc.player.setPosition(s.getX() + 0.5f, s.getY(), s.getZ() + 0.5f);
+        }
     }
 
     @Override public void onTick() {
