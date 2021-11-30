@@ -71,8 +71,11 @@ public class AutoTrap extends Module {
         target = EntityUtil.getTarget(range);
 
         if (disableRange >= 1 && !disable) {
-            if (target == null) setToggled(false);
-            if (mc.player.getDistanceSq(target) >= disableRange * disableRange && target != null) {
+            if (target == null) {
+                setToggled(false);
+                return;
+            }
+            if (mc.player.getDistanceSq(target) >= disableRange * disableRange) {
                 setToggled(false);
                 return;
             }
