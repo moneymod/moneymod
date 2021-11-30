@@ -43,22 +43,25 @@ import java.util.*;
 @Module.Register( label = "AutoCrystal", cat = Module.Category.COMBAT )
 public class AutoCrystal extends Module {
 
+
+
     @Value( value = "Place" ) public boolean place = true;
     @Value( value = "Break" ) public boolean hit = true;
-    @Value( value = "Logic" ) public Logic logic = Logic.BREAKPLACE;
+    @Value( value = "Predict" ) public boolean boost = true;
+
     @Value( value = "Target Range" ) @Bounds( max = 16 ) public int targetRange = 12;
     @Value( value = "Place Range " ) @Bounds( max = 6 ) public int placeRange = 5;
     @Value( value = "Break Range " ) @Bounds( max = 6 ) public int breakRange = 5;
-    @Value( value = "Wall Range" ) @Bounds( max = 6 ) public float wallRange = 3.5f;
-    @Value( value = "Break Delay" ) @Bounds( max = 200 ) public int breakDelay = 40;
     @Value( value = "Place Delay" ) @Bounds( max = 200 ) public int placeDelay = 20;
-    @Value( value = "MinDamage" ) @Bounds( max = 36 ) public int mindmg = 6;
-    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int maxselfdamage = 6;
-    @Value( value = "FacePlaceDamage" ) @Bounds( max = 36 ) public int faceplacehp = 8;
-    @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
+    @Value( value = "Break Delay" ) @Bounds( max = 200 ) public int breakDelay = 40;
+    @Value( value = "Predict Delay" ) @Bounds( max = 200 ) public int predictDelay = 40;
+    @Value( value = "Wall Range" ) @Bounds( max = 6 ) public float wallRange = 3.5f;
     @Value( value = "TickExisted" ) @Bounds( max = 20 ) public int tickexisted = 3;
-    @Value( value = "Predict" ) public boolean boost = true;
-    @Value( value = "Test" ) public boolean test = true;
+    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int maxselfdamage = 6;
+    @Value( value = "MinDamage" ) @Bounds( max = 36 ) public int mindmg = 6;
+    @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
+    @Value( value = "FacePlaceDamage" ) @Bounds( max = 36 ) public int faceplacehp = 8;
+    @Value( value = "Logic" ) public Logic logic = Logic.BREAKPLACE;
     @Value( value = "Rotate" ) public boolean rotateons = true;
     @Value( "Yaw Step" ) public YawStep yawStep = YawStep.NONE;
     @Value( "Steps" ) @Bounds( min = 0, max = 1f ) public float steps = 0.3f;
@@ -70,7 +73,7 @@ public class AutoCrystal extends Module {
     @Value( value = "Outline" ) public boolean outlines = false;
     @Value( value = "Box" ) public boolean boxes = true;
     @Value( value = "Line Widht " ) @Bounds( max = 3f ) public float lineWidht = 0.6f;
-    @Value( value = "Expand" ) @Bounds( max = 1f ) public float expands = 1;
+
     private final Set<BlockPos> placeSet = new HashSet<>();
     private BlockPos renderPos, lastPlaced;
     public EntityPlayer currentTarget;
@@ -297,7 +300,7 @@ public class AutoCrystal extends Module {
         if (e.getPacket() instanceof SPacketSpawnObject && boost) {
             final SPacketSpawnObject packet2 = e.getPacket();
             EnumHand hand = null;
-            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed(20)) {
+            if (packet2.getType() == 51 && placeSet.contains(new BlockPos(packet2.getX(), packet2.getY(), packet2.getZ()).down()) && predictTimer.passed(predictDelay)) {
                 if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
                 AccessorCPacketUseEntity hitPacket = ( AccessorCPacketUseEntity ) new CPacketUseEntity();
                 int entityId = packet2.getEntityID();
