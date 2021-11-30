@@ -2,26 +2,18 @@ package wtf.moneymod.client.impl.module.render;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import wtf.moneymod.client.Main;
-import wtf.moneymod.client.api.management.impl.WaypointManager;
+import wtf.moneymod.client.api.management.impl.WaypointManagement;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
-import wtf.moneymod.client.impl.utility.impl.render.Renderer2D;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.CFontRenderer;
-import wtf.moneymod.client.impl.utility.impl.render.fonts.FontRender;
 import wtf.moneymod.client.impl.waypoint.Waypoint;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 
@@ -34,8 +26,8 @@ public class Waypoints extends Module {
     AccessorRenderManager renderManager = ( AccessorRenderManager ) mc.getRenderManager();
 
     @Override public void onRender3D(float partialTicks) {
-        if (WaypointManager.getInstance().isEmpty()) return;
-        for (Waypoint waypoint : WaypointManager.getInstance()) {
+        if (WaypointManagement.getInstance().isEmpty()) return;
+        for (Waypoint waypoint : WaypointManagement.getInstance()) {
             String sd = mc.getCurrentServerData() == null ? "singleplayer" : mc.getCurrentServerData().serverIP;
             if (waypoint.getDimension() != mc.world.provider.getDimension() || !waypoint.getServer().equalsIgnoreCase(sd))
                 continue;

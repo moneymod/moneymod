@@ -21,25 +21,26 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Module.Register(label = "AutoTrap", cat = Module.Category.COMBAT)
+@Module.Register( label = "AutoTrap", cat = Module.Category.COMBAT )
 public class AutoTrap extends Module {
 
-    @Value(value = "Mode") public Mode mode = Mode.FULL;
-    @Value(value = "BPT") @Bounds(min = 1, max = 20) public int bpt = 8;
-    @Value(value = "Delay") @Bounds(min = 1, max = 250) public int delay = 26;
-    @Value(value = "Range") @Bounds(min = 1, max = 8) public float range = 5;
-    @Value(value = "Disable Range") @Bounds(min = 1, max = 12) public float disableRange = 6;
+    @Value( value = "Mode" ) public Mode mode = Mode.FULL;
+    @Value( value = "BPT" ) @Bounds( min = 1, max = 20 ) public int bpt = 8;
+    @Value( value = "Delay" ) @Bounds( min = 1, max = 250 ) public int delay = 26;
+    @Value( value = "Range" ) @Bounds( min = 1, max = 8 ) public float range = 5;
+    @Value( value = "Disable Range" ) @Bounds( min = 1, max = 12 ) public float disableRange = 6;
     @Value( value = "Retry" ) public boolean retry = true;
     @Value( value = "Help" ) public boolean help = true;
     @Value( value = "Disable" ) public boolean disable = false;
     @Value( value = "Anti Step" ) public boolean antiStep = true;
     @Value( value = "Render" ) public boolean render = true;
     @Value( value = "Move Check" ) public boolean moveCheck = true;
-    final Timer timer = new Timer( );
+    final Timer timer = new Timer();
     boolean didPlace, rotating;
     int placed;
     Entity target;
@@ -50,25 +51,24 @@ public class AutoTrap extends Module {
     });
 
     @Override public void onRender3D(float partialTicks) {
-        if ( render && target != null ) {
-            for ( BlockPos bp : mode == Mode.FULL ? getFull( target ) : getSimple( target ) ) {
-                Renderer3D.drawBoxESP( bp, Color.WHITE, 1f, true, true, 60, 255, 1 );
+        if (render && target != null) {
+            for (BlockPos bp : mode == Mode.FULL ? getFull(target) : getSimple(target)) {
+                Renderer3D.drawBoxESP(bp, Color.WHITE, 1f, true, true, 60, 255, 1);
             }
         }
     }
 
-    @Override protected void onEnable ( ) {
+    @Override protected void onEnable() {
         placed = 0;
         didPlace = false;
-        timer.reset( );
+        timer.reset();
         target = null;
         rotating = false;
     }
 
-    @Override public void onTick ( ) {
-        if ( nullCheck( ) ) return;
-        target = EntityUtil.getTarget( range );
-        /* CODED BY PIGHAX  23.10.21-22:30*/
+    @Override public void onTick() {
+        if (nullCheck()) return;
+        target = EntityUtil.getTarget(range);
 
         if (disableRange >= 1 && !disable) {
             if (target == null) setToggled(false);
@@ -78,39 +78,34 @@ public class AutoTrap extends Module {
             }
         }
 
-        /* CODED BY PIGHAX  23.10.21-22:30*/
-
-        if (target != null){
-            if (EntityUtil.INSTANCE.isMoving((EntityLivingBase) target)) return;
-        }
-        if ( !timer.passed( delay ) && didPlace || target == null ) return;
-        if ( mode == Mode.SIMPLE ) {
-            if ( getSimple( target ).size( ) == 0 ) {
-                if ( disable ) setToggled( false );
+        if (!timer.passed(delay) && didPlace || target == null) return;
+        if (mode == Mode.SIMPLE) {
+            if (getSimple(target).size() == 0) {
+                if (disable) setToggled(false);
                 rotating = false;
                 return;
             }
-            placeBlocks( getSimple( target ) );
+            placeBlocks(getSimple(target));
         } else {
-            if ( getFull( target ).size( ) == 0 ) {
-                if ( disable ) setToggled( false );
+            if (getFull(target).size() == 0) {
+                if (disable) setToggled(false);
                 rotating = false;
                 return;
             }
-            placeBlocks( getFull( target ) );
+            placeBlocks(getFull(target));
         }
         placed = 0;
-        timer.reset( );
+        timer.reset();
     }
 
 
-    List<BlockPos> getSimple ( Entity target ) {
-        AtomicBoolean add = new AtomicBoolean( false );
-        List<BlockPos> blocks = Stream.of( new BlockPos( target.posX, target.posY + 2.0, target.posZ ) ).filter(blockPos -> {
-            switch ( BlockUtil.INSTANCE.isPlaceable( blockPos ) ) {
+    List<BlockPos> getSimple(Entity target) {
+        AtomicBoolean add = new AtomicBoolean(false);
+        List<BlockPos> blocks = Stream.of(new BlockPos(target.posX, target.posY + 2.0, target.posZ)).filter(blockPos -> {
+            switch (BlockUtil.INSTANCE.isPlaceable(blockPos)) {
                 case 0: {
-                    if ( BlockUtil.INSTANCE.calcSide( blockPos ) == null ) {
-                        add.set( true );
+                    if (BlockUtil.INSTANCE.calcSide(blockPos) == null) {
+                        add.set(true);
                     }
                     return true;
                 }
@@ -122,23 +117,23 @@ public class AutoTrap extends Module {
                 }
             }
             return false;
-        } ).collect( Collectors.toList( ) );
-        if ( add.get( ) ) {
-            if ( help )
-                blocks.add( new BlockPos( new BlockPos( target.posX + 1f, target.posY - 1, target.posZ ) ) );
-            for ( int j = 0; j < 3; j++ ) blocks.add( new BlockPos( target.posX + 1f, target.posY + j, target.posZ ) );
+        }).collect(Collectors.toList());
+        if (add.get()) {
+            if (help)
+                blocks.add(new BlockPos(new BlockPos(target.posX + 1f, target.posY - 1, target.posZ)));
+            for (int j = 0; j < 3; j++) blocks.add(new BlockPos(target.posX + 1f, target.posY + j, target.posZ));
         }
         return blocks;
     }
 
 
-    List<BlockPos> getFull ( Entity target ) {
-        List<Vec3d> vec3d = new ArrayList<>( Arrays.asList( new Vec3d( 0.0, 0.0, -1.0 ), new Vec3d( 1.0, 0.0, 0.0 ), new Vec3d( 0.0, 0.0, 1.0 ), new Vec3d( -1.0, 0.0, 0.0 ), new Vec3d( 0.0, 1.0, -1.0 ), new Vec3d( 1.0, 1.0, 0.0 ), new Vec3d( 0.0, 1.0, 1.0 ), new Vec3d( -1.0, 1.0, 0.0 ), new Vec3d( 1.0, 2.0, 0.0 ), new Vec3d( 0.0, 2.0, 0.0 ) ) );
-        if ( help )
-            vec3d.addAll( 0, Arrays.asList( new Vec3d( 0.0, -1.0, -1.0 ), new Vec3d( 1.0, -1.0, 0.0 ), new Vec3d( 0.0, -1.0, 1.0 ), new Vec3d( -1.0, -1.0, 0.0 ) ) );
-        if ( antiStep ) vec3d.add( new Vec3d( 0.0, 3.0, 0.0 ) );
-        return vec3d.stream( ).map( vec -> new BlockPos( target.getPositionVector( ) ).add( vec.x, vec.y, vec.z ) ).filter( bp -> {
-            switch ( BlockUtil.INSTANCE.isPlaceable( bp ) ) {
+    List<BlockPos> getFull(Entity target) {
+        List<Vec3d> vec3d = new ArrayList<>(Arrays.asList(new Vec3d(0.0, 0.0, -1.0), new Vec3d(1.0, 0.0, 0.0), new Vec3d(0.0, 0.0, 1.0), new Vec3d(-1.0, 0.0, 0.0), new Vec3d(0.0, 1.0, -1.0), new Vec3d(1.0, 1.0, 0.0), new Vec3d(0.0, 1.0, 1.0), new Vec3d(-1.0, 1.0, 0.0), new Vec3d(1.0, 2.0, 0.0), new Vec3d(0.0, 2.0, 0.0)));
+        if (help)
+            vec3d.addAll(0, Arrays.asList(new Vec3d(0.0, -1.0, -1.0), new Vec3d(1.0, -1.0, 0.0), new Vec3d(0.0, -1.0, 1.0), new Vec3d(-1.0, -1.0, 0.0)));
+        if (antiStep) vec3d.add(new Vec3d(0.0, 3.0, 0.0));
+        return vec3d.stream().map(vec -> new BlockPos(target.getPositionVector()).add(vec.x, vec.y, vec.z)).filter(bp -> {
+            switch (BlockUtil.INSTANCE.isPlaceable(bp)) {
                 case 0: {
                     return true;
                 }
@@ -150,26 +145,26 @@ public class AutoTrap extends Module {
                 }
             }
             return false;
-        } ).collect( Collectors.toList( ) );
+        }).collect(Collectors.toList());
     }
 
-    void placeBlocks ( List<BlockPos> blockPos ) {
+    void placeBlocks(List<BlockPos> blockPos) {
         rotating = true;
-        for ( BlockPos bp : blockPos ) {
-            if ( placed >= bpt ) return;
+        for (BlockPos bp : blockPos) {
+            if (placed >= bpt) return;
             int old = mc.player.inventory.currentItem;
-            if ( ItemUtil.swapToHotbarSlot( ItemUtil.findItem( BlockObsidian.class ), false) == -1 )
+            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false) == -1)
                 return;
-            switch ( BlockUtil.INSTANCE.isPlaceable( bp ) ) {
+            switch (BlockUtil.INSTANCE.isPlaceable(bp)) {
                 case 0: {
-                    BlockUtil.INSTANCE.placeBlock( bp );
+                    BlockUtil.INSTANCE.placeBlock(bp);
                     didPlace = true;
                     placed++;
                     break;
                 }
                 case -1: {
-                    if ( retry ) {
-                        BlockUtil.INSTANCE.placeBlock( bp );
+                    if (retry) {
+                        BlockUtil.INSTANCE.placeBlock(bp);
                         placed++;
                     }
                     break;
@@ -183,7 +178,8 @@ public class AutoTrap extends Module {
     }
 
     public enum Mode {
-        SIMPLE, FULL
+        SIMPLE,
+        FULL
     }
 
 }

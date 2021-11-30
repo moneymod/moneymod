@@ -6,8 +6,8 @@
   "priority": 2147483647,
   "mixinPriority": 2147483647,
   "mixins": [
-    "ducks.IMinecraft",
-    "ducks.ICPacketChatMessage",
+    "ducks.AccessorMinecraft",
+    "ducks.AccessorCPacketChatMessage",
     "ducks.AccessorSPacketChat",
     "ducks.AccessorRenderManager",
     "ducks.AccessorCPacketUseEntity",

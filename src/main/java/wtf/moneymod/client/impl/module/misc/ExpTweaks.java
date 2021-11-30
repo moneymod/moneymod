@@ -1,13 +1,11 @@
 package wtf.moneymod.client.impl.module.misc;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemExpBottle;
 import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Mouse;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
-import wtf.moneymod.client.mixin.mixins.ducks.IMinecraft;
 
 @Module.Register( label = "ExpTweaks", cat = Module.Category.MISC)
 public class ExpTweaks extends Module {

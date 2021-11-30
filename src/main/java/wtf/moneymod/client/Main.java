@@ -4,11 +4,9 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 import wtf.moneymod.client.api.forge.EventHandler;
 import wtf.moneymod.client.api.management.impl.*;
-import wtf.moneymod.client.impl.module.global.Hud;
 import wtf.moneymod.client.impl.ui.click.Screen;
 import wtf.moneymod.client.impl.ui.hud.HudEditorScreen;
 import wtf.moneymod.client.impl.ui.irc.IrcScreen;
-import wtf.moneymod.client.impl.utility.Globals;
 import wtf.moneymod.client.impl.utility.impl.render.fonts.CFontRenderer;
 import wtf.moneymod.client.impl.utility.impl.cape.CapeThread;
 import wtf.moneymod.eventhandler.EventBus;
@@ -73,7 +71,7 @@ public class Main {
         holeManagement = new HoleManagement();
         moduleManagement = new ModuleManagement().register();
         commandManagement = new CommandManagement().register();
-        ConfigManager.getInstance().load();
+        ConfigManagement.getInstance().load();
         sessionManagement.reset();
         screen = new Screen();
         hudEditorScreen = new HudEditorScreen( );
@@ -83,7 +81,7 @@ public class Main {
             MinecraftForge.EVENT_BUS.register(handler);
         EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
-        Runtime.getRuntime().addShutdownHook(ConfigManager.getInstance());
+        Runtime.getRuntime().addShutdownHook(ConfigManagement.getInstance());
         Display.setTitle(String.format("moneymod build-%s", GitInfo.GIT_SHA.substring(0,7)));
     }
 

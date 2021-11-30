@@ -1,6 +1,6 @@
 package wtf.moneymod.client.impl.command.impl;
 
-import wtf.moneymod.client.api.management.impl.ConfigManager;
+import wtf.moneymod.client.api.management.impl.ConfigManagement;
 import wtf.moneymod.client.impl.command.Command;
 import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 
@@ -11,7 +11,7 @@ public class LoadCommand extends Command {
     }
 
     @Override public void execute(String[] args) {
-        ConfigManager.getInstance().load();
+        ConfigManagement.getInstance().load();
         ChatUtil.INSTANCE.sendMessage("Config loaded", true);
     }
 

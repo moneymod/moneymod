@@ -1,7 +1,6 @@
 package wtf.moneymod.client.api.management.impl;
 
 import com.google.gson.*;
-import net.minecraft.util.math.BlockPos;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.Option;
 import wtf.moneymod.client.impl.module.Module;
@@ -15,9 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public final class ConfigManager extends Thread implements Globals {
+public final class ConfigManagement extends Thread implements Globals {
 
-    private static final ConfigManager CONFIG_MANAGER;
+    private static final ConfigManagement CONFIG_MANAGER;
 
     private static final File mainFolder = new File("moneymod");
     private static final String modulesFolder = mainFolder.getAbsolutePath() + "/modules";
@@ -115,7 +114,7 @@ public final class ConfigManager extends Thread implements Globals {
                 if (waypointJson.size() != 4) continue;
                 try {
                     Waypoint waypoint = new Waypoint().fromJson(waypointJson);
-                    WaypointManager.getInstance().add(waypoint);
+                    WaypointManagement.getInstance().add(waypoint);
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
@@ -128,7 +127,7 @@ public final class ConfigManager extends Thread implements Globals {
         createFile(path);
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
-        for (Waypoint waypoint : WaypointManager.getInstance()) {
+        for (Waypoint waypoint : WaypointManagement.getInstance()) {
             jsonArray.add(waypoint.toJson(waypoint));
         }
         jsonObject.add("waypoints", jsonArray);
@@ -229,12 +228,12 @@ public final class ConfigManager extends Thread implements Globals {
         }
     }
 
-    public static ConfigManager getInstance() {
+    public static ConfigManagement getInstance() {
         return CONFIG_MANAGER;
     }
 
     static {
-        CONFIG_MANAGER = new ConfigManager();
+        CONFIG_MANAGER = new ConfigManagement();
     }
 
 }

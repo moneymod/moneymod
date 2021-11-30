@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Minecraft.class)
-public interface IMinecraft {
+public interface AccessorMinecraft {
 
     @Accessor("rightClickDelayTimer")
     void setRightClickDelayTimer(int rightClickDelayTimer);

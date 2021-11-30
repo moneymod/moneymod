@@ -1,12 +1,10 @@
 package wtf.moneymod.client.impl.module.movement;
 
-import net.minecraft.entity.MoverType;
-import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.mixin.accessors.AccessorEntity;
+import wtf.moneymod.client.mixin.accessors.IEntity;
 
 @Module.Register( label = "FastFall", cat = Module.Category.MOVEMENT)
 public class FastFall extends Module {
@@ -30,7 +28,7 @@ public class FastFall extends Module {
         if (mc.player.isInWater() || mc.player.isInLava()) return;
         if (mc.player.onGround) mc.player.motionY -= speed / 10;
 
-        if (((AccessorEntity) mc.player).isInWeb() && !mc.player.onGround && mc.gameSettings.keyBindSneak.isKeyDown()) {
+        if ((( IEntity ) mc.player).isInWeb() && !mc.player.onGround && mc.gameSettings.keyBindSneak.isKeyDown()) {
             switch (mode){
                 case MOTION:
                     mc.player.motionY = -motionSpeed;

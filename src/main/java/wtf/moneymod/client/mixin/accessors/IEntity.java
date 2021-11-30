@@ -1,6 +1,6 @@
 package wtf.moneymod.client.mixin.accessors;
 
-public interface AccessorEntity
+public interface IEntity
 {
     boolean isInWeb( );
     void setInWeb( boolean state );
