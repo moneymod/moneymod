@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Module.Register(label = "Hud", cat = Module.Category.GLOBAL)
 public class Hud extends Module {
-
+    @Value(value = "Static Color") public boolean staticColor = true;
     @Value(value = "Watermark") public boolean watermark = true;
     @Value(value = "Build Date") public boolean builddate = true;
     @Value(value = "Ping") public boolean ping = true;
@@ -38,6 +38,7 @@ public class Hud extends Module {
     @Value(value = "Color") public JColor color = new JColor(255, 255, 255, false);
 
     public static RenderItem itemRender = mc.getRenderItem();
+
 
     @Override public void onRender2D() {
         int ofs = 1; int offsets = 1;
@@ -151,6 +152,9 @@ public class Hud extends Module {
     }
 
     private int getColor(int diff) {
+        if (staticColor){
+            return color.getColor().getRGB();
+        }
         return ColorUtil.injectBrightness(color.getColor(), Main.getMain().getPulseManagement().getDifference(diff) / 255f).getRGB();
     }
 
