@@ -10,7 +10,7 @@ import java.awt.datatransfer.StringSelection;
 public class CoordsCommand extends Command {
 
     public CoordsCommand() {
-        super("coords", "coords");
+        super("coords", "coords", "c");
     }
 
     @Override public void execute(String[] args) {

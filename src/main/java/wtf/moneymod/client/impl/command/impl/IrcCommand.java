@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class IrcCommand extends Command {
 
     public IrcCommand() {
-        super("c <online/message>", "irc", "i", "c", "chat");
+        super("irc <online/message>", "irc", "i", "chat");
     }
 
     @Override public void execute(String[] args) {
