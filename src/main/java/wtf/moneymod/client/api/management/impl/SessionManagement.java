@@ -16,18 +16,15 @@ public class SessionManagement {
         return pops;
     }
 
-    public void addKills(){
-        kills+=1;
-    }
     public void addDeath(){
-        death+=1;
+        death++;
     }
     public void addPops(){
-        pops+=1;
+        pops++;
     }
 
     public String getInfo(){
-        return String.format("Session info: kills: %s, pops: %s, death: %s",kills,pops,death);
+        return String.format("Session info: pops: %s, death: %s",kills,pops,death);
     }
 
     public void reset(){

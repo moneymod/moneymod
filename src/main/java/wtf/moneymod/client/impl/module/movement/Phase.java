@@ -26,7 +26,6 @@ import wtf.moneymod.eventhandler.listener.Listener;
 public class Phase extends Module {
 
     @Value( value = "Mode" ) public Mode mode = Mode.DEFAULT;
-    @Value( value = "Attempts" ) @Bounds( min = 1, max = 5 ) public int attempts = 1;
     @Value( value = "Speed" ) @Bounds( min = 1, max = 5 ) public int speed = 1;
 
     //BLOCK PHASE
@@ -110,7 +109,7 @@ public class Phase extends Module {
                 if (noclip) mc.player.noClip = true;
                 if (timer.passed(50)) {
                     double[] forward = EntityUtil.forward(get(Type.SPEED));
-                    for (int i = 0; i < this.attempts; ++i) {
+                    for (int i = 0; i < 1; ++i) {
                         bypass = ChatFormatting.RED + "false";
                         this.sendPackets(mc.player.posX + forward[ 0 ], mc.player.posY, mc.player.posZ + forward[ 1 ]);
                     }
@@ -145,7 +144,7 @@ public class Phase extends Module {
             if (mc.player.collidedHorizontally) {
                 if (timer.passed(50)) {
                     double[] move = EntityUtil.forward(get(Type.SPEED));
-                    for (int i = 0; i < attempts; ++i) {
+                    for (int i = 0; i < 1; ++i) {
                         sendPackets(mc.player.posX + move[ 0 ], mc.player.posY + get(Type.UPPOS), mc.player.posZ + move[ 1 ]);
                     }
                 }
@@ -188,7 +187,7 @@ public class Phase extends Module {
 
         if (mode == Mode.TELEPORT) {
             double[] forward = EntityUtil.forward(get(Type.SPEED));
-            for (int i = 0; i < this.attempts; ++i) {
+            for (int i = 0; i < 1; ++i) {
                 this.sendPackets(mc.player.posX + forward[ 0 ], mc.player.posY + get(Type.UPPOS), mc.player.posZ + forward[ 1 ]);
             }
             e.motionX = e.motionX * 0.0001 / 10.0;
