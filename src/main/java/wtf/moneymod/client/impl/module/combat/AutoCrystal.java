@@ -128,16 +128,23 @@ public class AutoCrystal extends Module {
             renderPos = null;
         }
 
-        if (swap == Swap.AUTO) {
-            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
-            if (crystal != -1) ItemUtil.swapToHotbarSlot(crystal, false);
-        }
         offhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         currentTarget = EntityUtil.getTarget(targetRange);
         if (currentTarget == null) {
             renderPos = null;
             return;
         }
+
+        if (swap == Swap.AUTO) {
+            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
+            if (crystal != -1 && currentTarget != null){
+                if (!(mc.player.getDistanceSq(currentTarget) >= MathUtil.INSTANCE.square(placeRange))) {
+                    ItemUtil.swapToHotbarSlot(crystal, false);
+                }
+            }
+        }
+
+            
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
         doAutoCrystal();
     }
