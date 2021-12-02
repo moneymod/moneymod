@@ -70,6 +70,7 @@ public class AutoCrystal extends Module {
     @Value( value = "AutoObbyPlace" ) public boolean autoPlace = true;
     @Value( value = "Swap" ) public Swap swap = Swap.NONE;
     @Value( value = "Swing" ) public Swing swing = Swing.MAINHAND;
+    @Value("PauseWhileEating") public boolean eatPause = false;
     @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0, 180, true);
     @Value( value = "Outline" ) public boolean outlines = false;
     @Value( value = "Box" ) public boolean boxes = true;
@@ -143,6 +144,7 @@ public class AutoCrystal extends Module {
     }
 
     public void doAutoCrystal() {
+        if(mc.player.isHandActive() && eatPause) return;
         if (logic == Logic.BREAKPLACE) {
             if (hit) this.dbreak();
             if (place) this.place();
@@ -246,8 +248,6 @@ public class AutoCrystal extends Module {
             EnumFacing facing = EnumFacing.UP;
             if (swap == Swap.AUTO) {
                ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
-            }
-            if (swap == Swap.AUTO) {
                 if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
             }
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
