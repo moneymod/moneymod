@@ -135,16 +135,6 @@ public class AutoCrystal extends Module {
             return;
         }
 
-        if (swap == Swap.AUTO) {
-            int crystal = ItemUtil.findItem(ItemEndCrystal.class);
-            if (crystal != -1 && currentTarget != null){
-                if (!(mc.player.getDistanceSq(currentTarget) >= MathUtil.INSTANCE.square(placeRange))) {
-                    ItemUtil.swapToHotbarSlot(crystal, false);
-                }
-            }
-        }
-
-            
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
         doAutoCrystal();
     }
@@ -221,27 +211,24 @@ public class AutoCrystal extends Module {
 
                     if (placePos != null) {
                         old = mc.player.inventory.currentItem;
-                        ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.OBSIDIAN), false);
-                        BlockUtil.INSTANCE.placeBlock(placePos);
-                        ItemUtil.swapToHotbarSlot(old, false);
-                        blackPeople = true;
-                        return;
+                            ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.OBSIDIAN), false);
+                            BlockUtil.INSTANCE.placeBlock(placePos);
+                            ItemUtil.swapToHotbarSlot(old, false);
+                            blackPeople = true;
+                            return;
+                        }
                     }
+
                 }
-
             }
-        }
 
-        if (swap == Swap.SILENT) {
-            if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
-                return;
+            if (swap == Swap.SILENT) {
+                if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
+                    return;
+                }
             }
-        }
-        if (swap == Swap.NONE) {
+            if (swap == Swap.NONE) {
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
-        }
-        if (swap == Swap.AUTO) {
-            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
         if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
@@ -254,6 +241,12 @@ public class AutoCrystal extends Module {
             }
             if (placePos == null) return;
             EnumFacing facing = EnumFacing.UP;
+            if (swap == Swap.AUTO) {
+               ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
+            }
+            if (swap == Swap.AUTO) {
+                if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
+            }
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
             mc.playerController.updateController();
             if (swap == Swap.SILENT) ItemUtil.swapToHotbarSlot(old, false);
