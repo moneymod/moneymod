@@ -274,7 +274,7 @@ public class AutoCrystal extends Module {
             maxDamage = targetDamage;
         }
         if (maxCrystal != null && breakTimer.passed(( int ) breakDelay)) {
-            if (!(maxCrystal.ticksExisted >= tickexisted)) return;
+            if (!(maxCrystal.ticksExisted >= this.tickexisted)) return;
             if (rotateons) {
                 rotate(maxCrystal);
             }

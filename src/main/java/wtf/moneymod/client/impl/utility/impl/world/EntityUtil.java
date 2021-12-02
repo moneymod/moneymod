@@ -52,6 +52,46 @@ public enum EntityUtil implements Globals {
         return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || FriendManagement.getInstance().is(entity.getName());
     }
 
+    public double getCurrentStepHeight(double height) {
+        boolean collided = (mc.player.onGround && mc.player.collidedHorizontally);
+
+        if (!collided) {
+            return 0.0D;
+        }
+
+        double maximumY = -1.0D;
+
+        float rotationYaw = mc.player.rotationYaw;
+        if (mc.player.moveForward < 0.0F)
+            rotationYaw += 180.0F;
+        float forward = 1.0F;
+        if (mc.player.moveForward < 0.0F) {
+            forward = -0.5F;
+        } else if (mc.player.moveForward > 0.0F) {
+            forward = 0.5F;
+        }
+        if (mc.player.moveStrafing > 0.0F)
+            rotationYaw -= 90.0F * forward;
+        if (mc.player.moveStrafing < 0.0F)
+            rotationYaw += 90.0F * forward;
+
+        float yaw = (float) Math.toRadians(rotationYaw);
+
+        double x = -MathHelper.sin(yaw) * 0.4D;
+        double z = MathHelper.cos(yaw) * 0.4D;
+
+        AxisAlignedBB expandedBB = mc.player.getEntityBoundingBox().offset(0.0D, 0.05D, 0.0D).grow(0.05D);
+        expandedBB = expandedBB.setMaxY(expandedBB.maxY + (height));
+
+        for (AxisAlignedBB axisAlignedBB : mc.world.getCollisionBoxes(mc.player, expandedBB)) {
+            if (axisAlignedBB.maxY > maximumY)
+                maximumY = axisAlignedBB.maxY;
+        }
+
+        maximumY -= mc.player.posY;
+        return (maximumY > 0.0D && maximumY <= height) ? maximumY : 0.0D;
+    }
+
     public void setVanilaSpeed (MoveEvent event, double speed ) {
         float moveForward = mc.player.movementInput.moveForward;
         float moveStrafe = mc.player.movementInput.moveStrafe;
@@ -89,9 +129,9 @@ public enum EntityUtil implements Globals {
 
 
 
-    public boolean isMoving(EntityLivingBase entity) {
-        return entity.moveStrafing != 0 || entity.moveForward != 0;
-    }
+        public boolean isMoving(EntityLivingBase entity) {
+            return entity.moveStrafing != 0 || entity.moveForward != 0;
+        }
 
     public static double[] forward(double d) {
         float f = mc.player.movementInput.moveForward;

@@ -19,7 +19,7 @@ public class GlideWalk extends Module {
     @Handler
     public Listener<MoveEvent> moveListener = new Listener<>(MoveEvent.class, event -> {
         if (nullCheck()) return;
-        EntityUtil.INSTANCE.setVanilaSpeed(event, speed);
+        EntityUtil.INSTANCE.setVanilaSpeed(event, speed / 2);
     });
 
     @Override

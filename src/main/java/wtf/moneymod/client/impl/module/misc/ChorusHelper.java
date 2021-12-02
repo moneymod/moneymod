@@ -43,7 +43,7 @@ public class ChorusHelper extends Module {
         if (checkChorus) {
             if (!mc.player.getPosition().equals(pos) && !posTp) {
                 if (mc.player.getDistance(pos.getX(),pos.getY(),pos.getZ()) > 1) {
-                    mc.player.setPosition(pos.getX(),pos.getY(),pos.getZ());
+                    mc.player.setPosition(pos.getX()  + 0.5F,pos.getY(),pos.getZ() + 0.5F);
                     posTp = true;
                 }
             }
@@ -70,7 +70,7 @@ public class ChorusHelper extends Module {
     public Listener<FinishEatEvent> onFinishEatEvent = new Listener<>(FinishEatEvent.class, e -> {
         if (e.getEntity() == mc.player) {
             if (e.getItemStack().getItem().equals(Items.CHORUS_FRUIT)) {
-                pos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+                pos = new BlockPos(mc.player.getPositionVector());
                 posTp = false;
                 checkChorus = true;
             }
