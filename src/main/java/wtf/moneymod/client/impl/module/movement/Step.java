@@ -22,42 +22,44 @@ public class Step extends Module {
 
     @Handler
     public Listener<UpdateWalkingPlayerEvent> playerEventListener = new Listener<>(UpdateWalkingPlayerEvent.class, event -> {
-        if (!mc.player.isInWater() && mc.player.onGround && !mc.player.isOnLadder() && !mc.player.movementInput.jump && mc.player.collidedVertically && (double) mc.player.fallDistance < 0.1) {
-            currentStepHeight = EntityUtil.INSTANCE.getCurrentStepHeight(this.height);
-            if (currentStepHeight == 0.0D) {
-                return;
-            }
+        if (packet) {
+            if (!mc.player.isInWater() && mc.player.onGround && !mc.player.isOnLadder() && !mc.player.movementInput.jump && mc.player.collidedVertically && (double) mc.player.fallDistance < 0.1) {
+                currentStepHeight = EntityUtil.INSTANCE.getCurrentStepHeight(this.height);
+                if (currentStepHeight == 0.0D) {
+                    return;
+                }
 
-            if (currentStepHeight <= 1.0D) {
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.75D, mc.player.posZ, mc.player.onGround));
-                mc.player.setPosition(mc.player.posX, mc.player.posY + 1.0D, mc.player.posZ);
-                return;
-            }
+                if (currentStepHeight <= 1.0D) {
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.75D, mc.player.posZ, mc.player.onGround));
+                    mc.player.setPosition(mc.player.posX, mc.player.posY + 1.0D, mc.player.posZ);
+                    return;
+                }
 
-            if (currentStepHeight <= height && currentStepHeight <= 1.5D) {
-                event.setCancelled(true);
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.75D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.0D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.16D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.23D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.2D, mc.player.posZ, mc.player.onGround));
-                mc.player.setPosition(mc.player.posX, mc.player.posY + currentStepHeight, mc.player.posZ);
-                return;
-            }
+                if (currentStepHeight <= height && currentStepHeight <= 1.5D) {
+                    event.setCancelled(true);
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.75D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.0D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.16D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.23D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.2D, mc.player.posZ, mc.player.onGround));
+                    mc.player.setPosition(mc.player.posX, mc.player.posY + currentStepHeight, mc.player.posZ);
+                    return;
+                }
 
-            if (currentStepHeight <= height) {
-                event.setCancelled(true);
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.7800000000000002D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.63D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.51D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.9D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.21D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.45D, mc.player.posZ, mc.player.onGround));
-                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.43D, mc.player.posZ, mc.player.onGround));
-                mc.player.setPosition(mc.player.posX, mc.player.posY + currentStepHeight, mc.player.posZ);
+                if (currentStepHeight <= height) {
+                    event.setCancelled(true);
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.42D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.7800000000000002D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.63D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.51D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.9D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.21D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.45D, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.43D, mc.player.posZ, mc.player.onGround));
+                    mc.player.setPosition(mc.player.posX, mc.player.posY + currentStepHeight, mc.player.posZ);
+                }
             }
         }
     });
