@@ -57,10 +57,11 @@ public class AutoCrystal extends Module {
     @Value( value = "Predict Delay" ) @Bounds( max = 200 ) public int predictDelay = 40;
     @Value( value = "Wall Range" ) @Bounds( max = 6 ) public float wallRange = 3.5f;
     @Value( value = "TickExisted" ) @Bounds( max = 20 ) public int tickexisted = 3;
-    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int maxselfdamage = 6;
+    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int    maxselfdamage = 6;
     @Value( value = "MinDamage" ) @Bounds( max = 36 ) public int mindmg = 6;
     @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
     @Value( value = "FacePlaceDamage" ) @Bounds( max = 36 ) public int faceplacehp = 8;
+    @Value( value = "Stop Hp" ) @Bounds( max = 36 ) public int stopHp = 8;
     @Value( value = "Logic" ) public Logic logic = Logic.BREAKPLACE;
     @Value( value = "Rotate" ) public boolean rotateons = true;
     @Value( "Yaw Step" ) public YawStep yawStep = YawStep.NONE;
@@ -136,7 +137,9 @@ public class AutoCrystal extends Module {
         }
 
         lowArmor = ItemUtil.isArmorLow(currentTarget, ( int ) armorscale);
-        doAutoCrystal();
+        if (EntityUtil.getHealth(mc.player) > stopHp) {
+            doAutoCrystal();
+        }
     }
 
     public void doAutoCrystal() {
