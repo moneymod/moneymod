@@ -81,21 +81,12 @@ public class MotionClip extends Module {
             if (mc.player.collidedHorizontally) {
                 mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX + forward[0], mc.player.posY, mc.player.posZ + forward[1], mc.player.onGround));
                 if (t++ >= 1) {
-                    if (fallMethod == FallMethod.PLAYERSEND) {
+                    if (fallMethod == FallMethod.PLAYERSEND)
                         mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX, 0, mc.player.posZ, mc.player.onGround));
-                        t = 0;
-                    } else if (fallMethod == FallMethod.CONNECTIONSEND){
-                        mc.getConnection().sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX, 0, mc.player.posZ, mc.player.onGround));
-                        t = 0;
-                    }
+                    else mc.getConnection().sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX, 0, mc.player.posZ, mc.player.onGround));
+                    t = 0;
                 }
                 mc.player.connection.sendPacket((Packet)new CPacketEntityAction((Entity)mc.player, CPacketEntityAction.Action.STOP_RIDING_JUMP));
-                if (teleportingId) {
-                    teleportId++;
-                    if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId - 1));
-                    mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId));
-                    if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId + 1));
-                }
             } else {
                 if (timer) Main.TICK_TIMER = 1;
                 if (!EntityUtil.INSTANCE.isMoving(mc.player) && walkBypass) {
@@ -105,6 +96,12 @@ public class MotionClip extends Module {
 
                     }
                 }
+            }
+            if (teleportingId) {
+                teleportId++;
+                if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId - 1));
+                mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId));
+                if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId + 1));
             }
         }
 
