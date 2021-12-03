@@ -20,6 +20,14 @@ public enum ChatUtil implements Globals {
         sendMsgEvent(staticName, text, false, 1);
     }
 
+    public void sendInfoMessage(String text) {
+        sendMsgEvent(staticName, ChatFormatting.GOLD + "[INFO] " + ChatFormatting.YELLOW + text, false, 1);
+    }
+
+    public void sendErrorMessage(String text) {
+        sendMsgEvent(staticName, ChatFormatting.DARK_RED + "[ERROR] " + ChatFormatting.RED + text, false, 1);
+    }
+
     public void sendMessage(String text, Boolean silent) {
         sendMsgEvent(staticName, text, silent, 1);
     }

@@ -17,13 +17,17 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
+import java.util.Random;
+
 @Module.Register( label = "MotionClip", desc = "Bypass Method For CC", cat = Module.Category.MOVEMENT )
 public class MotionClip extends Module {
 
 
     @Value(value = "Movement") public Movement movement = Movement.SNEAK;
     @Value(value = "Method") public Method method = Method.PACKETS;
+    @Value(value = "Fall") public FallMethod fallMethod = FallMethod.PLAYERSEND;
     @Value(value = "Speed") @Bounds(min = 0, max = 8) public float speed = 1;
+    @Value(value = "Updater") @Bounds(min = 0, max = 1) public float updater = 0.2f;
     @Value(value = "NoClip") public boolean noClip = true;
     @Value(value = "Set Pos") public boolean setPos = false;
     @Value(value = "Cancel Motion") public boolean cancelMotion = false;
@@ -41,8 +45,12 @@ public class MotionClip extends Module {
         SPRINT, SNEAK, NONE
     }
 
+    public enum FallMethod {
+        PLAYERSEND, CONNECTIONSEND
+    }
 
 
+    int t;
     int teleportId;
 
     @Override
@@ -50,7 +58,9 @@ public class MotionClip extends Module {
         Main.TICK_TIMER = 1;    
         mc.player.noClip = false;
         teleportId = 0;
+        t = 0;
     }
+    private Random random = new Random();
 
     @Override
     public void onTick() {
@@ -69,11 +79,23 @@ public class MotionClip extends Module {
             double[] posSpeed = EntityUtil.forward(0.0000000001);
 
             if (mc.player.collidedHorizontally) {
-                
-                if (timer) Main.TICK_TIMER = timertick;
-                sendPacket(forward[0],mc.player.posY,forward[1],teleportingId,extraTelepor,fallTeleport,true);
-                if (setPos) mc.player.setPosition(mc.player.posX + (posSpeed[0]), mc.player.posY, mc.player.posZ + (posSpeed[1]));
-           
+                mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX + forward[0], mc.player.posY, mc.player.posZ + forward[1], mc.player.onGround));
+                if (t++ >= 1) {
+                    if (fallMethod == FallMethod.PLAYERSEND) {
+                        mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX, 0, mc.player.posZ, mc.player.onGround));
+                        t = 0;
+                    } else if (fallMethod == FallMethod.CONNECTIONSEND){
+                        mc.getConnection().sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX, 0, mc.player.posZ, mc.player.onGround));
+                        t = 0;
+                    }
+                }
+                mc.player.connection.sendPacket((Packet)new CPacketEntityAction((Entity)mc.player, CPacketEntityAction.Action.STOP_RIDING_JUMP));
+                if (teleportingId) {
+                    teleportId++;
+                    if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId - 1));
+                    mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId));
+                    if (extraTelepor) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId + 1));
+                }
             } else {
                 if (timer) Main.TICK_TIMER = 1;
                 if (!EntityUtil.INSTANCE.isMoving(mc.player) && walkBypass) {
@@ -83,12 +105,6 @@ public class MotionClip extends Module {
 
                     }
                 }
-            }
-            ++this.teleportId;
-            if (teleportingId) {
-                MotionClip.mc.player.connection.sendPacket((Packet) new CPacketConfirmTeleport(this.teleportId - 1));
-                MotionClip.mc.player.connection.sendPacket((Packet) new CPacketConfirmTeleport(this.teleportId));
-                MotionClip.mc.player.connection.sendPacket((Packet) new CPacketConfirmTeleport(this.teleportId + 1));
             }
         }
 
@@ -108,21 +124,6 @@ public class MotionClip extends Module {
         }
     }
 
-    public void sendPacket(double forward1, double y, double forward2, boolean tpId, boolean extra, boolean oldFallTp, boolean fallPacket) {
-        if (fallPacket) mc.player.connection.sendPacket((Packet) new CPacketEntityAction((Entity) mc.player, CPacketEntityAction.Action.STOP_RIDING_JUMP));
-       mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(mc.player.posX + forward1, y, mc.player.posZ + forward2, false));
-        if (oldFallTp) {
-            mc.getConnection().sendPacket((Packet) new CPacketPlayer.Position(forward1, -1337, forward2, false));
-        } else {
-            mc.player.connection.sendPacket((Packet) new CPacketPlayer.Position(forward1, -1337, forward2, false));
-        }
-        if (tpId) {
-            teleportId++;
-            if (extra) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId - 1));
-            mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId));
-            if (extra) mc.player.connection.sendPacket(new CPacketConfirmTeleport(teleportId + 1));
-        }
-    }
 
     @Handler
     public Listener<PacketEvent.Receive> packetEventReceive = new Listener<>(PacketEvent.Receive.class, e -> {

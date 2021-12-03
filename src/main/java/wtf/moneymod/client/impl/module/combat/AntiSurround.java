@@ -122,7 +122,7 @@ public class AntiSurround extends Module {
 
             int old = mc.player.inventory.currentItem;
             if (step == 0) {
-                if (BlockUtil.canPlaceCrystal(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), true) && ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) != -1) {
+                    if (BlockUtil.canPlaceCrystal(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), true) && ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) != -1) {
                     BlockUtil.placeCrystalOnBlock(new BlockPos(targetBlock).add(lole.get(targetBlock).x, -1, lole.get(targetBlock).z), EnumHand.MAIN_HAND, true);
                     crystal = mc.world.loadedEntityList.stream().filter(EntityEnderCrystal.class::isInstance).min(Comparator.comparing(c -> mc.player.getDistance(c))).orElse(null);
                     ItemUtil.swapToHotbarSlot(old, false);
