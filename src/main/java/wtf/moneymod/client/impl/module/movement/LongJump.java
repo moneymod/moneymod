@@ -14,7 +14,7 @@ import wtf.moneymod.eventhandler.listener.Listener;
 @Module.Register( label = "LongJump", cat = Module.Category.MOVEMENT)
 public class LongJump extends Module {
 
-    @Value(value = "Speed") @Bounds(min = 1, max = 15) public int speed = 10;
+    @Value(value = "Speed") @Bounds(min = 1, max = 12) public int speed = 10;
     @Value(value = "Toggle") public boolean toggle = true;
     boolean motion;
     private Timer timer = new Timer();
@@ -30,7 +30,7 @@ public class LongJump extends Module {
     public void onTick(){
         if (nullCheck()) return;
 
-        double ss[] = EntityUtil.forward(this.speed / 1.5);
+        double ss[] = EntityUtil.forward(this.speed / 2);
 
         if (mc.player.onGround && !motion && EntityUtil.INSTANCE.isMoving(mc.player)) {
             mc.player.jump();
