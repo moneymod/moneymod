@@ -41,6 +41,7 @@ public class PhaseWalk extends Module {
     private Timer timer = new Timer();
     @Override
     public void onToggle(){
+        timer.reset();
         walkDelay = 0;
         tpId = 0;
         mc.player.noClip = false;
