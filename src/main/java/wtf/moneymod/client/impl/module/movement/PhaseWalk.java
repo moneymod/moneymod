@@ -20,7 +20,7 @@ import wtf.moneymod.eventhandler.event.Event;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-@Module.Register( label = "PhaseWalkRewrite", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "PhaseWalk", cat = Module.Category.MOVEMENT)
 public class PhaseWalk extends Module {
 
     @Value(value = "Mode") public Mode mode = Mode.PACKET;
