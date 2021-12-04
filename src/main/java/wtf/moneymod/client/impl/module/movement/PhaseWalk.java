@@ -24,7 +24,7 @@ import wtf.moneymod.eventhandler.listener.Listener;
 public class PhaseWalk extends Module {
 
     @Value(value = "Mode") public Mode mode = Mode.PACKET;
-    @Value(value = "Teleport") public Teleport teleport = Teleport.UP;
+    @Value(value = "Teleport") public Teleport teleport = Teleport.FULL;
     @Value(value = "Movement") public Movement movement = Movement.SHIFT;
     @Value(value = "Speed") @Bounds(min = 0,max = 4) public float speed = 0.1f;
     @Value(value = "Factor") @Bounds(min = 0,max = 8) public int factor = 1;
