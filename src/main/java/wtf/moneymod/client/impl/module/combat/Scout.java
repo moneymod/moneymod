@@ -1,5 +1,6 @@
 package wtf.moneymod.client.impl.module.combat;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemBow;
@@ -27,7 +28,8 @@ import java.awt.*;
 public class Scout extends Module {
 
     @Value(value = "Time") @Bounds(min = 1,max = 8) public int time = 2;
-    @Value(value = "Spoof") @Bounds(min = 1,max = 12) public int spoof = 6;
+    @Value(value = "Spoof Ticks") @Bounds(min = 1,max = 100) public int spoof = 10;
+    @Value(value = "Horizontally") public boolean horizontally = false;
     @Value(value = "Render") public boolean render = false;
     @Value(value = "AutoFire") public boolean autoFire = true;
 
@@ -66,9 +68,16 @@ public class Scout extends Module {
                         hs = true;
                         lastHsTime = System.currentTimeMillis();
                         mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING));
-                        for ( int index = 0; index < spoof * 10; ++index ) {
-                            mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1e-10, mc.player.posZ, false));
-                            mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 1e-10, mc.player.posZ, true));
+                        for ( int i = 0; i < spoof; ++i ) {
+                            double yaw = mc.player.rotationYaw * 0.017453292;
+                            double t = 1;
+                            if (!horizontally) {
+                                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1e-10, mc.player.posZ, false));
+                                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 1e-10, mc.player.posZ, true));
+                            } else {
+                                mc.player.setPosition(mc.player.posX - Math.sin(yaw) * t, mc.player.posY, mc.player.posZ + Math.cos(yaw) * t);
+                                mc.player.setPosition(mc.player.posX + Math.sin(yaw) * t, mc.player.posY, mc.player.posZ - Math.cos(yaw) * t);
+                            }
                         }
                         hs = false;
                     }
@@ -82,10 +91,8 @@ public class Scout extends Module {
         GlStateManager.pushMatrix();
         ScaledResolution sr = new ScaledResolution(mc);
         if (render) {
-            FontRender.drawStringWithShadow(String.format("%s/100", percent) + "%", (int)(sr.getScaledWidth() / 2f - mc.fontRenderer.getStringWidth(String.format("%s/100", percent) + "%") / 2f),
+            FontRender.drawStringWithShadow(percent >= 100 ? ChatFormatting.GREEN + "Ready" : "Not Ready", (int)(sr.getScaledWidth() / 2f - mc.fontRenderer.getStringWidth(percent >= 100 ? ChatFormatting.GREEN + "Ready" : "Not Ready") / 2f),
                     (int)(sr.getScaledHeight() / 2f + 10f), new Color(170, 170, 170 ).getRGB());
-            Renderer2D.drawRect(sr.getScaledWidth() / 2f - 21, sr.getScaledHeight() / 2f + 20f, sr.getScaledWidth() / 2f + 23, sr.getScaledHeight() / 2f + 25f, new Color( 0, 0, 0, 140 ).getRGB());
-            Renderer2D.drawRect(sr.getScaledWidth() / 2f - 20, sr.getScaledHeight() / 2f + 21f, sr.getScaledWidth() / 2f - 20 + (percent * 0.42f), sr.getScaledHeight() / 2f + 24f, percent == 100 ? Color.green.getRGB() : Color.red.getRGB( ) );
         }
         GlStateManager.popMatrix( );
     }
