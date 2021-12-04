@@ -33,43 +33,39 @@ public class FastFall extends Module {
         Main.TICK_TIMER = 1;
     }
 
-    @Handler
-    public Listener< MoveEvent > onMove = new Listener< >( MoveEvent.class, event ->
-    {
+    @Override
+    public void onTick() {
         if (mc.player.isInWater() || mc.player.isInLava()) return;
-        if (mc.player.onGround)
-        {
-            if( !stop )
-            {
-                if( event.motionY < 0 )
-                    event.motionY -= speed / 10;
-            }
-            else
-            {
-                if( trace( ) && event.motionY < 0 )
-                {
-                    event.motionX *= 0.05;
-                    event.motionY -= speed / 10;
-                    event.motionZ *= 0.05;
-                }
-            }
-        }
+        if (mc.player.onGround) mc.player.motionY -= speed / 10;
 
         if ((( IEntity ) mc.player).isInWeb() && !mc.player.onGround && mc.gameSettings.keyBindSneak.isKeyDown()) {
             switch (mode){
                 case MOTION:
-                    event.motionY = -motionSpeed;
+                    mc.player.motionY = -motionSpeed;
                     break;
                 case TIMER:
                     Main.TICK_TIMER = timerSpeed * 4;
                     break;
                 case SKIP:
-                    event.motionY = -55;
+                    mc.player.motionY = -55;
                     break;
 
             }
         } else
             Main.TICK_TIMER = 1;
+    }
+
+    @Handler
+    public Listener< MoveEvent > onMove = new Listener< >( MoveEvent.class, event ->
+    {
+        if (mc.player.isInWater() || mc.player.isInLava()) return;
+
+        if( stop && trace( ) && mc.player.onGround )
+        {
+            event.motionX *= 0.05;
+            event.motionY -= speed / 10;
+            event.motionZ *= 0.05;
+        }
     } );
 
     private boolean trace( )
