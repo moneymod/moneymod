@@ -18,6 +18,7 @@
     "ducks.AccessorEntityPlayerSP",
     "ducks.AccessorPlayerControllerMP",
     "MixinGuiScreen",
+    "MixinRenderLivingBase",
     "MixinNetworkManager",
     "MixinMinecraft",
     "MixinGuiMainMenu",
