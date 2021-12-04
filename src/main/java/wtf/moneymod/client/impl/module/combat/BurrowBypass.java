@@ -1,6 +1,7 @@
 package wtf.moneymod.client.impl.module.combat;
 
 import net.minecraft.block.BlockObsidian;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
@@ -9,7 +10,7 @@ import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
 
-@Module.Register( label = "SelfFillBypass", cat = Module.Category.COMBAT )
+@Module.Register( label = "BurrowBypass", cat = Module.Category.COMBAT )
 public class BurrowBypass extends Module {
 
     /**
@@ -17,45 +18,80 @@ public class BurrowBypass extends Module {
      * date: 18.11.2021
      */
 
-    @Value(value = "Ticks") @Bounds(min = 8, max = 130) public int ticks = 250;
-    @Value(value = "Timer") @Bounds(max = 100) public int timer = 20;
-    @Value(value = "Auto Swap") public boolean autoSwap = false;
-    @Value(value = "Jump Mode") public JumpMode jumpMode = JumpMode.NORMAL;
-    public enum JumpMode{
-        NORMAL, MODIFY
-    }
+    @Value("Timer") @Bounds(min = 1, max = 100) public int timertick = 50;
 
-    private int delay;
-    private BlockPos startPos;
+    int delay = 0;
+    int delay2 = 0;
+    int stage = 1;
+    int old = 0;
+    BlockPos pos;
+
+    @Override
+    public void onToggle(){
+        delay = 0;
+        delay2 = 0;
+        Main.TICK_TIMER = 1;
+    }
     @Override
     public void onEnable(){
-        startPos = new BlockPos(mc.player.getPositionVector());
-        delay = 0;
-    }
-    @Override
-    public void onDisable(){
         Main.TICK_TIMER = 1;
-        startPos = null;
+        delay = 0;
+        delay2 = 0;
+        old = mc.player.inventory.currentItem;
+        stage = 1;
+        pos = new BlockPos(mc.player.getPositionVector());
     }
 
     @Override
-    public void onTick() {
+    public void onTick(){
         if (nullCheck()) return;
-        if (ItemUtil.findItem(BlockObsidian.class) == -1) setToggled(false);
+        System.out.println("OnTick");
         delay++;
-        if (mc.player.onGround) mc.player.motionY = 0.48f;
-        Main.TICK_TIMER = timer;
-        if (delay >= (ticks / 2)){
-            int old = mc.player.inventory.currentItem;
-            if (autoSwap) ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false);
-            BlockUtil.INSTANCE.placeBlock(startPos);
-            if (autoSwap) ItemUtil.swapToHotbarSlot(old, false);
-        }
-        if (delay >= ticks){
-            Main.TICK_TIMER = 1;
-            delay = 0;
-            setToggled(false);
-        }
+        if (stage == 1){
+            System.out.println("Stage1");
 
+
+            Main.TICK_TIMER = 50;
+            if (mc.player.onGround){
+                mc.player.jump();
+                mc.player.motionY -= 0.25;
+            }
+            if (delay >= 30){
+                Main.TICK_TIMER = 1;
+                delay = 0;
+                stage = 1;
+            }
+        }
+        if (stage == 2){
+
+            System.out.println("Stage2");
+            if (nullCheck()) return;
+            if (ItemUtil.findItem(Blocks.OBSIDIAN) == -1){
+                setToggled(false);
+                return;
+            } else {
+                int slot = ItemUtil.findItem(Blocks.OBSIDIAN);
+                if (mc.player.onGround) mc.player.jump();
+                ItemUtil.swapToHotbarSlot(slot, false);
+                BlockUtil.INSTANCE.placeBlock(pos);
+                ItemUtil.swapToHotbarSlot(old, false);
+                if (mc.world.getBlockState(pos).getBlock() != Blocks.AIR) stage = 2;
+            }
+        }
+        if (stage == 3){
+
+            System.out.println("Stage3");
+            delay2++;
+            Main.TICK_TIMER = timertick;
+            if (delay2 >= 30){
+                Main.TICK_TIMER = 1;
+                delay2 = 0;
+                setToggled(false);
+            }
+            if (mc.player.onGround){
+                mc.player.jump();
+                mc.player.motionY -= 0.25;
+            }
+        }
     }
 }

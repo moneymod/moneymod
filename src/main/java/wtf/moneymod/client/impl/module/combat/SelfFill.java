@@ -39,8 +39,6 @@ public class SelfFill extends Module {
 
     @Override
     public void onTick() {
-        float yaw = mc.player.rotationYaw;
-        float pitch = mc.player.rotationPitch;
         int startSlot = mc.player.inventory.currentItem;
         startPos = new BlockPos(mc.player.getPositionVector());
         if (ItemUtil.findItem(Blocks.ENDER_CHEST, Blocks.OBSIDIAN, Blocks.CHEST) == -1) {

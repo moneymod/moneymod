@@ -53,12 +53,6 @@ public class ServerFlag extends Module {
                         mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + height, mc.player.posZ, false));
                         break;
                     case PACKET2:
-
-
-
-
-
-                        mc.player.setPositionAndUpdate(mc.player.posX, mc.player.posY + height, mc.player.posZ);
                         break;
                     case POSITON3:
                         mc.player.setPosition(mc.player.posX, mc.player.posY + height, mc.player.posZ);
