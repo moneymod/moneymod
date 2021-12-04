@@ -7,20 +7,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.math.Rotation;
 import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
+import javax.annotation.Nonnull;
+
+@Deprecated
 public class RotationManagement implements Globals {
 
     private float yaw, pitch;
-
-    @Handler public Listener<PacketEvent.Send> packetEventSend = new Listener<>(PacketEvent.Send.class, e -> {
-        if (e.getPacket() instanceof CPacketPlayer) {
-            (( AccessorCPacketPlayer ) e.getPacket()).setYaw(yaw);
-            (( AccessorCPacketPlayer ) e.getPacket()).setPitch(pitch);
-        }
-    });
 
     public void update() {
         yaw = mc.player.rotationYaw;
@@ -41,6 +38,16 @@ public class RotationManagement implements Globals {
             mc.player.rotationYawHead = yaw;
             mc.player.rotationPitch = pitch;
         }
+    }
+
+    public static Rotation calcRotation(@Nonnull BlockPos bp) {
+        float[] angles = calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(bp.getX() + .5f, bp.getY() + .5f, bp.getZ() + .5f));
+        return new Rotation(angles[ 0 ], angles[ 1 ]);
+    }
+
+    public static Rotation calcRotation(@Nonnull Entity e) {
+        float[] angles = calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), e.getPositionEyes(mc.getRenderPartialTicks()));
+        return new Rotation(angles[ 0 ], angles[ 1 ]);
     }
 
     public float[] look(BlockPos bp, boolean packet) {

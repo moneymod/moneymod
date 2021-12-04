@@ -114,7 +114,7 @@ public class AntiSurround extends Module {
                     return lambdaPos;
                 }).filter(bp -> {
                     BlockPos crystalPos = new BlockPos(bp).add(lole.get(bp).x, -1, lole.get(bp).z);
-                    return mc.world.getBlockState(bp).getBlock() != Blocks.BEDROCK && BlockUtil.canPlaceCrystal(crystalPos, true, false);
+                    return mc.world.getBlockState(bp).getBlock() != Blocks.BEDROCK && BlockUtil.canPlaceCrystal(crystalPos, true, false, false);
                 }).min(Comparator.comparing(bp -> mc.player.getDistanceSq(bp))).orElse(null);
                 return;
             }

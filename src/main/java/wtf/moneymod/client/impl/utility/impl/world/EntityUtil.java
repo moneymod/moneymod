@@ -1,10 +1,10 @@
 package wtf.moneymod.client.impl.utility.impl.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockWeb;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
-import wtf.moneymod.client.Main;
+import net.minecraft.world.Explosion;
 import wtf.moneymod.client.api.events.MoveEvent;
 import wtf.moneymod.client.api.management.impl.FriendManagement;
 import wtf.moneymod.client.impl.utility.Globals;
@@ -48,6 +48,10 @@ public enum EntityUtil implements Globals {
         return currentTarget;
     }
 
+    public boolean canSee(BlockPos blockPos) {
+        return mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 1.5, blockPos.getZ() + 0.5), false, true, false) == null;
+    }
+
     public static boolean isntValid(final EntityPlayer entity, final double range) {
         return EntityUtil.mc.player.getDistance(entity) > range || entity == EntityUtil.mc.player || entity.getHealth() <= 0.0f || entity.isDead || FriendManagement.getInstance().is(entity.getName());
     }
@@ -75,7 +79,7 @@ public enum EntityUtil implements Globals {
         if (mc.player.moveStrafing < 0.0F)
             rotationYaw += 90.0F * forward;
 
-        float yaw = (float) Math.toRadians(rotationYaw);
+        float yaw = ( float ) Math.toRadians(rotationYaw);
 
         double x = -MathHelper.sin(yaw) * 0.4D;
         double z = MathHelper.cos(yaw) * 0.4D;
@@ -92,33 +96,33 @@ public enum EntityUtil implements Globals {
         return (maximumY > 0.0D && maximumY <= height) ? maximumY : 0.0D;
     }
 
-    public void setVanilaSpeed (MoveEvent event, double speed ) {
+    public void setVanilaSpeed(MoveEvent event, double speed) {
         float moveForward = mc.player.movementInput.moveForward;
         float moveStrafe = mc.player.movementInput.moveStrafe;
         float rotationYaw = mc.player.rotationYaw;
 
-        if ( moveForward == 0.0f && moveStrafe == 0.0f ) {
+        if (moveForward == 0.0f && moveStrafe == 0.0f) {
             event.motionX = 0;
             event.motionZ = 0;
 
             return;
-        } else if ( moveForward != 0.0f ) {
-            if ( moveStrafe >= 1.0f ) {
+        } else if (moveForward != 0.0f) {
+            if (moveStrafe >= 1.0f) {
                 rotationYaw += moveForward > 0.0f ? -45.0f : 45.0f;
                 moveStrafe = 0.0f;
-            } else if ( moveStrafe <= -1.0f ) {
+            } else if (moveStrafe <= -1.0f) {
                 rotationYaw += moveForward > 0.0f ? 45.0f : -45.0f;
                 moveStrafe = 0.0f;
             }
 
-            if ( moveForward > 0.0f )
+            if (moveForward > 0.0f)
                 moveForward = 1.0f;
-            else if ( moveForward < 0.0f )
+            else if (moveForward < 0.0f)
                 moveForward = -1.0f;
         }
 
-        double motionX = Math.cos( Math.toRadians( rotationYaw + 90.0f ) );
-        double motionZ = Math.sin( Math.toRadians( rotationYaw + 90.0f ) );
+        double motionX = Math.cos(Math.toRadians(rotationYaw + 90.0f));
+        double motionZ = Math.sin(Math.toRadians(rotationYaw + 90.0f));
 
         double newX = moveForward * speed * motionX + moveStrafe * speed * motionZ;
         double newZ = moveForward * speed * motionZ - moveStrafe * speed * motionX;
@@ -128,10 +132,9 @@ public enum EntityUtil implements Globals {
     }
 
 
-
-        public boolean isMoving(EntityLivingBase entity) {
-            return entity.moveStrafing != 0 || entity.moveForward != 0;
-        }
+    public boolean isMoving(EntityLivingBase entity) {
+        return entity.moveStrafing != 0 || entity.moveForward != 0;
+    }
 
     public static double[] forward(double d) {
         float f = mc.player.movementInput.moveForward;
@@ -161,27 +164,57 @@ public enum EntityUtil implements Globals {
         return player.getHealth() + player.getAbsorptionAmount();
     }
 
-    public float calculate(double posX, final double posY, double posZ, EntityLivingBase entity) {
-        double v = (1.0 - entity.getDistance(posX, posY, posZ) / 12.0) * getBlockDensity(new Vec3d(posX, posY, posZ), entity.getEntityBoundingBox());
-        return getBlastReduction(entity, getDamageMultiplied(( float ) ((v * v + v) / 2.0 * 85.0 + 1.0)));
+    public static float calculate(double posX, double posY, double posZ, Entity entity, boolean terrain) {
+        float doubleExplosionSize = 12.0f;
+        double distanceSize = entity.getDistance(posX, posY, posZ) / ( double ) doubleExplosionSize;
+        Vec3d vec3d = new Vec3d(posX, posY, posZ);
+        double blockDensity = 0.0;
+        try {
+            if (terrain) {
+                blockDensity = getBlockDensity(vec3d, entity.getEntityBoundingBox());
+            } else {
+                blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
+            }
+        } catch (Exception ignored) { }
+        double v = (1.0 - distanceSize) * blockDensity;
+        float damage = ( int ) ((v * v + v) / 2.0 * 7.0 * ( double ) doubleExplosionSize + 1.0);
+        double finald = 1.0;
+        if (entity instanceof EntityLivingBase) {
+            finald = getBlastReduction(( EntityLivingBase ) entity, getDamageMultiplied(damage), new Explosion(mc.world, entity, posX, posY, posZ, 6.0f, false, true));
+        }
+        return ( float ) finald;
     }
 
-    public float getBlastReduction(EntityLivingBase entity, float damageI) {
+    public static float getBlastReduction(EntityLivingBase entity, float damageI, Explosion explosion) {
         float damage = damageI;
-        damage = CombatRules.getDamageAfterAbsorb(damage, ( float ) entity.getTotalArmorValue(), ( float ) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
-        damage *= 1.0f - MathHelper.clamp(( float ) EnchantmentHelper.getEnchantmentModifierDamage(entity.getArmorInventoryList(), EXPLOSION_SOURCE), 0.0f, 20.0f) / 25.0f;
-        if (entity.isPotionActive(MobEffects.RESISTANCE)) {
-            return damage - damage / 4.0f;
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer ep = ( EntityPlayer ) entity;
+            DamageSource ds = DamageSource.causeExplosionDamage(explosion);
+            damage = CombatRules.getDamageAfterAbsorb(damage, ( float ) ep.getTotalArmorValue(), ( float ) ep.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+            int k = 0;
+            try {
+                k = EnchantmentHelper.getEnchantmentModifierDamage(ep.getArmorInventoryList(), ds);
+            } catch (Exception exception) {
+                // empty catch block
+            }
+            float f = MathHelper.clamp(( float ) k, 0.0f, 20.0f);
+            damage *= 1.0f - f / 25.0f;
+            if (entity.isPotionActive(MobEffects.RESISTANCE)) {
+                damage -= damage / 4.0f;
+            }
+            damage = Math.max(damage, 0.0f);
+            return damage;
         }
+        damage = CombatRules.getDamageAfterAbsorb(damage, ( float ) entity.getTotalArmorValue(), ( float ) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
         return damage;
     }
 
-    public float getDamageMultiplied(float damage) {
+    public static float getDamageMultiplied(float damage) {
         final int diff = EntityUtil.mc.world.getDifficulty().getId();
         return damage * ((diff == 0) ? 0.0f : ((diff == 2) ? 1.0f : ((diff == 1) ? 0.5f : 1.5f)));
     }
 
-    public float getBlockDensity(final Vec3d vec, final AxisAlignedBB bb) {
+    public static float getBlockDensity(final Vec3d vec, final AxisAlignedBB bb) {
         final double d0 = 1.0 / ((bb.maxX - bb.minX) * 2.0 + 1.0);
         final double d2 = 1.0 / ((bb.maxY - bb.minY) * 2.0 + 1.0);
         final double d3 = 1.0 / ((bb.maxZ - bb.minZ) * 2.0 + 1.0);

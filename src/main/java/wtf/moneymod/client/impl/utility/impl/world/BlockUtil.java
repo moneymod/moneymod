@@ -49,7 +49,7 @@ public enum BlockUtil implements Globals {
     }
 
     public static boolean canPlaceCrystal(BlockPos blockPos, boolean check) {
-        return canPlaceCrystal(blockPos, check, true);
+        return canPlaceCrystal(blockPos, check, true, false);
     }
 
     public static void placeCrystalOnBlock(BlockPos pos, EnumHand hand, boolean swing) {
@@ -62,7 +62,7 @@ public enum BlockUtil implements Globals {
         mc.playerController.updateController();
     }
 
-    public static boolean canPlaceCrystal(BlockPos blockPos, boolean check, boolean entity) {
+    public static boolean canPlaceCrystal(BlockPos blockPos, boolean check, boolean entity, boolean multiplace) {
         if (BlockUtil.mc.world.getBlockState(blockPos).getBlock() != Blocks.BEDROCK && BlockUtil.mc.world.getBlockState(blockPos).getBlock() != Blocks.OBSIDIAN) {
             return false;
         }
@@ -70,7 +70,7 @@ public enum BlockUtil implements Globals {
         if (BlockUtil.mc.world.getBlockState(boost).getBlock() != Blocks.AIR || BlockUtil.mc.world.getBlockState(blockPos.add(0, 2, 0)).getBlock() != Blocks.AIR) {
             return false;
         }
-        return !entity || BlockUtil.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(boost.getX(), boost.getY(), boost.getZ(), boost.getX() + 1, boost.getY() + (check ? 2 : 1), boost.getZ() + 1), e -> !(e instanceof EntityEnderCrystal)).size() == 0;
+        return !entity || BlockUtil.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(boost.getX(), boost.getY(), boost.getZ(), boost.getX() + 1, boost.getY() + (check ? 2 : 1), boost.getZ() + 1), e -> !(e instanceof EntityEnderCrystal) || multiplace).size() == 0;
     }
 
     public static boolean canPlaceCrystal(BlockPos blockPos) {

@@ -129,10 +129,12 @@ public class SpeedMine extends Module {
 
         if (currentPos != null) {
 
-            if (e.getBlockPos().toLong() == currentPos.toLong() && !swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.bestSlot(currentPos)), start) <= 1 - speed && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
-                swapTo();
-                mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
-                e.cancel();
+            if (e.getBlockPos().toLong() == currentPos.toLong()) {
+                if (!swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.bestSlot(currentPos)), start) <= 1 - speed && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
+                    swapTo();
+                    mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
+                    e.cancel();
+                }
                 return;
             }
 

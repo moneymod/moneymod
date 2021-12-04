@@ -33,6 +33,7 @@
     "MixinEntityOtherPlayerMP",
     "MixinNetHandlerPlayClient",
     "MixinBlockSoulSand",
-    "MixinRenderPlayer"
+    "MixinRenderPlayer",
+    "MixinModelBiped"
   ]
 }

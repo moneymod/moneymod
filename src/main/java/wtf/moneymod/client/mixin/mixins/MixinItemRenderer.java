@@ -1,11 +1,15 @@
 package wtf.moneymod.client.mixin.mixins;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,14 +18,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.render.CustomModel;
+import wtf.moneymod.client.impl.module.render.ESP;
 import wtf.moneymod.client.impl.module.render.NoBob;
 import wtf.moneymod.client.impl.module.render.NoRender;
 import wtf.moneymod.client.impl.utility.Globals;
+import wtf.moneymod.client.impl.utility.impl.shader.impl.OutlineShader;
 
 @Mixin( value = { ItemRenderer.class } )
 public class MixinItemRenderer implements Globals {
 
     @Shadow @Final private Minecraft mc;
+    @Shadow @Final private RenderItem itemRenderer;
 
     @Inject( method = "renderItemSide", at = @At( value = "HEAD" ) )
     public void renderItemSide(EntityLivingBase entityLivingBase, ItemStack stack, ItemCameraTransforms.TransformType transform, boolean leftHanded, CallbackInfo info) {
@@ -31,6 +38,35 @@ public class MixinItemRenderer implements Globals {
             if (mc.player.getActiveItemStack() != stack) {
                 GlStateManager.translate((view.translateX * 0.1f) * (leftHanded ? -1 : 1), view.translateY * 0.1f, view.translateZ * 0.1);
             }
+        }
+    }
+
+    @Inject( method = "renderItemSide", at = @At( "TAIL" ) )
+    public void shit(EntityLivingBase entityLivingBase, ItemStack stack, ItemCameraTransforms.TransformType transform, boolean leftHanded, CallbackInfo info) {
+        ESP esp = ( ESP ) Main.getMain().getModuleManager().get(ESP.class);
+        if (esp.isToggled()) {
+            Item item = stack.getItem();
+            Block block = Block.getBlockFromItem(item);
+            boolean flag = this.itemRenderer.shouldRenderItemIn3D(stack) && block.getRenderLayer() == BlockRenderLayer.TRANSLUCENT;
+
+            GlStateManager.pushMatrix();
+
+            if (flag) {
+                GlStateManager.depthMask(false);
+            }
+
+//            OutlineShader.INSTANCE.setCustomValues(esp.rainbowspeed, esp.rainbowstrength, esp.saturation);
+//            OutlineShader.INSTANCE.startDraw(1);
+//
+//            itemRenderer.renderItem(stack, entityLivingBase, transform, leftHanded);
+//
+//            OutlineShader.INSTANCE.stopDraw(esp.color.getColor(), esp.radius, esp.quality, esp.saturation, 1, 0.5f, 0.5f);
+
+            if (flag) {
+                GlStateManager.depthMask(true);
+            }
+
+            GlStateManager.popMatrix();
         }
     }
 
