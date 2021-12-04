@@ -67,17 +67,12 @@ public class PhaseWalk extends Module {
         mc.player.connection.sendPacket(new CPacketPlayer.Position(x,y,z,mc.player.onGround));
         if (downTimer.passed(delay)) {
             switch (teleport) {
-                case DOWN:
+                case FULL:
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(x, -1888, z, mc.player.onGround));
                     break;
-                case UP:
-                    mc.player.connection.sendPacket(new CPacketPlayer.Position(x, 1888, z, mc.player.onGround));
-                    break;
+
                 case SEMI:
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(x, 0, z, mc.player.onGround));
-                    break;
-                case TEST:
-                    mc.player.connection.sendPacket(new CPacketPlayer.Position(x, -5, z, mc.player.onGround));
                     break;
             }
             downTimer.reset();
@@ -92,8 +87,6 @@ public class PhaseWalk extends Module {
         mc.player.noClip = this.noClip;
 
         if (movement == Movement.SHIFT && !mc.gameSettings.keyBindSneak.isKeyDown()) return;
-        if (movement == Movement.SPRINT && !mc.gameSettings.keyBindSprint.isKeyDown()) return;
-        if (movement == Movement.FORWARD && !mc.gameSettings.keyBindForward.isKeyDown()) return;
 
         if (cancelMotion) {
             mc.player.motionX = 0;
@@ -145,20 +138,6 @@ public class PhaseWalk extends Module {
                 doPackets(mc.player.posX + forw[0], mc.player.posY, mc.player.posZ + forw[1]);
             }
         }
-
-        //shitty phase lol
-        if (mode == Mode.SMOOTH){
-            if (mc.player.collidedHorizontally){
-                 if (timer.passed(delay)) {
-                    for (int i = 0; i < factor; i++) {
-                        doPackets(mc.player.posX + forw[0], mc.player.posY, mc.player.posZ + forw[1]);
-                    }
-                    timer.reset();
-                }
-            } else {
-                if (walkBypass && !EntityUtil.INSTANCE.isMoving(mc.player)) doWalkBypas();
-            }
-        }
     }
 
     
@@ -179,13 +158,13 @@ public class PhaseWalk extends Module {
     });
     
     public enum Teleport{
-        UP, DOWN, SEMI, NONE, TEST
+        FULL, SEMI
     }
     public enum Mode{
-        SMOOTH, TELEPORT, PACKET, MOTION
+        TELEPORT, PACKET, MOTION
     }
     public enum Movement{
-        SHIFT, FORWARD, SPRINT, NONE
+        SHIFT, NONE
     }
     
 }
