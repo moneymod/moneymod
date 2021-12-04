@@ -69,15 +69,10 @@ public class Scout extends Module {
                         lastHsTime = System.currentTimeMillis();
                         mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING));
                         for ( int i = 0; i < spoof; ++i ) {
-                            double yaw = mc.player.rotationYaw * 0.017453292;
-                            double t = 1;
-                            if (!horizontally) {
-                                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1e-10, mc.player.posZ, false));
-                                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 1e-10, mc.player.posZ, true));
-                            } else {
-                                mc.player.setPosition(mc.player.posX - Math.sin(yaw) * t, mc.player.posY, mc.player.posZ + Math.cos(yaw) * t);
-                                mc.player.setPosition(mc.player.posX + Math.sin(yaw) * t, mc.player.posY, mc.player.posZ - Math.cos(yaw) * t);
-                            }
+
+                            mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1e-10, mc.player.posZ, false));
+                            mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 1e-10, mc.player.posZ, true));
+
                         }
                         hs = false;
                     }

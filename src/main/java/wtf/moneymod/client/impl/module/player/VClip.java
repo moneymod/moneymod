@@ -1,8 +1,6 @@
 package wtf.moneymod.client.impl.module.player;
 
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketPlayerDigging;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
@@ -10,15 +8,9 @@ import wtf.moneymod.client.impl.utility.impl.world.ChatUtil;
 
 @Module.Register( label = "VClip", cat = Module.Category.PLAYER )
 public class VClip extends Module {
-
-    @Value(value = "Offset") @Bounds(min = -5f, max = 5f) public float offset = 0.2f;
-    @Value(value = "Tick") @Bounds(min = 1, max = 8) public int tick = 4;
-
-    @Value(value = "Disable") public boolean disable = true;
     @Value(value = "Mode") public Mode mode = Mode.DEFAULT;
-
-    double[] packets = new double[] {0.41, 0.75, 1, 1.16 };
-    int t;
+    @Value(value = "Offset") @Bounds(min = -5f, max = 5f) public float offset = 0.2f;
+    @Value(value = "Disable") public boolean disable = true;
     @Override public void onTick() {
         if (nullCheck()) return;
         if (mode == Mode.DEFAULT){

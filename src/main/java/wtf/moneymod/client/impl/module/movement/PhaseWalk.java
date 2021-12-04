@@ -39,6 +39,7 @@ public class PhaseWalk extends Module {
     private int walkDelay = 0;
     private int tpId = 0;
     private Timer timer = new Timer();
+
     @Override
     public void onToggle(){
         timer.reset();
