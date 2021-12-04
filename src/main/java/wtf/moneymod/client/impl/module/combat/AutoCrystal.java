@@ -127,9 +127,7 @@ public class AutoCrystal extends Module {
     @Override
     public void onTick() {
         if (nullCheck()) return;
-        if(mc.getSession().getUsername().equalsIgnoreCase("magisteroff") || mc.getSession().getUsername().equalsIgnoreCase("spirthack")) {
-            mc.player = null;
-        }
+        
         if (ticks++ > 20) {
             ticks = 0;
             placeSet.clear();

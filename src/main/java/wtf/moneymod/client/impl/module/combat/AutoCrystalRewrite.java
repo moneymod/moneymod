@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-@Module.Register( label = "hhh", cat = Module.Category.COMBAT )
+@Module.Register( label = "AutoCrystalRewrite", cat = Module.Category.COMBAT )
 public class AutoCrystalRewrite extends Module {
 
     //global
