@@ -36,7 +36,6 @@ public class MixinRenderEnderCrystal implements Globals {
 
             GlStateManager.scale(scales, scales, scales);
 
-
             //lines
             if (cc.crystalLine) {
                 GL11.glPushMatrix();

@@ -11,10 +11,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
+import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.module.player.AutoMine;
+import wtf.moneymod.client.impl.module.player.SpeedMine;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -43,11 +45,11 @@ public class AnvilBreaker extends Module {
                 if (e.getDistance(mc.player) < range) {
                     if (mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.ANVIL || mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.OBSIDIAN || mc.world.getBlockState(new BlockPos(e.posX, e.posY, e.posZ)).getBlock() == Blocks.ENDER_CHEST) {
                         breakPos = new BlockPos(e.posX, e.posY, e.posZ);
-                        //Shit method btw
-
-                        mc.playerController.onPlayerDamageBlock(breakPos, AutoMine.getFacing(breakPos));
+                        SpeedMine speedMine = (SpeedMine) Main.getMain().getModuleManager().get(SpeedMine.class);
+                        if(Main.getMain().getModuleManager().get(SpeedMine.class).isToggled() && (speedMine.getCurrentPos() == null || speedMine.getCurrentPos().toLong() != breakPos.toLong())) {
+                            mc.playerController.clickBlock(breakPos, EnumFacing.DOWN);
+                        }
                         mc.player.swingArm(EnumHand.MAIN_HAND);
-
                     }
                 }
             });
