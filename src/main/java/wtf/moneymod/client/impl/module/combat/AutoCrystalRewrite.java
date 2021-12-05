@@ -107,6 +107,12 @@ public class AutoCrystalRewrite extends Module {
     private final Timer placeTimer = new Timer();
     private final Timer clearTimer = new Timer();
 
+    @Handler public Listener<PacketEvent.Send> sendListener = new Listener<>(PacketEvent.Send.class, e -> {
+        if (e.getPacket() instanceof CPacketPlayerTryUseItemOnBlock && mc.player.getHeldItem((( CPacketPlayerTryUseItemOnBlock ) e.getPacket()).getHand()).getItem() == Items.END_CRYSTAL) {
+            placedCrystals.add((( CPacketPlayerTryUseItemOnBlock ) e.getPacket()).getPos());
+        }
+    });
+
     @Handler
     public Listener<UpdateWalkingPlayerEvent> walkingPlayerEventListener = new Listener<>(UpdateWalkingPlayerEvent.class, e -> {
         if (e.getStage() == 0 && rotation != null && rotations != Rotations.NONE) {
@@ -143,7 +149,7 @@ public class AutoCrystalRewrite extends Module {
                     if (mc.player.getDistance(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5) >= (canSee ? hitRange : wallBreakRange))
                         break;
 
-                    if (hitMode == BreakMode.OWN && Math.sqrt(getDistance(pos.getX(), pos.getY(), pos.getZ(), packet.getX(), packet.getY(), packet.getZ())) > 3)
+                    if (hitMode == BreakMode.OWN && Math.sqrt(getDistance(pos.getX(), pos.getY(), pos.getZ(), packet.getX(), packet.getY(), packet.getZ())) > 1.5)
                         continue;
 
                     if (hitMode == BreakMode.SMART && EntityUtil.getHealth(mc.player) - EntityUtil.calculate(packet.getX(), packet.getY(), packet.getZ(), mc.player, terrainIgnore) < 0)
@@ -270,10 +276,10 @@ public class AutoCrystalRewrite extends Module {
         mc.player.connection.sendPacket(new CPacketAnimation(swing == AutoCrystal.Swing.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
         mc.playerController.updateController();
         placeTimer.reset();
-        placedCrystals.add(pos);
     }
 
     void swing() {
+        if (swing == AutoCrystal.Swing.NONE) return;
         if (packetSwing) {
             mc.player.connection.sendPacket(new CPacketAnimation(swing == AutoCrystal.Swing.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
         } else {
