@@ -65,7 +65,7 @@ public class SpeedMine extends Module {
                     ItemUtil.swapToHotbarSlot(old, false);
                 }
                 swap = false;
-                if (!instant) currentPos = null;
+                if (!instant && currentPos != null) currentPos = null;
                 delay = 0;
             }
             delay++;
@@ -131,7 +131,7 @@ public class SpeedMine extends Module {
 
             if (e.getBlockPos().toLong() == currentPos.toLong()) {
                 if (!swap && getBlockProgress(currentPos, mc.player.inventory.getStackInSlot(ToolUtil.bestSlot(currentPos)), start) <= 1 - speed && mc.world.getBlockState(currentPos).getBlock() != Blocks.AIR) {
-                    swapTo();
+                    if (silent) swapTo();
                     mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, currentPos, EnumFacing.DOWN));
                     e.cancel();
                 }

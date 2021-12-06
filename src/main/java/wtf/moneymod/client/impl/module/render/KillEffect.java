@@ -23,9 +23,11 @@ public class KillEffect extends Module {
     @Handler public Listener<EntityDeathEvent> listener = new Listener<>(EntityDeathEvent.class, event -> {
         if (!nullCheck() && event.getEntity() != null) {
             Entity entity = event.getEntity();
-            if (entity.isDead || (( EntityPlayer ) entity).getHealth() <= 0) {
-                mc.world.spawnEntity(new EntityLightningBolt(mc.world, entity.posX, entity.posY, entity.posZ, true));
-                if (sound) mc.player.playSound(SoundEvents.ENTITY_LIGHTNING_THUNDER, 0.5f, 1.f);
+            if (entity != null) {
+                if (entity.isDead || ((EntityPlayer) entity).getHealth() <= 0) {
+                    mc.world.spawnEntity(new EntityLightningBolt(mc.world, entity.posX, entity.posY, entity.posZ, true));
+                    if (sound) mc.player.playSound(SoundEvents.ENTITY_LIGHTNING_THUNDER, 0.5f, 1.f);
+                }
             }
         }
     });

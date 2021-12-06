@@ -64,12 +64,6 @@ public class EventHandler implements Globals {
         Main.getMain().getModuleManager().get(Module::isToggled).forEach(Module::onTick);
     }
 
-    @SubscribeEvent public void onDeath(LivingDeathEvent event) {
-        Main.EVENT_BUS.dispatch(new EntityDeathEvent(event.getSource(), event.getEntity()));
-        if (event.getEntity().equals(mc.player)) {
-            Main.getMain().getSessionManagement().addDeath();
-        }
-    }
 
     @SubscribeEvent public void onClientChat(ClientChatEvent event) {
         String message = event.getMessage();

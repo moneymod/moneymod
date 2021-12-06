@@ -57,9 +57,9 @@ public class AutoCrystalRewrite extends Module {
     @Value( "Inhibit" ) public boolean inhibit = true;
     @Value( "Place Delay" ) @Bounds( max = 200 ) public int placeDelay = 20;
     @Value( "Break Delay" ) @Bounds( max = 200 ) public int breakDelay = 40;
-    @Value( "Swap" ) public AutoCrystal.Swap swap = AutoCrystal.Swap.NONE;
+    @Value( "Swap" ) public SwapMode swap = SwapMode.NONE;
     @Value( "Packet Swing" ) public boolean packetSwing = false;
-    @Value( "Swing" ) public AutoCrystal.Swing swing = AutoCrystal.Swing.MAINHAND;
+    @Value( "Swing" ) public SwingMode swing = SwingMode.MAINHAND;
     @Value( "AntiWeakness" ) public AntiWeakness antiWeakness = AntiWeakness.NONE;
     //ranges
     @Value( "Target Range" ) @Bounds( min = 2, max = 15 ) public float targetRange = 12;
@@ -216,7 +216,7 @@ public class AutoCrystalRewrite extends Module {
 
     void placer() {
         if (!place || !placeTimer.passed(placeDelay)) return;
-
+        EnumHand hand = null;
         double max = 0.5;
 
         for (BlockPos bp : BlockUtil.INSTANCE.getSphere(placeRange, true)) {
@@ -250,7 +250,9 @@ public class AutoCrystalRewrite extends Module {
         boolean isOffhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         int old = -1;
 
-        if (swap != AutoCrystal.Swap.NONE && !isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) {
+        if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
+
+        if (swap != SwapMode.NONE && !isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) {
             old = mc.player.inventory.currentItem;
             if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) == -1) return;
         }
@@ -261,7 +263,9 @@ public class AutoCrystalRewrite extends Module {
 
         placeCrystal(current, isOffhand);
 
-        if (old != -1 && swap == AutoCrystal.Swap.SILENT) {
+        if (hand != null) mc.player.setActiveHand(hand);
+
+        if (old != -1 && swap == SwapMode.SILENT) {
             ItemUtil.swapToHotbarSlot(old, false);
         }
 
@@ -273,17 +277,17 @@ public class AutoCrystalRewrite extends Module {
         RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + ( double ) mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(( double ) pos.getX() + 0.5, ( double ) pos.getY() - 0.5, ( double ) pos.getZ() + 0.5));
         EnumFacing facing = result == null || result.sideHit == null ? EnumFacing.UP : result.sideHit;
         mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
-        mc.player.connection.sendPacket(new CPacketAnimation(swing == AutoCrystal.Swing.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
+        mc.player.connection.sendPacket(new CPacketAnimation(swing == SwingMode.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
         mc.playerController.updateController();
         placeTimer.reset();
     }
 
     void swing() {
-        if (swing == AutoCrystal.Swing.NONE) return;
+        if (swing == SwingMode.NONE) return;
         if (packetSwing) {
-            mc.player.connection.sendPacket(new CPacketAnimation(swing == AutoCrystal.Swing.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
+            mc.player.connection.sendPacket(new CPacketAnimation(swing == SwingMode.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND));
         } else {
-            mc.player.swingArm(swing == AutoCrystal.Swing.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
+            mc.player.swingArm(swing == SwingMode.MAINHAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
         }
     }
 
@@ -414,6 +418,18 @@ public class AutoCrystalRewrite extends Module {
         NONE,
         SEMI,
         FULL
+    }
+
+    public enum SwapMode {
+        NONE,
+        AUTO,
+        SILENT
+    }
+
+    public enum SwingMode {
+        OFFHAND,
+        MAINHAND,
+        NONE
     }
 
 }

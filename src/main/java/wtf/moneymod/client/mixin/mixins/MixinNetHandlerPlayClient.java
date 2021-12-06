@@ -22,6 +22,9 @@ public class MixinNetHandlerPlayClient implements Globals {
             EntityPlayer player = ( EntityPlayer ) entity;
             if (player.getHealth() <= 0.0f ) {
                 Main.EVENT_BUS.dispatch(new EntityDeathEvent(null, player));
+                if (entity == mc.player){
+                    Main.getMain().getSessionManagement().addDeath();
+                }
             }
         }
     }
