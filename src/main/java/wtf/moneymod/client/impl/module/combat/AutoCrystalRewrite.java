@@ -162,7 +162,7 @@ public class AutoCrystalRewrite extends Module {
                         } catch (Exception ignored) { }
                     }
 
-                    if (rotations != Rotations.NONE && rotations != Rotations.SEMI) {
+                    if (rotations == Rotations.FULL) {
                         rotation = RotationManagement.calcRotation(new BlockPos(packet.getX(), packet.getY(), packet.getZ()));
                     }
 
@@ -334,7 +334,7 @@ public class AutoCrystalRewrite extends Module {
             }
         }
 
-        if (rotations != Rotations.NONE && rotations != Rotations.SEMI) {
+        if (rotations == Rotations.FULL) {
             rotation = RotationManagement.calcRotation(crystal);
         }
 
