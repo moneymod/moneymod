@@ -4,73 +4,58 @@ import net.minecraft.util.math.MathHelper;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.Global;
 
-public class PulseManagement {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    private Global mod = ( Global ) Main.getMain().getModuleManager().get(Global.class);
+public class PulseManagement
+{
+    private Global mod = ( Global )Main.getMain( ).getModuleManager( ).get( Global.class );
 
     public static int min = 110;
     public static int max = 255;
+    private int current = 0;
+    private int frame = 0;
 
-    private int current = min;
-    private boolean up = true;
+    public List< Integer > values = new ArrayList< >( );
 
-    public void update() {
-        current = step(current);
-    }
+    public PulseManagement( )
+    {
+        for( int i = 0; i <= max * 2; i++ )
+        {
+            int value = i;
+            if( value > max )
+                value = max - ( i - max );
 
-    public int getCurrentPulse() {
-        return current;
-    }
-
-    public int getDifference(int value) {
-        int ret = current;
-
-        if (up) {
-            ret += value % 210;
-
-            if (ret > max) {
-                int i = Math.abs(ret - max);
-                ret = max - i;
-            }
-        } else {
-            ret -= value % 210;
-
-            if (ret < min) {
-                int i = Math.abs(ret - min);
-                ret = min + i;
-            }
+            values.add( value );
         }
 
-        return MathHelper.clamp(ret, min, max);
+        values = values.stream( ).filter( v -> v >= min && v <= max ).collect( Collectors.toList( ) );
     }
 
-    public int clamp(int value) {
-        if (up) {
-            if (value >= max) {
-                value = max;
-                up = false;
-            }
-        } else {
-            if (value <= min) {
-                value = min;
-                up = true;
-            }
-        }
+    public int getDifference( int niga )
+    {
+        frame++;
 
-        return value;
-    }
+        int ret = current + frame + niga;
+        if( ret >= values.size( ) )
+            ret = ( values.size( ) - ret );
+        
+        ret = MathHelper.clamp( ret, 0, values.size( ) - 1 );
+        ret = values.get( Math.abs( ret ) );
 
-    public int step(int from) {
-        double fps = Main.getMain().getFpsManagement().getFrametime();
-        if(fps < 0.006) fps = 0.006;
-        int ret = ( int ) (
-                up
-                        ? (from + (max / (double) mod.pulseSpeed * fps))
-                        : (from - (min / (double) mod.pulseSpeed * fps))
-        );
-
-        ret = clamp(ret);
         return ret;
     }
 
+    public void update( )
+    {
+        frame = 0;
+
+        double frametime = Main.getMain( ).getFpsManagement( ).getFrametime( );
+        int next = current + ( int )Math.ceil( ( values.size( ) / ( double )mod.pulseSpeed ) * frametime );
+        if( next >= values.size( ) )
+            next = ( values.size( ) - next );
+
+        current = next;
+    }
 }

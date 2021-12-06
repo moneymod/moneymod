@@ -1,23 +1,22 @@
 package wtf.moneymod.client.impl.module.combat;
 
+import net.minecraft.block.BlockEnderChest;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import wtf.moneymod.client.Main;
-import wtf.moneymod.client.api.events.PacketEvent;
+import wtf.moneymod.client.api.events.StepEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
 import wtf.moneymod.client.impl.utility.impl.world.BlockUtil;
-import wtf.moneymod.client.mixin.mixins.ducks.AccessorCPacketPlayer;
+import wtf.moneymod.eventhandler.event.enums.Era;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
@@ -37,13 +36,14 @@ public class FeetPlace extends Module {
     @Value( value = "Disable" ) public boolean disable = false;
     @Value( value = "Rotate" ) public boolean rotate = false;
     @Value( value = "AutoCenter" ) public boolean center = false;
+    @Value( "Smart" ) public boolean smart = true;
 
     private final Timer timer = new Timer();
     private int placed;
     public boolean didPlace;
     private double y;
-    private BlockPos s;
     private HashMap<BlockPos, Integer> retriesCount = new HashMap<>();
+
     @Override protected void onEnable() {
         placed = 0;
         y = mc.player.posY;
@@ -51,11 +51,17 @@ public class FeetPlace extends Module {
         didPlace = false;
         timer.reset();
         retriesCount.clear();
-        s = new BlockPos(mc.player.getPositionVector());
-        if (center){
+        BlockPos s = new BlockPos(mc.player.getPositionVector());
+        if (center) {
             mc.player.setPosition(s.getX() + 0.5f, s.getY(), s.getZ() + 0.5f);
         }
     }
+
+    @Handler public Listener<StepEvent> onStep = new Listener<>(StepEvent.class, e -> {
+        if (e.getEra() == Era.PRE && jumpDisable && mc.player.stepHeight > 1) {
+            setToggled(false);
+        }
+    });
 
     @Override public void onTick() {
         if (nullCheck()) return;
@@ -63,17 +69,20 @@ public class FeetPlace extends Module {
     }
 
     private void doFeetPlace() {
+        if ((mc.player.posY != y || mc.player.motionY > 0) && jumpDisable) {
+            setToggled(false);
+            return;
+        }
         if (!this.timer.passed(delay) && didPlace) return;
-        if (mc.player.posY != y && jumpDisable) setToggled(false);
         int offset = (mc.world.getBlockState(new BlockPos(mc.player.getPositionVector())).getBlock() == Blocks.ENDER_CHEST && mc.player.posY - Math.floor(mc.player.posY) > 0.5 ? 1 : 0);
-        if (BlockUtil.INSTANCE.getUnsafePositions(mc.player.getPositionVector(), offset).size() == 0) {
+        if (Main.getMain().getHoleManagement().isInHole(new BlockPos(mc.player.getPositionVector())) || BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset, smart).size() == 0) {
             if (disable) setToggled(false);
             return;
         }
         if (help) {
-            placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getPositionVector(), offset - 1));
+            placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset - 1, smart));
         }
-        placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getPositionVector(), offset));
+        placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset, smart));
         placed = 0;
         timer.reset();
     }
@@ -82,8 +91,9 @@ public class FeetPlace extends Module {
         for (BlockPos bp : blocks) {
             if (placed >= bps) return;
             int old = mc.player.inventory.currentItem;
-            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false) == -1)
-                return;
+            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockObsidian.class), false) == -1) {
+                if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(BlockEnderChest.class), false) == -1) return;
+            }
             switch (BlockUtil.INSTANCE.isPlaceable(bp)) {
                 case 0: {
                     BlockUtil.INSTANCE.placeBlock(bp);
@@ -116,4 +126,5 @@ public class FeetPlace extends Module {
             }
         }
     }
+
 }

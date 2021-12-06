@@ -21,7 +21,6 @@ import wtf.moneymod.client.impl.utility.Globals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public enum BlockUtil implements Globals {
     INSTANCE;
@@ -102,8 +101,21 @@ public enum BlockUtil implements Globals {
         return block.getBlockHardness(blockState, mc.world, pos) != -1;
     }
 
-    public List<BlockPos> getUnsafePositions(Vec3d vector, int level) {
-        return getLevels(level).stream().map(vec -> new BlockPos(vector).add(vec.x, vec.y, vec.z)).filter(bp -> mc.world.getBlockState(bp).getMaterial().isReplaceable()).collect(Collectors.toList());
+    public List<BlockPos> getUnsafePositions(AxisAlignedBB vector, int level, boolean smart) {
+        List<BlockPos> blocks = new ArrayList<>();
+        if(!smart) {
+            getLevels(level).stream().map(vec -> new BlockPos(vector.getCenter().add(vec.x, vec.y, vec.z))).filter(block -> mc.world.getBlockState(block).getMaterial().isReplaceable()).forEach(blocks::add);
+        } else {
+            int maxX = ( int ) Math.floor(vector.maxX),
+                    minX = ( int ) Math.floor(vector.minX),
+                    maxZ = ( int ) Math.floor(vector.maxZ),
+                    minZ = ( int ) Math.floor(vector.minZ);
+            Arrays.asList(new BlockPos(maxX, vector.getCenter().y, maxZ), new BlockPos(maxX, vector.getCenter().y, minZ), new BlockPos(minX, vector.getCenter().y, maxZ), new BlockPos(minX, vector.getCenter().y, minZ)).forEach(bp -> {
+                if (!mc.world.getBlockState(bp).getMaterial().isReplaceable()) return;
+                getLevels(level).stream().map(vec -> bp.add(vec.x, vec.y, vec.z)).filter(block -> mc.world.getBlockState(block).getMaterial().isReplaceable()).forEach(blocks::add);
+            });
+        }
+        return blocks;
     }
 
     public List<Vec3d> getLevels(int y) {
@@ -128,14 +140,14 @@ public enum BlockUtil implements Globals {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-        int radiuss = (int) radius;
+        int radiuss = ( int ) radius;
         int x = posX - radiuss;
-        while ((float) x <= (float) posX + radius) {
+        while (( float ) x <= ( float ) posX + radius) {
             int z = posZ - radiuss;
-            while ((float) z <= (float) posZ + radius) {
+            while (( float ) z <= ( float ) posZ + radius) {
                 int y = posY - radiuss;
-                while ((float) y < (float) posY + radius) {
-                    if ((float) ((posX - x) * (posX - x) + (posZ - z) * (posZ - z) + (posY - y) * (posY - y)) < radius * radius) {
+                while (( float ) y < ( float ) posY + radius) {
+                    if (( float ) ((posX - x) * (posX - x) + (posZ - z) * (posZ - z) + (posY - y) * (posY - y)) < radius * radius) {
                         BlockPos position = new BlockPos(x, y, z);
                         if (!ignoreAir || BlockUtil.mc.world.getBlockState(position).getBlock() != Blocks.AIR) {
                             sphere.add(position);
