@@ -48,6 +48,12 @@ import java.util.Set;
 @Module.Register( label = "AutoCrystalRewrite", cat = Module.Category.COMBAT )
 public class AutoCrystalRewrite extends Module {
 
+    //TODO: AntiCity (aka antisurround)
+    //TODO: Break Check
+    //TODO: Пофиксить рендер в са, Рендерится даже когда не держись кристаллы в руках
+    //TODO: Пофиксить плейсмент (СА Плейсит когда я даже не держу кристаллы в руках)
+
+
     //global
     @Value( "Place" ) public boolean place = true;
     @Value( "Break" ) public boolean hit = true;
