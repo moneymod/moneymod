@@ -31,7 +31,7 @@ public class BreadCrumbs extends Module {
     @Override
     public void onTick() {
         if (nullCheck()) return;
-        if (mode == Mode.DEFAULT) bcs.add(new CrumbsUtil(mc.player.getPositionVector()));
+        bcs.add(new CrumbsUtil(mc.player.getPositionVector()));
         if (mode == Mode.PARTICLE) mc.world.spawnParticle(EnumParticleTypes.DRIP_WATER, mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.motionX, mc.player.motionY, mc.player.motionZ, 2);
     }
 

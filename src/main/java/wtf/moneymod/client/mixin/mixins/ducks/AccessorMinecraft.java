@@ -11,10 +11,7 @@ public interface AccessorMinecraft {
 
     @Accessor("rightClickDelayTimer")
     void setRightClickDelayTimer(int rightClickDelayTimer);
-
-    @Accessor("jumpTicks")
-    void setJumpTicks(int jumpTicks);
-
+    
     @Accessor( value = "leftClickCounter" )
     void mm_setLeftClickCounter( int val );
 
