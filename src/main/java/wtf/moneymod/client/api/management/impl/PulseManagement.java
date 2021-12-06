@@ -1,5 +1,6 @@
 package wtf.moneymod.client.api.management.impl;
 
+import net.minecraft.util.math.MathHelper;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.impl.module.global.Global;
 
@@ -39,7 +40,8 @@ public class PulseManagement
         int ret = current + frame + niga;
         if( ret >= values.size( ) )
             ret = ( values.size( ) - ret );
-
+        
+        ret = MathHelper.clamp( ret, 0, values.size( ) - 1 );
         ret = values.get( Math.abs( ret ) );
 
         return ret;
