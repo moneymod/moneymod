@@ -5,12 +5,15 @@ import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
 @Module.Register( label = "Ambience", cat = Module.Category.RENDER )
 public class Ambience extends Module {
 
+    @Value("Light") public boolean light = false;
+    @Value("Color Light") public JColor color = new JColor(255, 255, 255, 100, false);
     @Value( value = "Time" ) @Bounds( min = 5, max = 24 ) public int timeValue = 24;
     @Value( value = "Infinity Cycle" ) public boolean infinity = true;
     @Value( value = "Speed" ) @Bounds( min = 10, max = 1000 ) public int speed = 100;
