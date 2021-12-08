@@ -62,18 +62,6 @@ public class NameTags extends Module {
     AccessorRenderManager renderManager = ( AccessorRenderManager ) mc.getRenderManager( );
     HashMap<String, Integer> totemPops = new HashMap<>( );
 
-    /*
-    //TODO: POFIXIT ETO GOVNO
-    @SubscribeEvent public void onTotemPop( TotemPopEvent event ) {
-        String name = event.getEntityPlayerSP( ).getName( );
-        if ( totemPops.get( name ) == null ) {
-            totemPops.putIfAbsent( name, 1 );
-            return;
-        }
-        totemPops.replace( name, totemPops.get( name ) + 1 );
-    }
-   
-     */
 
     @Override public void onTick() {
         if ( nullCheck( ) ) {
