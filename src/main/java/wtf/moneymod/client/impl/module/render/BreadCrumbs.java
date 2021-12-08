@@ -7,9 +7,11 @@ import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
+import wtf.moneymod.client.mixin.mixins.ducks.AccessorRenderManager;
 
 import java.util.ArrayList;
 
@@ -21,8 +23,10 @@ public class BreadCrumbs extends Module {
     @Value( value = "Mode" ) public Mode mode = Mode.DEFAULT;
     @Value( value = "Line Widht" ) @Bounds( min = 0.1F, max = 5 ) public float lineWidht = 1;
     @Value( value = "Tick Clear" ) @Bounds( min = 1, max = 45 ) public int tickClear = 25;
-    @Value("Fade Speed") @Bounds(min = 0.1f, max = 2f) public float fadeSpeed = 0.4f;
+    @Value( "Fade Speed" ) @Bounds( min = 0.1f, max = 2f ) public float fadeSpeed = 0.4f;
     @Value( "Color" ) public JColor color = new JColor(255, 255, 255, false);
+
+    AccessorRenderManager renderManager = ( AccessorRenderManager ) mc.getRenderManager( );
 
     public enum Mode {
         DEFAULT,
@@ -36,13 +40,12 @@ public class BreadCrumbs extends Module {
             mc.world.spawnParticle(EnumParticleTypes.DRIP_WATER, mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.motionX, mc.player.motionY, mc.player.motionZ, 2);
     }
 
-
     public static void putVertex3d(Vec3d vec) { GL11.glVertex3d(vec.x, vec.y, vec.z); }
 
-    public static Vec3d getRenderPos(double x, double y, double z) {
-        x = x - mc.getRenderManager().viewerPosX;
-        y = y - mc.getRenderManager().viewerPosY;
-        z = z - mc.getRenderManager().viewerPosZ;
+    public Vec3d getRenderPos(double x, double y, double z) {
+        x = x - renderManager.getRenderPosX();
+        y = y - renderManager.getRenderPosY();
+        z = z - renderManager.getRenderPosZ();
         return new Vec3d(x, y, z);
     }
 
@@ -53,16 +56,24 @@ public class BreadCrumbs extends Module {
 
     @Override
     public void onRender3D(float partialTicks) {
-        if (mode == Mode.DEFAULT && EntityUtil.INSTANCE.isMoving(mc.player))
-            bcs.add(new BreadCrumb(new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ)));
         if (mode == Mode.DEFAULT) {
+            double interpolatedX = MathUtil.INSTANCE.interpolate(mc.player.lastTickPosX, mc.player.posX, mc.getRenderPartialTicks());
+            double interpolatedY = MathUtil.INSTANCE.interpolate(mc.player.lastTickPosY, mc.player.posY, mc.getRenderPartialTicks());
+            double interpolatedZ = MathUtil.INSTANCE.interpolate(mc.player.lastTickPosZ, mc.player.posZ, mc.getRenderPartialTicks());
+            bcs.add(new BreadCrumb(new Vec3d(interpolatedX, interpolatedY, interpolatedZ)));
             int time = tickClear * 50;
+            GL11.glPushAttrib(1048575);
             GL11.glPushMatrix();
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(3008);
+            GL11.glEnable(3042);
             GL11.glBlendFunc(770, 771);
-            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glDisable(3553);
+            GL11.glDisable(2929);
+            GL11.glDepthMask(false);
+            GL11.glEnable(2884);
+            GL11.glEnable(2848);
+            GL11.glHint(3154, 4353);
+            GL11.glDisable(2896);
             GL11.glLineWidth(lineWidht);
             GL11.glBegin(3);
             for (int i = 0; i < bcs.size(); i++) {
@@ -74,11 +85,16 @@ public class BreadCrumbs extends Module {
                 putVertex3d(getRenderPos(crumb.getVector().x, crumb.getVector().y + 0.3, crumb.getVector().z));
             }
             GL11.glEnd();
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glEnable(2896);
+            GL11.glDisable(2848);
+            GL11.glEnable(3553);
+            GL11.glEnable(2929);
+            GL11.glDisable(3042);
+            GL11.glEnable(3008);
+            GL11.glDepthMask(true);
+            GL11.glCullFace(1029);
             GL11.glPopMatrix();
+            GL11.glPopAttrib();
         }
     }
 
