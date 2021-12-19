@@ -7,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSword;
@@ -50,8 +51,6 @@ public class AutoCrystalRewrite extends Module {
 
     //TODO: AntiCity (aka antisurround)
     //TODO: Break Check
-    //TODO: Пофиксить рендер в са, Рендерится даже когда не держись кристаллы в руках
-    //TODO: Пофиксить плейсмент (СА Плейсит когда я даже не держу кристаллы в руках)
 
 
     //global
@@ -255,12 +254,27 @@ public class AutoCrystalRewrite extends Module {
 
         boolean isOffhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         int old = -1;
+        int crystalSlot = ItemUtil.findItem(ItemEndCrystal.class);
 
         if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
 
-        if (swap != SwapMode.NONE && !isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) {
-            old = mc.player.inventory.currentItem;
-            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) == -1) return;
+        switch ((SwapMode) switchMode.getValEnum()) {
+                case NONE: {
+                    if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
+                        return;
+                    }
+                    break;
+                }
+                default: {
+                    if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
+                        if(crystalSlot == -1) {
+                            return;
+                        } else {
+                            ItemUtil.swapToHotbarSlot(crystalSlot, false);
+                        }
+                    }
+                    break;
+                }
         }
 
         if (rotations != Rotations.NONE) {
@@ -370,6 +384,7 @@ public class AutoCrystalRewrite extends Module {
 
     @Override public void onRender3D(float partialTicks) {
         if (current == null) return;
+        if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) return;
         Renderer3D.drawBoxESP(current, box.getColor(), line.getColor(), lineWidth, true, true, box.getColor().getAlpha(), line.getColor().getAlpha(), 1f);
     }
 
@@ -437,5 +452,4 @@ public class AutoCrystalRewrite extends Module {
         MAINHAND,
         NONE
     }
-
 }
