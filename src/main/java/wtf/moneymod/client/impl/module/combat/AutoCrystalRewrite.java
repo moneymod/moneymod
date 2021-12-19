@@ -101,6 +101,8 @@ public class AutoCrystalRewrite extends Module {
     @Value( "Line" ) public JColor line = new JColor(255, 255, 255, 255, false);
     @Value( "Line Width" ) @Bounds( max = 3f ) public float lineWidth = 0.6f;
 
+    @Value( "Debug" ) public boolean debug = false;
+
     Random random = new Random();
     Set<BlockPos> placedCrystals = new HashSet<>();
     EntityPlayer target;
@@ -282,7 +284,7 @@ public class AutoCrystalRewrite extends Module {
 
     void placeCrystal(BlockPos pos, boolean offhand) {
         if (pos == null) return;
-        System.out.println("PLACE");
+        if (debug) System.out.println("PLACE");
         RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + ( double ) mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(( double ) pos.getX() + 0.5, ( double ) pos.getY() - 0.5, ( double ) pos.getZ() + 0.5));
         EnumFacing facing = result == null || result.sideHit == null ? EnumFacing.UP : result.sideHit;
         mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
@@ -356,7 +358,7 @@ public class AutoCrystalRewrite extends Module {
     }
 
     void hit(EntityEnderCrystal entityEnderCrystal) {
-        System.out.println("HIT");
+        if (debug) System.out.println("HIT");
         lastHitEntity = entityEnderCrystal;
         mc.player.connection.sendPacket(new CPacketUseEntity(entityEnderCrystal));
         swing();
