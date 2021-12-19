@@ -214,6 +214,10 @@ public class AutoCrystalRewrite extends Module {
 
         if ((mc.player.isHandActive() && pauseOnEat) || (EntityUtil.getHealth(mc.player) <= pauseHealth)) return;
 
+        if (swap != SwapMode.SILENT && (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL || mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL)){
+            return;
+        }
+
         placer();
         breaker();
 
@@ -257,25 +261,6 @@ public class AutoCrystalRewrite extends Module {
         int crystalSlot = ItemUtil.findItem(ItemEndCrystal.class);
 
         if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
-
-        switch ((SwapMode) swap) {
-                case NONE: {
-                    if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
-                        return;
-                    }
-                    break;
-                }
-                default: {
-                    if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
-                        if(crystalSlot == -1) {
-                            return;
-                        } else {
-                            ItemUtil.swapToHotbarSlot(crystalSlot, false);
-                        }
-                    }
-                    break;
-                }
-        }
 
         if (rotations != Rotations.NONE) {
             rotation = RotationManagement.calcRotation(current);
@@ -384,7 +369,6 @@ public class AutoCrystalRewrite extends Module {
 
     @Override public void onRender3D(float partialTicks) {
         if (current == null) return;
-        if(mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) return;
         Renderer3D.drawBoxESP(current, box.getColor(), line.getColor(), lineWidth, true, true, box.getColor().getAlpha(), line.getColor().getAlpha(), 1f);
     }
 
