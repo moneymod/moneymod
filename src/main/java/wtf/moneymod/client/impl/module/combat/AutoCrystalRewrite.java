@@ -214,10 +214,6 @@ public class AutoCrystalRewrite extends Module {
 
         if ((mc.player.isHandActive() && pauseOnEat) || (EntityUtil.getHealth(mc.player) <= pauseHealth)) return;
 
-        if (swap != SwapMode.SILENT && (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL || mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL)){
-            return;
-        }
-
         placer();
         breaker();
 
@@ -260,6 +256,14 @@ public class AutoCrystalRewrite extends Module {
         int old = -1;
         int crystalSlot = ItemUtil.findItem(ItemEndCrystal.class);
 
+        if (swap != SwapMode.NONE) {
+            old = mc.player.inventory.currentItem;
+            if (swap == SwapMode.SILENT && crystalSlot == -1) return;
+            ItemUtil.swapToHotbarSlot(crystalSlot,false);
+            if (swap == SwapMode.AUTO && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
+        } else {
+            if (!isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
+        }
         if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
 
         if (rotations != Rotations.NONE) {
