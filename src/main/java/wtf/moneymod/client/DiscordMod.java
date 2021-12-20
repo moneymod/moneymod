@@ -3,7 +3,6 @@ package wtf.moneymod.client;
 import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
-import org.apache.commons.codec.digest.DigestUtils;
 
 
 public class DiscordMod {
