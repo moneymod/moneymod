@@ -27,8 +27,8 @@ gversion {
     dateFormat = "dd/MM/yyyy HH:mm:ss"
 }
 
-project.genSrgs.dependsOn(createVersionFile)
-project.sourceApiJava.dependsOn(createVersionFile)
+//project.genSrgs.dependsOn(createVersionFile)
+//roject.sourceApiJava.dependsOn(createVersionFile)
 
 group = "wtf.moneymod"
 archivesBaseName = "moneymod"

@@ -18,7 +18,6 @@ public class Warp extends Module {
     @Value(value = "Accelerate++") @Bounds(min = 0, max = 1) public float accele = 0.1f;
     @Value(value = "Step") public boolean step = true;
     @Value(value = "Step") @Bounds(min = 1, max = 2) public float stepHeight = 1;
-    @Value(value = "OnlyMoving") public boolean onlyMoving = true;
 
     int delay;
     float a;
@@ -30,10 +29,7 @@ public class Warp extends Module {
         mc.player.stepHeight = 0.6f;
     }
     @Override public void onTick() {
-        if (!EntityUtil.INSTANCE.isMoving(mc.player) && onlyMoving) {
-            Main.TICK_TIMER = 1;
-            setToggled(false);
-        }
+
         if (step) mc.player.stepHeight = stepHeight;
 
         if (mode == Mode.ACCELERATE) {

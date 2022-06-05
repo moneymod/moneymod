@@ -82,7 +82,7 @@ public class Main {
         EVENT_BUS.register(handler);
         MinecraftForge.EVENT_BUS.register(PacketManagement.getInstance());
         Runtime.getRuntime().addShutdownHook(ConfigManagement.getInstance());
-        Display.setTitle(String.format("moneymod build-%s", GitInfo.GIT_SHA.substring(0,7)));
+        Display.setTitle(String.format("moneymod build"));
     }
 
 
