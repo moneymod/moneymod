@@ -113,7 +113,7 @@ public class Hud extends Module {
 
         if (watermark) {
             //FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
-            FontRender.drawStringWithShadow(WatermarkCommand.watermark , 1, 1,  getColor(1));
+            FontRender.drawStringWithShadow(WatermarkCommand.watermark, 1, 1,  getColor(1));
         }
 
         if (fps){

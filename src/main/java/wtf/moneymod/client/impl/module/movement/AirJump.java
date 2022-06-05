@@ -12,7 +12,7 @@ import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-@Module.Register( label = "DoubleTap", cat = Module.Category.MOVEMENT)
+@Module.Register( label = "AirJump", cat = Module.Category.MOVEMENT)
 public class AirJump extends Module {
 
     @Override
