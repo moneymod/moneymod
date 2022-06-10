@@ -295,7 +295,7 @@ public class Speed extends Module {
     }
 
     public enum Mode {
-        STRAFE, ONGROUND, GROUNDSTRAGE, VANILLA
+        STRAFE, ONGROUND, GROUNDSTRAFE, VANILLA
     }
 
 }
