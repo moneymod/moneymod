@@ -18,8 +18,8 @@ public class DiscordMod {
         discordRPC.Discord_Initialize(discordID, eventHandlers, true, null);
         discordRichPresence.startTimestamp = System.currentTimeMillis() / 1000L;
         discordRichPresence.largeImageKey = "sonyakot";
-        discordRichPresence.largeImageText = "sonya kot fanboy club";
-        discordRichPresence.details = "version: " + GitInfo.GIT_SHA.substring(0,7);
+        discordRichPresence.largeImageText = "fanboy club";
+        discordRichPresence.details = "version: ++";
         discordRichPresence.state = "$gang";
         discordRichPresence.partyId = "ae488379-351d-4a4f-ad32-2b9b01c91657";
         discordRichPresence.joinSecret = "MTI4NzM0OjFpMmhuZToxMjMxMjM= ";
