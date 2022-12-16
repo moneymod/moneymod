@@ -53,7 +53,7 @@ public class FeetPlace extends Module {
         retriesCount.clear();
         BlockPos s = new BlockPos(mc.player.getPositionVector());
         if (center) {
-            mc.player.setPosition(s.getX() + 0.5f, s.getY(), s.getZ() + 0.5f);
+            mc.player.setPosition(s.getX() + 0.5f, mc.player.posY, s.getZ() + 0.5f);
         }
     }
 
@@ -74,15 +74,14 @@ public class FeetPlace extends Module {
             return;
         }
         if (!this.timer.passed(delay) && didPlace) return;
-        int offset = (mc.world.getBlockState(new BlockPos(mc.player.getPositionVector())).getBlock() == Blocks.ENDER_CHEST && mc.player.posY - Math.floor(mc.player.posY) > 0.5 ? 1 : 0);
-        if (Main.getMain().getHoleManagement().isInHole(new BlockPos(mc.player.getPositionVector())) || BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset, smart).size() == 0) {
+        if (Main.getMain().getHoleManagement().isInHole(new BlockPos(mc.player.getPositionVector())) || BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), 0, smart).size() == 0) {
             if (disable) setToggled(false);
             return;
         }
         if (help) {
-            placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset - 1, smart));
+            placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), -1, smart));
         }
-        placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), offset, smart));
+        placeBlocks(BlockUtil.INSTANCE.getUnsafePositions(mc.player.getEntityBoundingBox(), 0, smart));
         placed = 0;
         timer.reset();
     }

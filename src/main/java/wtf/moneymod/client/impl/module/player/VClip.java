@@ -18,17 +18,12 @@ public class VClip extends Module {
             mc.player.setPositionAndUpdate(mc.player.posX, mc.player.posY + offset, mc.player.posZ);
             if (disable) setToggled(false);
         } else if (mode == Mode.BYPASS) {
-            if (mc.player.onGround && mc.player.posY < 3) {
-                ChatUtil.INSTANCE.sendInfoMessage("Teleporting...");
-                for (int i = 0; i < 3; i++) {
-                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 0.001, mc.player.posZ, mc.player.onGround));
-                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, -1, mc.player.posZ, mc.player.onGround));
-                }
-                if (disable) setToggled(false);
-            } else {
-                ChatUtil.INSTANCE.sendErrorMessage("this exploit working only if your Y position is 1 or 2");
-                setToggled(false);
+            ChatUtil.INSTANCE.sendInfoMessage("Teleporting...");
+            for (int i = 0; i < 3; i++) {
+                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 0.001, mc.player.posZ, mc.player.onGround));
+                mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, -1, mc.player.posZ, mc.player.onGround));
             }
+            if (disable) setToggled(false);
         }
     }
 

@@ -23,8 +23,7 @@ public class PopNotify extends Module
 
     private static final Map< String, Integer > list = new HashMap< >( );
 
-    @Handler
-    public Listener< TotemPopEvent > onTotemPop = new Listener< >( TotemPopEvent.class, event ->
+    @Handler public Listener< TotemPopEvent > onTotemPop = new Listener< >( TotemPopEvent.class, event ->
     {
         if( !localplayer )
         {

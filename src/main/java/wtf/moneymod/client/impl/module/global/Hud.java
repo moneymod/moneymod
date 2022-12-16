@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import wtf.moneymod.client.GitInfo;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
@@ -113,7 +114,14 @@ public class Hud extends Module {
 
         if (watermark) {
             //FontRender.drawStringWithShadow("moneymod", 1, 1,  getColor(1));
-            FontRender.drawStringWithShadow(WatermarkCommand.watermark + " b-", 1, 1,  getColor(1));
+            FontRender.drawStringWithShadow(WatermarkCommand.watermark + " b-" + GitInfo.GIT_SHA.substring( 0, 7 ), 1, 1,  getColor(1));
+        }
+
+        if( builddate )
+        {
+            Date date = new Date( GitInfo.BUILD_UNIX_TIME );
+            String format = new SimpleDateFormat( "MMM dd y HH:mm:ss", Locale.ENGLISH ).format( date );
+            FontRender.drawStringWithShadow(format, 1, 2 + FontRender.getFontHeight(),  getColor(1));
         }
 
         if (fps){

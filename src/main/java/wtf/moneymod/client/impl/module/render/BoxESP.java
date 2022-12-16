@@ -9,9 +9,12 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.render.JColor;
 import wtf.moneymod.client.impl.utility.impl.render.Renderer3D;
 
@@ -38,7 +41,19 @@ public class BoxESP extends Module {
                         (e instanceof EntityItem || e instanceof EntityExpBottle || e instanceof EntityEnderPearl && other))
                 .forEach(e -> {
                     if (e == mc.player) return;
-                    Renderer3D.drawBoxESP(e.getEntityBoundingBox(), color.getColor(), colorLine.getColor(), lineWidth, outline, box, color.getColor().getAlpha(), colorLine.getColor().getAlpha());
+                    AxisAlignedBB ebb = e.getEntityBoundingBox();
+                    final double xoff = (ebb.maxX - ebb.minX) / 2,
+                              yoff = (ebb.maxY - ebb.minY) / 2,
+                              zoff = (ebb.maxZ - ebb.minZ) / 2;
+                    AxisAlignedBB bb = new AxisAlignedBB(
+                            MathUtil.INSTANCE.interpolate(e.prevPosX, e.posX, partialTicks) - xoff,
+                            MathUtil.INSTANCE.interpolate(e.prevPosY, e.posY, partialTicks) - yoff ,
+                            MathUtil.INSTANCE.interpolate(e.prevPosZ, e.posZ, partialTicks) - zoff,
+                            MathUtil.INSTANCE.interpolate(e.prevPosX, e.posX, partialTicks) + xoff,
+                            MathUtil.INSTANCE.interpolate(e.prevPosY, e.posY, partialTicks) + yoff,
+                            MathUtil.INSTANCE.interpolate(e.prevPosZ, e.posZ, partialTicks) + zoff
+                    );
+                    Renderer3D.drawBoxESP(bb, color.getColor(), colorLine.getColor(), lineWidth, outline, box, color.getColor().getAlpha(), colorLine.getColor().getAlpha());
                 });
     }
 

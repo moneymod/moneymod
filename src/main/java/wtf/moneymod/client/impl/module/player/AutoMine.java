@@ -40,7 +40,8 @@ public class AutoMine extends Module
 
     public enum Mode
     {
-        FEET, CONTINIOUS
+        FEET,
+        CONTINUOUS
     }
 
     private BlockPos blockpos = null;
@@ -61,7 +62,7 @@ public class AutoMine extends Module
     @Handler
     public Listener< PreUpdateEvent > onPreUpdate = new Listener< >( PreUpdateEvent.class, event ->
     {
-        if( mode == Mode.CONTINIOUS )
+        if( mode == Mode.CONTINUOUS)
         {
             if( !focused )
                 ( ( AccessorMinecraft )mc ).mm_setLeftClickCounter( 0 );
@@ -75,7 +76,7 @@ public class AutoMine extends Module
     {
         if( event.stage != 0 ) return;
 
-        if( mode == Mode.CONTINIOUS ) return;
+        if( mode == Mode.CONTINUOUS) return;
 
         if( !switchbool || checkPickaxe( ) )
         {

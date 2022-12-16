@@ -7,6 +7,7 @@ import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.lwjgl.input.Keyboard;
 import wtf.moneymod.client.Main;
 import wtf.moneymod.client.api.events.MoveEvent;
@@ -14,6 +15,7 @@ import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
+import wtf.moneymod.client.impl.module.misc.ServerFlag;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.world.EntityUtil;
 import wtf.moneymod.eventhandler.event.Event;
@@ -29,6 +31,8 @@ public class PhaseWalk extends Module {
     @Value(value = "Speed") @Bounds(min = 0,max = 4) public float speed = 0.1f;
     @Value(value = "Factor") @Bounds(min = 0,max = 8) public int factor = 1;
     @Value(value = "Delay") @Bounds(min = 0,max = 20) public int delay = 1;
+    @Value("Flag") public boolean flag = false;
+    @Value("Flag Delay") @Bounds(min = 100, max = 4000) public int flagDelay = 500;
     @Value(value = "Fall Packet") public boolean fallPacket = true;
     @Value(value = "Teleport Id") public boolean teleportId = true;
     @Value(value = "Cancel Motion") public boolean cancelMotion = true;
@@ -39,13 +43,14 @@ public class PhaseWalk extends Module {
     private int walkDelay = 0;
     private int tpId = 0;
     private Timer timer = new Timer();
+    private Timer flagger = new Timer();
 
     @Override
     public void onToggle(){
         timer.reset();
         walkDelay = 0;
         tpId = 0;
-        mc.player.noClip = false;
+        if (mc.player != null)mc.player.noClip = false;
     }
 
     public void doWalkBypas(){
@@ -77,6 +82,12 @@ public class PhaseWalk extends Module {
 
         if (movement == Movement.SHIFT && !mc.gameSettings.keyBindSneak.isKeyDown()) return;
 
+        if (flag && flagger.passed(flagDelay)) {
+            Main.getMain().getModuleManager().get(ServerFlag.class).setToggled(true);
+            flagger.reset();
+            return;
+        }
+
         if (cancelMotion) {
             mc.player.motionX = 0;
             mc.player.motionZ = 0;
@@ -96,7 +107,7 @@ public class PhaseWalk extends Module {
             if (collidedTimer) Main.TICK_TIMER = timerSpeed;
 
             if (mode == Mode.PACKET) {
-                if (timer.passed(delay * 100)) {
+                if (timer.passed(delay * 100L)) {
                     for (int i = 0; i < factor; i++) doPackets(mc.player.posX + forw[0], mc.player.posY, mc.player.posZ + forw[1]);
                     if (fallPacket) mc.player.connection.sendPacket((Packet) new CPacketEntityAction((Entity) mc.player, CPacketEntityAction.Action.STOP_RIDING_JUMP));
                     timer.reset();
@@ -122,6 +133,7 @@ public class PhaseWalk extends Module {
                 doPackets(mc.player.posX + forw[0], mc.player.posY, mc.player.posZ + forw[1]);
             }
         }
+
     }
 
     

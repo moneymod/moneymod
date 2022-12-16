@@ -4,9 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.server.SPacketDestroyEntities;
-import net.minecraft.network.play.server.SPacketEntity;
-import net.minecraft.network.play.server.SPacketEntityStatus;
 import wtf.moneymod.client.api.events.EntityDeathEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.setting.annotatable.Value;
@@ -19,6 +16,7 @@ public class KillEffect extends Module {
 
     @Value( "Effect" ) public Effect effect = Effect.BOLT;
     @Value( "Sound" ) public boolean sound = true;
+    @Value("KillStreak") public boolean killStreak = false;
 
     @Handler public Listener<EntityDeathEvent> listener = new Listener<>(EntityDeathEvent.class, event -> {
         if (!nullCheck() && event.getEntity() != null) {

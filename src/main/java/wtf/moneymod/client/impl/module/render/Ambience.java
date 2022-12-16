@@ -20,7 +20,7 @@ public class Ambience extends Module {
     int cycle = 0;
     @Override public void onTick() {
         cycle+=speed;
-        mc.world.setWorldTime(infinity ? cycle : timeValue * 1000);
+        mc.world.setWorldTime(infinity ? cycle : timeValue * 1000L);
         if (cycle >= 24000) cycle = 0;
     }
 

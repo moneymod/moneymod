@@ -7,7 +7,6 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSword;
@@ -51,6 +50,8 @@ public class AutoCrystalRewrite extends Module {
 
     //TODO: AntiCity (aka antisurround)
     //TODO: Break Check
+    //TODO: Пофиксить рендер в са, Рендерится даже когда не держись кристаллы в руках
+    //TODO: Пофиксить плейсмент (СА Плейсит когда я даже не держу кристаллы в руках)
 
 
     //global
@@ -100,8 +101,6 @@ public class AutoCrystalRewrite extends Module {
     @Value( "Box" ) public JColor box = new JColor(255, 255, 255, 120, false);
     @Value( "Line" ) public JColor line = new JColor(255, 255, 255, 255, false);
     @Value( "Line Width" ) @Bounds( max = 3f ) public float lineWidth = 0.6f;
-
-    @Value( "Debug" ) public boolean debug = false;
 
     Random random = new Random();
     Set<BlockPos> placedCrystals = new HashSet<>();
@@ -256,17 +255,13 @@ public class AutoCrystalRewrite extends Module {
 
         boolean isOffhand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL;
         int old = -1;
-        int crystalSlot = ItemUtil.findItem(ItemEndCrystal.class);
 
-        if (swap != SwapMode.NONE) {
-            old = mc.player.inventory.currentItem;
-            if (swap == SwapMode.SILENT && crystalSlot == -1) return;
-            ItemUtil.swapToHotbarSlot(crystalSlot,false);
-            if (swap == SwapMode.AUTO && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
-        } else {
-            if (!isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
-        }
         if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
+
+        if (swap != SwapMode.NONE && !isOffhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) {
+            old = mc.player.inventory.currentItem;
+            if (ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false) == -1) return;
+        }
 
         if (rotations != Rotations.NONE) {
             rotation = RotationManagement.calcRotation(current);
@@ -284,7 +279,7 @@ public class AutoCrystalRewrite extends Module {
 
     void placeCrystal(BlockPos pos, boolean offhand) {
         if (pos == null) return;
-        if (debug) System.out.println("PLACE");
+        System.out.println("PLACE");
         RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + ( double ) mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(( double ) pos.getX() + 0.5, ( double ) pos.getY() - 0.5, ( double ) pos.getZ() + 0.5));
         EnumFacing facing = result == null || result.sideHit == null ? EnumFacing.UP : result.sideHit;
         mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));
@@ -358,7 +353,7 @@ public class AutoCrystalRewrite extends Module {
     }
 
     void hit(EntityEnderCrystal entityEnderCrystal) {
-        if (debug) System.out.println("HIT");
+        System.out.println("HIT");
         lastHitEntity = entityEnderCrystal;
         mc.player.connection.sendPacket(new CPacketUseEntity(entityEnderCrystal));
         swing();
@@ -444,4 +439,3 @@ public class AutoCrystalRewrite extends Module {
     }
 
 }
-

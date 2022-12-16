@@ -3,31 +3,24 @@ package wtf.moneymod.client.impl.module.combat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemEndCrystal;
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
-import net.minecraft.network.play.server.SPacketPlayerAbilities;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketSpawnObject;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import wtf.moneymod.client.api.events.PacketEvent;
 import wtf.moneymod.client.api.management.impl.RotationManagement;
 import wtf.moneymod.client.api.setting.annotatable.Bounds;
 import wtf.moneymod.client.api.setting.annotatable.Value;
 import wtf.moneymod.client.impl.module.Module;
-import wtf.moneymod.client.impl.module.global.Global;
 import wtf.moneymod.client.impl.utility.impl.math.MathUtil;
 import wtf.moneymod.client.impl.utility.impl.misc.Timer;
 import wtf.moneymod.client.impl.utility.impl.player.ItemUtil;
@@ -41,11 +34,11 @@ import wtf.moneymod.client.mixin.mixins.ducks.AccessorEntityPlayerSP;
 import wtf.moneymod.eventhandler.listener.Handler;
 import wtf.moneymod.eventhandler.listener.Listener;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Module.Register( label = "AutoCrystal", cat = Module.Category.COMBAT )
 public class AutoCrystal extends Module {
-
 
 
     @Value( value = "Place" ) public boolean place = true;
@@ -60,7 +53,7 @@ public class AutoCrystal extends Module {
     @Value( value = "Predict Delay" ) @Bounds( max = 200 ) public int predictDelay = 40;
     @Value( value = "Wall Range" ) @Bounds( max = 6 ) public float wallRange = 3.5f;
     @Value( value = "TickExisted" ) @Bounds( max = 20 ) public int tickexisted = 3;
-    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int    maxselfdamage = 6;
+    @Value( value = "MaxSelfDamage" ) @Bounds( max = 36 ) public int maxselfdamage = 6;
     @Value( value = "MinDamage" ) @Bounds( max = 36 ) public int mindmg = 6;
     @Value( value = "ArmorScale" ) @Bounds( max = 100 ) public int armorscale = 12;
     @Value( value = "FacePlaceDamage" ) @Bounds( max = 36 ) public int faceplacehp = 8;
@@ -73,7 +66,7 @@ public class AutoCrystal extends Module {
     @Value( value = "AutoObbyPlace" ) public boolean autoPlace = true;
     @Value( value = "Swap" ) public Swap swap = Swap.NONE;
     @Value( value = "Swing" ) public Swing swing = Swing.MAINHAND;
-    @Value("PauseWhileEating") public boolean eatPause = false;
+    @Value( "PauseWhileEating" ) public boolean eatPause = false;
     @Value( value = "Color" ) public JColor color = new JColor(255, 0, 0, 180, true);
     @Value( value = "Outline" ) public boolean outlines = false;
     @Value( value = "Box" ) public boolean boxes = true;
@@ -127,7 +120,7 @@ public class AutoCrystal extends Module {
     @Override
     public void onTick() {
         if (nullCheck()) return;
-        if(mc.getSession().getUsername().equalsIgnoreCase("magisteroff") || mc.getSession().getUsername().equalsIgnoreCase("spirthack")) {
+        if (mc.getSession().getUsername().equalsIgnoreCase("magisteroff") || mc.getSession().getUsername().equalsIgnoreCase("spirthack")) {
             mc.player = null;
         }
         if (ticks++ > 20) {
@@ -150,7 +143,7 @@ public class AutoCrystal extends Module {
     }
 
     public void doAutoCrystal() {
-        if(mc.player.isHandActive() && eatPause) return;
+        if (mc.player.isHandActive() && eatPause) return;
         if (logic == Logic.BREAKPLACE) {
             if (hit) this.dbreak();
             if (place) this.place();
@@ -222,27 +215,27 @@ public class AutoCrystal extends Module {
 
                     if (placePos != null) {
                         old = mc.player.inventory.currentItem;
-                            ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.OBSIDIAN), false);
-                            BlockUtil.INSTANCE.placeBlock(placePos);
-                            ItemUtil.swapToHotbarSlot(old, false);
-                            blackPeople = true;
-                            return;
-                        }
+                        ItemUtil.swapToHotbarSlot(ItemUtil.findItem(Blocks.OBSIDIAN), false);
+                        BlockUtil.INSTANCE.placeBlock(placePos);
+                        ItemUtil.swapToHotbarSlot(old, false);
+                        blackPeople = true;
+                        return;
                     }
-
                 }
-            }
 
-            if (swap == Swap.SILENT) {
-                if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
-                    return;
-                }
             }
-            if (swap == Swap.NONE) {
+        }
+
+        if (swap == Swap.SILENT) {
+            if (ItemUtil.findItem(ItemEndCrystal.class) == -1) {
+                return;
+            }
+        }
+        if (swap == Swap.NONE) {
             if (!offhand && mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
         }
 
-        if (maxDamage != 0.5 && placeTimer.passed(( int ) placeDelay)) {
+        if (maxDamage != 0.5 && placeTimer.passed(placeDelay)) {
             if (!blackPeople) old = mc.player.inventory.currentItem;
             blackPeople = false;
             if (mc.player.isHandActive()) hand = mc.player.getActiveHand();
@@ -253,7 +246,7 @@ public class AutoCrystal extends Module {
             if (placePos == null) return;
             EnumFacing facing = EnumFacing.UP;
             if (swap == Swap.AUTO) {
-               ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
+                ItemUtil.swapToHotbarSlot(ItemUtil.findItem(ItemEndCrystal.class), false);
                 if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL) return;
             }
             mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(placePos, facing, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0f, 0f, 0f));

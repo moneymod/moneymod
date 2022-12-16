@@ -86,7 +86,7 @@ public final class ConfigManagement extends Thread implements Globals {
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }

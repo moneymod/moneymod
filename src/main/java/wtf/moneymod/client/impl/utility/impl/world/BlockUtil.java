@@ -128,7 +128,7 @@ public enum BlockUtil implements Globals {
         if (!mc.world.getBlockState(bp).getMaterial().isReplaceable()) return 1;
         for (Entity e : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(bp))) {
             if (e instanceof EntityXPOrb || e instanceof EntityItem) continue;
-            if (e instanceof EntityPlayer) return 1;
+            if (e instanceof EntityPlayer || e == mc.player) return 1;
             return -1;
         }
         return 0;
