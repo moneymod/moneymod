@@ -73,3 +73,4 @@ void main() {
     vec3 color  = palette(value);
 
     gl_FragColor = vec4(color, 1.);
+}
