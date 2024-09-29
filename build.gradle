@@ -39,11 +39,19 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2847"
-    runDir = 'run'
-    mappings = "stable_39"
-    coreMod = 'wtf.moneymod.client.mixin.Loader'
-    makeObfSourceJar = false
+    mappings channel: "stable", version: "39-1.12"
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'fml.coreMods.load', 'wtf.moneymod.client.mixin.Loader'
+            property 'mixin.env.disableRefMap', 'true' 
+            
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
 }
 
 repositories {
