@@ -161,9 +161,9 @@ processResources {
     }
 }
 
-task copyDeps(type: Copy) {
-    from configurations.runtime
-    into 'build/lib'
-}
+// task copyDeps(type: Copy) {
+//     from configurations.runtime
+//     into 'build/lib'
+// }
 
 build.dependsOn(shadowJar)
