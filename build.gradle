@@ -63,6 +63,8 @@ repositories {
 }
 
 dependencies {
+    minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2860"
+
     compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") { // do NOT update this to 8.0 or above, it breaks compatibility with future client
         exclude module: 'launchwrapper'
         exclude module: 'guava'
