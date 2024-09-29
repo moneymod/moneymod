@@ -20,7 +20,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: |
-          ./gradlew setupDecompWorkspace
+          ./gradlew --no-daemon classes
           ./gradlew build
       - name: List files
         run: ls
