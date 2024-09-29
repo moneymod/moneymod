@@ -111,14 +111,22 @@ shadowJar {
 }
 
 mixin {
-    defaultObfuscationEnv searge
-    add sourceSets.main, 'mixins.moneymod.refmap.json'
+    defaultObfuscationEnv 'searge'
+    sourceSets {
+        main {
+            ext.refMap = 'mixins.moneymod.refmap.json'
+        }
+    }
 }
 
 reobf {
-    shadowJar {
-        mappingType = 'SEARGE'
-        classpath = sourceSets.main.compileClasspath
+    // shadowJar {
+    //     mappingType = 'SEARGE'
+    //     classpath = sourceSets.main.compileClasspath
+    // }
+    shadowJar {}
+    jar {
+        enabled = false
     }
 }
 
